@@ -10,6 +10,7 @@ namespace CaroServer
         public TcpClient Client { get; }
         public NetworkStream Stream { get; }
         public Room? CurrentRoom { get; set; }
+        public bool IsSpectator { get; set; } = false;
 
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
@@ -20,8 +21,17 @@ namespace CaroServer
             PlayerId = Guid.NewGuid().ToString("N")[..8];
         }
 
+        public ClientSession(string id, string name)
+        {
+            PlayerId = id;
+            PlayerName = name;
+            Client = null!;
+            Stream = null!;
+        }
+
         public async Task SendPacketAsync(Packet packet)
         {
+            if (Stream == null) return;
             try
             {
                 await PacketFraming.SendPacketAsync(Stream, packet, _cts.Token);
@@ -61,8 +71,8 @@ namespace CaroServer
         public void Disconnect()
         {
             _cts.Cancel();
-            try { Stream.Close(); } catch { }
-            try { Client.Close(); } catch { }
+            try { Stream?.Close(); } catch { }
+            try { Client?.Close(); } catch { }
         }
     }
 }

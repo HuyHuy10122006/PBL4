@@ -10,21 +10,30 @@ namespace CaroServer
         public ClientSession Player1 { get; }
         public ClientSession? Player2 { get; private set; }
         public GameEngine Engine { get; }
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession> _spectators = new System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession>();
+
+        public int TimePerTurn { get; }
+        public bool BlockBothEndsRule { get; }
+        private CancellationTokenSource? _turnTimeoutCts;
+        private readonly object _timerLock = new object();
 
         public char Player1Symbol => 'X';
         public char Player2Symbol => 'O';
 
         public bool IsFull => Mode == GameMode.PvAI || Player2 != null;
+        public int SpectatorCount => _spectators.Count;
 
-        public Room(string roomId, GameMode mode, AIDifficulty difficulty, ClientSession player1, int boardSize = 15)
+        public Room(string roomId, GameMode mode, AIDifficulty difficulty, ClientSession player1, int boardSize = 15, bool blockBothEndsRule = true, int timePerTurn = 30)
         {
             RoomId = roomId;
             Mode = mode;
             Difficulty = difficulty;
             Player1 = player1;
             Player1.CurrentRoom = this;
+            BlockBothEndsRule = blockBothEndsRule;
+            TimePerTurn = timePerTurn;
 
-            Engine = new GameEngine(boardSize, blockBothEndsRule: true);
+            Engine = new GameEngine(boardSize, blockBothEndsRule: blockBothEndsRule);
         }
 
         public bool JoinPlayer2(ClientSession player2)
@@ -35,14 +44,31 @@ namespace CaroServer
             return true;
         }
 
+        public bool AddSpectator(ClientSession spectator)
+        {
+            spectator.CurrentRoom = this;
+            spectator.IsSpectator = true;
+            _spectators[spectator.PlayerId] = spectator;
+            return true;
+        }
+
+        public bool RemoveSpectator(string playerId)
+        {
+            return _spectators.TryRemove(playerId, out _);
+        }
+
+        public GameStateUpdateData GetCurrentGameStateData() => CreateGameStateData();
+
         public async Task StartGameAsync()
         {
             Engine.Reset();
             await BroadcastGameStateAsync();
+            StartTurnTimeoutTimer();
         }
 
         public async Task ProcessMoveAsync(ClientSession player, int row, int col)
         {
+            if (player.IsSpectator) return;
             char symbol = (player.PlayerId == Player1.PlayerId) ? Player1Symbol : Player2Symbol;
 
             if (!Engine.MakeMove(row, col, symbol, out string errorMsg))
@@ -63,6 +89,15 @@ namespace CaroServer
 
             await BroadcastGameStateAsync();
 
+            if (Engine.Status == GameStateStatus.Playing)
+            {
+                StartTurnTimeoutTimer();
+            }
+            else
+            {
+                StopTurnTimeoutTimer();
+            }
+
             // Check if game continues and it's AI turn
             if (Mode == GameMode.PvAI && Engine.Status == GameStateStatus.Playing && Engine.CurrentTurnSymbol == Player2Symbol)
             {
@@ -72,20 +107,51 @@ namespace CaroServer
                     Point aiMove = MinimaxAI.FindBestMove(Engine, Player2Symbol, Difficulty);
                     Engine.MakeMove(aiMove.Row, aiMove.Col, Player2Symbol, out _);
                     await BroadcastGameStateAsync();
+
+                    if (Engine.Status == GameStateStatus.Playing)
+                    {
+                        StartTurnTimeoutTimer();
+                    }
+                    else
+                    {
+                        StopTurnTimeoutTimer();
+                    }
                 });
             }
         }
 
         public async Task RestartAsync(ClientSession requester)
         {
+            if (requester.IsSpectator) return;
+
+            // Trận đấu chưa kết thúc thì không được phép chơi lại!
+            if (Engine.Status != GameStateStatus.GameOver)
+            {
+                var errorPacket = Packet.Create(PacketType.ChatMessage, new ChatMessageData
+                {
+                    SenderName = "Hệ thống",
+                    Message = "Trận đấu đang diễn ra, chưa thể tái đấu!"
+                });
+                await requester.SendPacketAsync(errorPacket);
+                return;
+            }
+
             Engine.Reset();
             await BroadcastGameStateAsync();
+            StartTurnTimeoutTimer();
         }
 
         public async Task HandleSurrenderAsync(ClientSession surrenderPlayer)
         {
+            if (surrenderPlayer.IsSpectator) return;
+            if (Engine.Status != GameStateStatus.Playing) return;
+
+            StopTurnTimeoutTimer();
+
             char winner = (surrenderPlayer.PlayerId == Player1.PlayerId) ? Player2Symbol : Player1Symbol;
             string winnerName = (winner == 'X') ? Player1.PlayerName : (Player2?.PlayerName ?? "Máy (AI)");
+
+            Engine.Surrender(winner); // Cập nhật trạng thái ván đấu thành GameOver trên Engine
 
             var stateData = CreateGameStateData();
             stateData.Status = GameStateStatus.GameOver;
@@ -94,6 +160,77 @@ namespace CaroServer
 
             var packet = Packet.Create(PacketType.GameStateUpdate, stateData);
             await BroadcastPacketAsync(packet);
+        }
+
+        public async Task HandleTurnTimeoutAsync()
+        {
+            if (Engine.Status != GameStateStatus.Playing) return;
+
+            StopTurnTimeoutTimer();
+
+            char timedOutSymbol = Engine.CurrentTurnSymbol;
+            char winner = (timedOutSymbol == 'X') ? Player2Symbol : Player1Symbol;
+            string timedOutName = (timedOutSymbol == 'X') ? Player1.PlayerName : (Player2?.PlayerName ?? "Máy (AI)");
+            string winnerName = (winner == 'X') ? Player1.PlayerName : (Player2?.PlayerName ?? "Máy (AI)");
+
+            Engine.Surrender(winner);
+
+            var stateData = CreateGameStateData();
+            stateData.Status = GameStateStatus.GameOver;
+            stateData.WinnerSymbol = winner;
+            stateData.StatusMessage = $"Hết giờ! {timedOutName} ({timedOutSymbol}) đã bị xử thua do hết thời gian lượt đi. {winnerName} chiến thắng!";
+
+            var packet = Packet.Create(PacketType.GameStateUpdate, stateData);
+            await BroadcastPacketAsync(packet);
+        }
+
+        private void StartTurnTimeoutTimer()
+        {
+            lock (_timerLock)
+            {
+                StopTurnTimeoutTimer();
+
+                if (TimePerTurn <= 0 || Engine.Status != GameStateStatus.Playing)
+                    return;
+
+                var cts = new CancellationTokenSource();
+                _turnTimeoutCts = cts;
+
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        // Thêm 1.2s độ trễ mạng để client xử lý trước
+                        await Task.Delay((TimePerTurn + 1) * 1000 + 200, cts.Token);
+                        if (!cts.Token.IsCancellationRequested && Engine.Status == GameStateStatus.Playing)
+                        {
+                            await HandleTurnTimeoutAsync();
+                        }
+                    }
+                    catch (OperationCanceledException) { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[Timer] Lỗi timer: {ex.Message}");
+                    }
+                });
+            }
+        }
+
+        public void StopTurnTimeoutTimer()
+        {
+            lock (_timerLock)
+            {
+                try
+                {
+                    _turnTimeoutCts?.Cancel();
+                    _turnTimeoutCts?.Dispose();
+                }
+                catch { }
+                finally
+                {
+                    _turnTimeoutCts = null;
+                }
+            }
         }
 
         public async Task BroadcastChatMessageAsync(ClientSession sender, string message)
@@ -142,7 +279,9 @@ namespace CaroServer
                 Status = Engine.Status,
                 WinnerSymbol = Engine.WinnerSymbol,
                 WinLine = Engine.WinLine,
-                StatusMessage = statusMsg
+                StatusMessage = statusMsg,
+                BlockBothEndsRule = BlockBothEndsRule,
+                TimePerTurn = TimePerTurn
             };
         }
 
@@ -152,6 +291,13 @@ namespace CaroServer
             if (Player2 != null)
             {
                 await Player2.SendPacketAsync(packet);
+            }
+            foreach (var spec in _spectators.Values)
+            {
+                if (spec.Client != null && spec.Client.Connected)
+                {
+                    try { await spec.SendPacketAsync(packet); } catch { }
+                }
             }
         }
     }

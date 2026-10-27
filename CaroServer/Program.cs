@@ -7,6 +7,7 @@ namespace CaroServer
     internal class Program
     {
         private static readonly RoomManager _roomManager = new RoomManager();
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession> _sessions = new System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession>();
         private static readonly int Port = 8888;
 
         static async Task Main(string[] args)
@@ -15,6 +16,12 @@ namespace CaroServer
             Console.WriteLine("=================================================");
             Console.WriteLine("    CARO GAME SERVER - SYSTEM STARTING...       ");
             Console.WriteLine("=================================================");
+
+            _roomManager.OnRoomStateChanged = async () =>
+            {
+                await BroadcastPlayerListAsync();
+                await BroadcastRoomListAsync();
+            };
 
             TcpListener listener = new TcpListener(IPAddress.Any, Port);
             try
@@ -27,6 +34,7 @@ namespace CaroServer
                 {
                     TcpClient tcpClient = await listener.AcceptTcpClientAsync();
                     ClientSession session = new ClientSession(tcpClient);
+                    _sessions[session.PlayerId] = session;
                     IPEndPoint? remoteEp = tcpClient.Client.RemoteEndPoint as IPEndPoint;
                     Console.WriteLine($"[CONNECT] Client mới kết nối từ {remoteEp?.Address}:{remoteEp?.Port} (ID: {session.PlayerId})");
 
@@ -52,15 +60,19 @@ namespace CaroServer
                     if (connReq != null)
                     {
                         session.PlayerName = string.IsNullOrWhiteSpace(connReq.PlayerName) ? $"Player_{session.PlayerId}" : connReq.PlayerName;
+                        _sessions[session.PlayerId] = session;
                         Console.WriteLine($"[LOGIN] Client {session.PlayerId} đặt tên là: '{session.PlayerName}'");
 
                         var resp = Packet.Create(PacketType.ConnectResp, new ConnectRespData
                         {
                             Success = true,
                             PlayerId = session.PlayerId,
+                            ServerHostName = Environment.MachineName,
                             Message = $"Chào mừng {session.PlayerName} kết nối đến Server Caro!"
                         });
                         await session.SendPacketAsync(resp);
+                        _ = BroadcastPlayerListAsync();
+                        _ = BroadcastRoomListAsync();
                     }
                     break;
 
@@ -68,8 +80,8 @@ namespace CaroServer
                     var createReq = packet.DeserializePayload<CreateRoomReqData>();
                     if (createReq != null)
                     {
-                        Console.WriteLine($"[ROOM] {session.PlayerName} yêu cầu tạo phòng. Chế độ: {createReq.Mode}, Độ khó: {createReq.AIDifficulty}");
-                        await _roomManager.CreateRoomAsync(session, createReq.Mode, createReq.AIDifficulty, createReq.BoardSize);
+                        Console.WriteLine($"[ROOM] {session.PlayerName} yêu cầu tạo phòng. Chế độ: {createReq.Mode}, Luật: {(createReq.BlockBothEndsRule ? "Chặn 2 đầu" : "Tự do")}, Thời gian: {createReq.TimePerTurn}s");
+                        await _roomManager.CreateRoomAsync(session, createReq.Mode, createReq.AIDifficulty, createReq.BoardSize, createReq.BlockBothEndsRule, createReq.TimePerTurn);
                     }
                     break;
 
@@ -119,13 +131,90 @@ namespace CaroServer
                     Console.WriteLine($"[ROOM] {session.PlayerName} yêu cầu thoát phòng");
                     await _roomManager.LeaveRoomAsync(session);
                     break;
+
+                case PacketType.GetRoomsReq:
+                    var roomList = _roomManager.GetActiveRooms();
+                    var listPacket = Packet.Create(PacketType.RoomList, new RoomListData { Rooms = roomList });
+                    await session.SendPacketAsync(listPacket);
+                    break;
+
+                case PacketType.SpectateRoomReq:
+                    var specReq = packet.DeserializePayload<SpectateRoomReqData>();
+                    if (specReq != null)
+                    {
+                        Console.WriteLine($"[SPECTATE] {session.PlayerName} yêu cầu xem phòng '{specReq.RoomId}'");
+                        await _roomManager.SpectateRoomAsync(session, specReq.RoomId);
+                    }
+                    break;
             }
         }
 
         private static void OnClientDisconnected(ClientSession session)
         {
             Console.WriteLine($"[DISCONNECT] Client '{session.PlayerName}' (ID: {session.PlayerId}) đã ngắt kết nối.");
+            _sessions.TryRemove(session.PlayerId, out _);
             _ = _roomManager.HandleClientDisconnectedAsync(session);
+            _ = BroadcastPlayerListAsync();
+            _ = BroadcastRoomListAsync();
+        }
+
+        public static async Task BroadcastPlayerListAsync()
+        {
+            try
+            {
+                var players = _sessions.Values
+                    .Where(s => s.Client != null && s.Client.Connected && !string.IsNullOrEmpty(s.PlayerName))
+                    .Select(s => new PlayerInfoData
+                    {
+                        PlayerId = s.PlayerId,
+                        PlayerName = s.PlayerName,
+                        Status = (s.CurrentRoom != null) ? "Trong phòng" : "Đang chờ"
+                    })
+                    .ToList();
+
+                var packet = Packet.Create(PacketType.PlayerList, new PlayerListData { Players = players });
+
+                foreach (var session in _sessions.Values)
+                {
+                    if (session.Client != null && session.Client.Connected)
+                    {
+                        try
+                        {
+                            await session.SendPacketAsync(packet);
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] BroadcastPlayerListAsync: {ex.Message}");
+            }
+        }
+
+        public static async Task BroadcastRoomListAsync()
+        {
+            try
+            {
+                var rooms = _roomManager.GetActiveRooms();
+                var packet = Packet.Create(PacketType.RoomList, new RoomListData { Rooms = rooms });
+
+                foreach (var session in _sessions.Values)
+                {
+                    if (session.Client != null && session.Client.Connected)
+                    {
+                        try
+                        {
+                            await session.SendPacketAsync(packet);
+                        }
+                        catch { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] BroadcastRoomListAsync: {ex.Message}");
+            }
         }
     }
 }

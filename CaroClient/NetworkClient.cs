@@ -8,11 +8,13 @@ namespace CaroClient
         private TcpClient? _tcpClient;
         private NetworkStream? _stream;
         private CancellationTokenSource? _cts;
-        private readonly SynchronizationContext? _syncContext;
+        private SynchronizationContext? _syncContext;
 
         public bool IsConnected => _tcpClient != null && _tcpClient.Connected;
         public string PlayerId { get; private set; } = string.Empty;
         public string PlayerName { get; private set; } = string.Empty;
+        public string ServerHostName { get; private set; } = string.Empty;
+        public bool IsSpectator { get; set; } = false;
 
         // --- UI Events ---
         public event Action<bool, string>? OnConnectionCompleted;
@@ -23,6 +25,9 @@ namespace CaroClient
         public event Action<ChatMessageData>? OnChatMessageReceived;
         public event Action<string>? OnOpponentDisconnected;
         public event Action<string>? OnErrorOccurred;
+        public event Action<List<PlayerInfoData>>? OnPlayerListReceived;
+        public event Action<RoomListData>? OnRoomListReceived;
+        public event Action<SpectateRoomRespData>? OnSpectateRoomResponse;
 
         public NetworkClient()
         {
@@ -31,11 +36,17 @@ namespace CaroClient
 
         public async Task ConnectAsync(string ip, int port, string playerName)
         {
+            if (_syncContext == null && SynchronizationContext.Current != null)
+            {
+                _syncContext = SynchronizationContext.Current;
+            }
+
             PlayerName = playerName;
             try
             {
                 _tcpClient = new TcpClient();
-                await _tcpClient.ConnectAsync(ip, port);
+                using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                await _tcpClient.ConnectAsync(ip, port, timeoutCts.Token);
                 _stream = _tcpClient.GetStream();
                 _cts = new CancellationTokenSource();
 
@@ -48,7 +59,8 @@ namespace CaroClient
             }
             catch (Exception ex)
             {
-                PostToUI(() => OnConnectionCompleted?.Invoke(false, $"Không thể kết nối đến Server: {ex.Message}"));
+                Disconnect();
+                PostToUI(() => OnConnectionCompleted?.Invoke(false, $"Không thể kết nối đến Server ({ip}:{port}): {ex.Message}\n\nLưu ý: Hãy chắc chắn bạn đã chạy dự án CaroServer!"));
             }
         }
 
@@ -83,7 +95,16 @@ namespace CaroClient
                     if (connResp != null)
                     {
                         PlayerId = connResp.PlayerId;
+                        ServerHostName = connResp.ServerHostName;
                         PostToUI(() => OnConnectionCompleted?.Invoke(connResp.Success, connResp.Message));
+                    }
+                    break;
+
+                case PacketType.PlayerList:
+                    var listData = packet.DeserializePayload<PlayerListData>();
+                    if (listData != null)
+                    {
+                        PostToUI(() => OnPlayerListReceived?.Invoke(listData.Players));
                     }
                     break;
 
@@ -128,10 +149,48 @@ namespace CaroClient
                     var leaveResp = packet.DeserializePayload<LeaveRoomRespData>();
                     if (leaveResp != null)
                     {
+                        if (leaveResp.Success)
+                        {
+                            IsSpectator = false;
+                        }
                         PostToUI(() => OnLeaveRoomResponse?.Invoke(leaveResp));
                     }
                     break;
+
+                case PacketType.RoomList:
+                    var roomListData = packet.DeserializePayload<RoomListData>();
+                    if (roomListData != null)
+                    {
+                        PostToUI(() => OnRoomListReceived?.Invoke(roomListData));
+                    }
+                    break;
+
+                case PacketType.SpectateRoomResp:
+                    var specResp = packet.DeserializePayload<SpectateRoomRespData>();
+                    if (specResp != null)
+                    {
+                        if (specResp.Success)
+                        {
+                            IsSpectator = true;
+                        }
+                        PostToUI(() => OnSpectateRoomResponse?.Invoke(specResp));
+                    }
+                    break;
             }
+        }
+
+        public async Task RequestRoomListAsync()
+        {
+            if (!IsConnected || _stream == null) return;
+            var packet = Packet.Create(PacketType.GetRoomsReq, new object());
+            await PacketFraming.SendPacketAsync(_stream, packet);
+        }
+
+        public async Task SendSpectateRoomAsync(string roomId)
+        {
+            if (!IsConnected || _stream == null) return;
+            var packet = Packet.Create(PacketType.SpectateRoomReq, new SpectateRoomReqData { RoomId = roomId });
+            await PacketFraming.SendPacketAsync(_stream, packet);
         }
 
         public async Task SendMoveAsync(int row, int col)
@@ -141,14 +200,16 @@ namespace CaroClient
             await PacketFraming.SendPacketAsync(_stream, packet);
         }
 
-        public async Task CreateRoomAsync(GameMode mode, AIDifficulty difficulty, int boardSize = 15)
+        public async Task CreateRoomAsync(GameMode mode, AIDifficulty difficulty, int boardSize = 15, bool blockBothEndsRule = true, int timePerTurn = 30)
         {
             if (!IsConnected || _stream == null) return;
             var packet = Packet.Create(PacketType.CreateRoomReq, new CreateRoomReqData
             {
                 Mode = mode,
                 AIDifficulty = difficulty,
-                BoardSize = boardSize
+                BoardSize = boardSize,
+                BlockBothEndsRule = blockBothEndsRule,
+                TimePerTurn = timePerTurn
             });
             await PacketFraming.SendPacketAsync(_stream, packet);
         }
@@ -195,6 +256,8 @@ namespace CaroClient
             try { _tcpClient?.Close(); } catch { }
             _tcpClient = null;
             _stream = null;
+            IsSpectator = false;
+            ServerHostName = string.Empty;
         }
 
         private void PostToUI(Action action)

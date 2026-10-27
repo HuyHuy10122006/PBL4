@@ -1,6 +1,4 @@
-using CaroProtocol;
-
-namespace CaroServer
+namespace CaroProtocol
 {
     public class GameEngine
     {
@@ -35,6 +33,12 @@ namespace CaroServer
             WinnerSymbol = ' ';
             WinLine.Clear();
             LastMove = null;
+        }
+
+        public void Surrender(char winnerSymbol)
+        {
+            Status = GameStateStatus.GameOver;
+            WinnerSymbol = winnerSymbol;
         }
 
         public bool MakeMove(int row, int col, char playerSymbol, out string errorMessage)

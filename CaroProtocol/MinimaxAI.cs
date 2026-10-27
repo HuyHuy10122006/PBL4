@@ -1,7 +1,4 @@
-using CaroProtocol;
-using System.Collections.Concurrent;
-
-namespace CaroServer
+namespace CaroProtocol
 {
     public class MinimaxAI
     {

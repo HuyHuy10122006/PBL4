@@ -152,14 +152,23 @@ namespace CaroClient
             float cellSize = GetCellSize();
             float padding = GetPadding();
 
-            // Background Fill (Warm elegant wood/slate background)
-            using (SolidBrush bgBrush = new SolidBrush(Color.FromArgb(245, 240, 230)))
+            // Background Fill (Deep Cyberpunk Midnight Navy)
+            using (SolidBrush bgBrush = new SolidBrush(Color.FromArgb(10, 16, 34)))
             {
                 g.FillRectangle(bgBrush, ClientRectangle);
             }
 
+            // Draw Board Container Frame
+            float boardPixelSize = cellSize * BoardSize;
+            using (SolidBrush boardBg = new SolidBrush(Color.FromArgb(12, 21, 44)))
+            using (Pen boardBorder = new Pen(Color.FromArgb(28, 48, 88), 2f))
+            {
+                g.FillRectangle(boardBg, padding, padding, boardPixelSize, boardPixelSize);
+                g.DrawRectangle(boardBorder, padding, padding, boardPixelSize, boardPixelSize);
+            }
+
             // Draw Board Grid
-            using (Pen gridPen = new Pen(Color.FromArgb(160, 140, 110), 1.5f))
+            using (Pen gridPen = new Pen(Color.FromArgb(26, 42, 76), 1.2f))
             {
                 for (int i = 0; i < BoardSize; i++)
                 {
@@ -173,7 +182,7 @@ namespace CaroClient
                 }
             }
 
-            // Draw Star Points (Tâm bàn cờ và các điểm góc)
+            // Draw Star Points (Tâm bàn cờ và các điểm góc với hiệu ứng phát sáng Neon)
             int center = BoardSize / 2;
             DrawStarPoint(g, center, center, cellSize, padding);
             if (BoardSize >= 15)
@@ -184,28 +193,32 @@ namespace CaroClient
                 DrawStarPoint(g, BoardSize - 4, BoardSize - 4, cellSize, padding);
             }
 
-            // Draw Hover Effect
+            // Draw Hover Effect (Neon Cyan Glow)
             if (_hoverRow >= 0 && _hoverCol >= 0 && Status == GameStateStatus.Playing && IsMyTurn)
             {
                 if (Board[_hoverRow][_hoverCol] == ' ')
                 {
                     float hX = padding + _hoverCol * cellSize;
                     float hY = padding + _hoverRow * cellSize;
-                    using (SolidBrush hoverBrush = new SolidBrush(Color.FromArgb(80, 76, 175, 80)))
+                    using (SolidBrush hoverBrush = new SolidBrush(Color.FromArgb(40, 0, 229, 255)))
+                    using (Pen hoverPen = new Pen(Color.FromArgb(160, 0, 229, 255), 1.5f))
                     {
                         g.FillRectangle(hoverBrush, hX + 2, hY + 2, cellSize - 4, cellSize - 4);
+                        g.DrawRectangle(hoverPen, hX + 2, hY + 2, cellSize - 4, cellSize - 4);
                     }
                 }
             }
 
-            // Draw Last Move Highlight
+            // Draw Last Move Highlight (Glowing Amber Box)
             if (LastMoveRow >= 0 && LastMoveCol >= 0)
             {
                 float lmX = padding + LastMoveCol * cellSize;
                 float lmY = padding + LastMoveRow * cellSize;
-                using (SolidBrush lastMoveBg = new SolidBrush(Color.FromArgb(90, 255, 235, 59)))
+                using (SolidBrush lastMoveBg = new SolidBrush(Color.FromArgb(60, 255, 215, 0)))
+                using (Pen lastMoveBorder = new Pen(Color.FromArgb(200, 255, 215, 0), 1.5f))
                 {
-                    g.FillRectangle(lastMoveBg, lmX + 2, lmY + 2, cellSize - 4, cellSize - 4);
+                    g.FillRectangle(lastMoveBg, lmX + 3, lmY + 3, cellSize - 6, cellSize - 6);
+                    g.DrawRectangle(lastMoveBorder, lmX + 3, lmY + 3, cellSize - 6, cellSize - 6);
                 }
             }
 
@@ -226,7 +239,7 @@ namespace CaroClient
                 }
             }
 
-            // Draw Win Line
+            // Draw Win Line (Laser Beam Effect)
             if (WinLine != null && WinLine.Count >= 5)
             {
                 var start = WinLine[0];
@@ -237,7 +250,16 @@ namespace CaroClient
                 float eX = padding + end.Col * cellSize + cellSize / 2f;
                 float eY = padding + end.Row * cellSize + cellSize / 2f;
 
-                using (Pen winPen = new Pen(Color.FromArgb(220, 255, 193, 7), 6f))
+                // Outer Laser Glow
+                using (Pen glowPen = new Pen(Color.FromArgb(120, 255, 215, 0), 10f))
+                {
+                    glowPen.StartCap = LineCap.Round;
+                    glowPen.EndCap = LineCap.Round;
+                    g.DrawLine(glowPen, sX, sY, eX, eY);
+                }
+
+                // Inner Bright Beam
+                using (Pen winPen = new Pen(Color.FromArgb(255, 255, 255), 4f))
                 {
                     winPen.StartCap = LineCap.Round;
                     winPen.EndCap = LineCap.Round;
@@ -250,8 +272,15 @@ namespace CaroClient
         {
             float x = padding + col * cellSize + cellSize / 2f;
             float y = padding + row * cellSize + cellSize / 2f;
-            float r = 4f;
-            using (SolidBrush brush = new SolidBrush(Color.FromArgb(120, 100, 70)))
+            float r = 3.5f;
+
+            // Halo glow
+            using (SolidBrush glow = new SolidBrush(Color.FromArgb(50, 0, 229, 255)))
+            {
+                g.FillEllipse(glow, x - r * 2, y - r * 2, r * 4, r * 4);
+            }
+            // Center point
+            using (SolidBrush brush = new SolidBrush(Color.FromArgb(0, 229, 255)))
             {
                 g.FillEllipse(brush, x - r, y - r, r * 2, r * 2);
             }
@@ -265,7 +294,17 @@ namespace CaroClient
             float x2 = padding + (col + 1) * cellSize - margin;
             float y2 = padding + (row + 1) * cellSize - margin;
 
-            using (Pen xPen = new Pen(Color.FromArgb(229, 57, 53), 3.5f)) // Crimson Red
+            // Outer Crimson Glow
+            using (Pen glowPen = new Pen(Color.FromArgb(70, 255, 46, 99), 7f))
+            {
+                glowPen.StartCap = LineCap.Round;
+                glowPen.EndCap = LineCap.Round;
+                g.DrawLine(glowPen, x1, y1, x2, y2);
+                g.DrawLine(glowPen, x1, y2, x2, y1);
+            }
+
+            // Core Neon Red Stroke
+            using (Pen xPen = new Pen(Color.FromArgb(255, 46, 99), 3.5f))
             {
                 xPen.StartCap = LineCap.Round;
                 xPen.EndCap = LineCap.Round;
@@ -281,7 +320,14 @@ namespace CaroClient
             float y = padding + row * cellSize + margin;
             float diameter = cellSize - margin * 2;
 
-            using (Pen oPen = new Pen(Color.FromArgb(30, 136, 229), 3.5f)) // Royal Blue
+            // Outer Cyan Glow
+            using (Pen glowPen = new Pen(Color.FromArgb(70, 0, 229, 255), 7f))
+            {
+                g.DrawEllipse(glowPen, x, y, diameter, diameter);
+            }
+
+            // Core Electric Cyan Stroke
+            using (Pen oPen = new Pen(Color.FromArgb(0, 229, 255), 3.5f))
             {
                 g.DrawEllipse(oPen, x, y, diameter, diameter);
             }

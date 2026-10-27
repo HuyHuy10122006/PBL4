@@ -7,11 +7,12 @@ namespace CaroServer
     {
         private readonly ConcurrentDictionary<string, Room> _rooms = new ConcurrentDictionary<string, Room>();
         private int _roomCounter = 1000;
+        public Func<Task>? OnRoomStateChanged { get; set; }
 
-        public async Task<Room> CreateRoomAsync(ClientSession creator, GameMode mode, AIDifficulty difficulty, int boardSize = 15)
+        public async Task<Room> CreateRoomAsync(ClientSession creator, GameMode mode, AIDifficulty difficulty, int boardSize = 15, bool blockBothEndsRule = true, int timePerTurn = 30)
         {
             string roomId = $"R{Interlocked.Increment(ref _roomCounter)}";
-            Room room = new Room(roomId, mode, difficulty, creator, boardSize);
+            Room room = new Room(roomId, mode, difficulty, creator, boardSize, blockBothEndsRule, timePerTurn);
             _rooms[roomId] = room;
 
             var resp = Packet.Create(PacketType.CreateRoomResp, new CreateRoomRespData
@@ -28,6 +29,11 @@ namespace CaroServer
             if (mode == GameMode.PvAI)
             {
                 await room.StartGameAsync();
+            }
+
+            if (OnRoomStateChanged != null)
+            {
+                await OnRoomStateChanged();
             }
 
             return room;
@@ -105,10 +111,93 @@ namespace CaroServer
 
                 // Start game
                 await room.StartGameAsync();
+
+                if (OnRoomStateChanged != null)
+                {
+                    await OnRoomStateChanged();
+                }
                 return true;
             }
 
             return false;
+        }
+
+        public List<RoomInfoData> GetActiveRooms()
+        {
+            var list = new List<RoomInfoData>();
+            foreach (var room in _rooms.Values)
+            {
+                list.Add(new RoomInfoData
+                {
+                    RoomId = room.RoomId,
+                    Mode = room.Mode,
+                    Player1Name = room.Player1.PlayerName,
+                    Player2Name = (room.Mode == GameMode.PvAI) ? "Máy (AI)" : (room.Player2?.PlayerName ?? string.Empty),
+                    SpectatorCount = room.SpectatorCount,
+                    Status = room.Engine.Status,
+                    IsFull = room.IsFull,
+                    CanJoinAsPlayer = (room.Mode == GameMode.PvP && !room.IsFull),
+                    BlockBothEndsRule = room.BlockBothEndsRule,
+                    TimePerTurn = room.TimePerTurn
+                });
+            }
+            return list;
+        }
+
+        public async Task<bool> SpectateRoomAsync(ClientSession spectator, string roomId)
+        {
+            if (!_rooms.TryGetValue(roomId, out Room? room))
+            {
+                var errResp = Packet.Create(PacketType.SpectateRoomResp, new SpectateRoomRespData
+                {
+                    Success = false,
+                    Message = "Không tìm thấy phòng chơi này."
+                });
+                await spectator.SendPacketAsync(errResp);
+                return false;
+            }
+
+            if (spectator.CurrentRoom != null)
+            {
+                var errResp = Packet.Create(PacketType.SpectateRoomResp, new SpectateRoomRespData
+                {
+                    Success = false,
+                    Message = "Bạn đang ở trong phòng khác rồi!"
+                });
+                await spectator.SendPacketAsync(errResp);
+                return false;
+            }
+
+            room.AddSpectator(spectator);
+
+            var resp = Packet.Create(PacketType.SpectateRoomResp, new SpectateRoomRespData
+            {
+                Success = true,
+                RoomId = roomId,
+                Player1Name = room.Player1.PlayerName,
+                Player2Name = (room.Mode == GameMode.PvAI) ? "Máy (AI)" : (room.Player2?.PlayerName ?? "Chưa có"),
+                Mode = room.Mode,
+                BlockBothEndsRule = room.BlockBothEndsRule,
+                TimePerTurn = room.TimePerTurn,
+                CurrentState = room.GetCurrentGameStateData(),
+                Message = $"Đang xem trực tiếp phòng {roomId}"
+            });
+            await spectator.SendPacketAsync(resp);
+
+            // Notify room via chat
+            var chatPacket = Packet.Create(PacketType.ChatMessage, new ChatMessageData
+            {
+                SenderName = "Hệ thống",
+                Message = $"{spectator.PlayerName} đã vào xem trận đấu."
+            });
+            await room.BroadcastPacketAsync(chatPacket);
+
+            if (OnRoomStateChanged != null)
+            {
+                await OnRoomStateChanged();
+            }
+
+            return true;
         }
 
         public async Task LeaveRoomAsync(ClientSession session)
@@ -126,8 +215,36 @@ namespace CaroServer
 
             Room room = session.CurrentRoom;
 
-            // Can only block leave when game is actively being played (both players present)
-            bool isGameActivelyPlaying = room.IsFull && room.Engine.Status == GameStateStatus.Playing;
+            // Xử lý người xem rời phòng (không ảnh hưởng ván đấu của 2 người chơi)
+            if (session.IsSpectator)
+            {
+                room.RemoveSpectator(session.PlayerId);
+                session.CurrentRoom = null;
+                session.IsSpectator = false;
+
+                var okResp = Packet.Create(PacketType.LeaveRoomResp, new LeaveRoomRespData
+                {
+                    Success = true,
+                    Message = "Đã rời chế độ xem phòng."
+                });
+                await session.SendPacketAsync(okResp);
+
+                var chatPacket = Packet.Create(PacketType.ChatMessage, new ChatMessageData
+                {
+                    SenderName = "Hệ thống",
+                    Message = $"{session.PlayerName} đã rời phòng xem."
+                });
+                await room.BroadcastPacketAsync(chatPacket);
+
+                if (OnRoomStateChanged != null)
+                {
+                    await OnRoomStateChanged();
+                }
+                return;
+            }
+
+            // Can only block leave when game is actively being played between 2 human players (PvP)
+            bool isGameActivelyPlaying = (room.Mode == GameMode.PvP) && room.IsFull && (room.Engine.Status == GameStateStatus.Playing);
             if (isGameActivelyPlaying)
             {
                 var resp = Packet.Create(PacketType.LeaveRoomResp, new LeaveRoomRespData
@@ -139,7 +256,8 @@ namespace CaroServer
                 return;
             }
 
-            // Remove room
+            // Remove room & stop timer
+            room.StopTurnTimeoutTimer();
             _rooms.TryRemove(room.RoomId, out _);
             session.CurrentRoom = null;
 
@@ -157,14 +275,19 @@ namespace CaroServer
             }
 
             // Confirm leave to the player
-            var okResp = Packet.Create(PacketType.LeaveRoomResp, new LeaveRoomRespData
+            var okRespRoom = Packet.Create(PacketType.LeaveRoomResp, new LeaveRoomRespData
             {
                 Success = true,
                 Message = "Đã thoát phòng thành công."
             });
-            await session.SendPacketAsync(okResp);
+            await session.SendPacketAsync(okRespRoom);
 
             Console.WriteLine($"[ROOM] {session.PlayerName} đã rời phòng {room.RoomId}");
+
+            if (OnRoomStateChanged != null)
+            {
+                await OnRoomStateChanged();
+            }
         }
 
         public async Task HandleClientDisconnectedAsync(ClientSession session)
@@ -172,6 +295,20 @@ namespace CaroServer
             if (session.CurrentRoom != null)
             {
                 Room room = session.CurrentRoom;
+
+                if (session.IsSpectator)
+                {
+                    room.RemoveSpectator(session.PlayerId);
+                    session.CurrentRoom = null;
+                    session.IsSpectator = false;
+                    if (OnRoomStateChanged != null)
+                    {
+                        await OnRoomStateChanged();
+                    }
+                    return;
+                }
+
+                room.StopTurnTimeoutTimer();
                 _rooms.TryRemove(room.RoomId, out _);
 
                 ClientSession? opponent = (session.PlayerId == room.Player1.PlayerId) ? room.Player2 : room.Player1;
@@ -184,6 +321,11 @@ namespace CaroServer
                         Message = $"{session.PlayerName} đã ngắt kết nối. Trận đấu kết thúc!"
                     });
                     await opponent.SendPacketAsync(dcPacket);
+                }
+
+                if (OnRoomStateChanged != null)
+                {
+                    await OnRoomStateChanged();
                 }
             }
         }

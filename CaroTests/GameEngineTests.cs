@@ -86,6 +86,27 @@ namespace CaroTests
         }
 
         [Fact]
+        public void CheckWin_BlockedBothEnds_WinsWhenFreeRuleEnabled()
+        {
+            var engine = new GameEngine(15, blockBothEndsRule: false);
+
+            // Block ends with O at (7,2) and (7,8)
+            engine.MakeMove(0, 0, 'X', out _); engine.MakeMove(7, 2, 'O', out _);
+            engine.MakeMove(0, 1, 'X', out _); engine.MakeMove(7, 8, 'O', out _);
+
+            // X plays (7,3), (7,4), (7,5), (7,6), (7,7)
+            engine.MakeMove(7, 3, 'X', out _); engine.MakeMove(1, 0, 'O', out _);
+            engine.MakeMove(7, 4, 'X', out _); engine.MakeMove(1, 1, 'O', out _);
+            engine.MakeMove(7, 5, 'X', out _); engine.MakeMove(1, 2, 'O', out _);
+            engine.MakeMove(7, 6, 'X', out _); engine.MakeMove(1, 3, 'O', out _);
+            engine.MakeMove(7, 7, 'X', out _);
+
+            // In free rule, 5-in-a-row ALWAYS wins!
+            Assert.Equal(GameStateStatus.GameOver, engine.Status);
+            Assert.Equal('X', engine.WinnerSymbol);
+        }
+
+        [Fact]
         public void MinimaxAI_MustBlockWinningMove()
         {
             var engine = new GameEngine(15, blockBothEndsRule: true);
@@ -102,6 +123,18 @@ namespace CaroTests
             Point aiMove = MinimaxAI.FindBestMove(engine, 'O', AIDifficulty.Hard);
 
             Assert.True((aiMove.Row == 7 && aiMove.Col == 2) || (aiMove.Row == 7 && aiMove.Col == 7));
+        }
+
+        [Fact]
+        public void Surrender_UpdatesStatusToGameOverAndSetsWinner()
+        {
+            var engine = new GameEngine(15);
+            Assert.Equal(GameStateStatus.Playing, engine.Status);
+
+            engine.Surrender('O');
+
+            Assert.Equal(GameStateStatus.GameOver, engine.Status);
+            Assert.Equal('O', engine.WinnerSymbol);
         }
     }
 }
