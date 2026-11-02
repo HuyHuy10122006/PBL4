@@ -100,7 +100,11 @@ namespace CaroClient
         Gamepad,
         Plus,
         Link,
-        Settings
+        Settings,
+        History,
+        Trophy,
+        User,
+        Login
     }
 
     public class CyberButton : Button
@@ -340,6 +344,35 @@ namespace CaroClient
                             g.DrawLine(pen, x1, y1, x2, y2);
                         }
                         break;
+
+                    case CyberIcon.History:
+                        // Đồng hồ lịch sử
+                        g.DrawEllipse(pen, x + 1, y + 1, size - 2, size - 2);
+                        g.DrawLine(pen, x + size / 2, y + 4, x + size / 2, y + size / 2);
+                        g.DrawLine(pen, x + size / 2, y + size / 2, x + size / 2 + 4, y + size / 2);
+                        break;
+
+                    case CyberIcon.Trophy:
+                        // Chiếc cúp vô địch
+                        g.DrawArc(pen, x + 3, y + 2, size - 6, 8, 0, 180);
+                        g.DrawLine(pen, x + 3, y + 2, x + size - 3, y + 2);
+                        g.DrawLine(pen, x + size / 2, y + 10, x + size / 2, y + size - 4);
+                        g.DrawLine(pen, x + 4, y + size - 3, x + size - 4, y + size - 3);
+                        break;
+
+                    case CyberIcon.User:
+                        // Biểu tượng người dùng (Đầu + Vai)
+                        g.DrawEllipse(pen, x + size / 2 - 3, y + 2, 6, 6);
+                        g.DrawArc(pen, x + 2, y + 9, size - 4, 10, 180, 180);
+                        break;
+
+                    case CyberIcon.Login:
+                        // Biểu tượng Chìa khóa / Đăng nhập
+                        g.DrawEllipse(pen, x + 2, y + size / 2 - 4, 7, 7);
+                        g.DrawLine(pen, x + 9, y + size / 2, x + size - 2, y + size / 2);
+                        g.DrawLine(pen, x + size - 5, y + size / 2, x + size - 5, y + size / 2 + 3);
+                        g.DrawLine(pen, x + size - 2, y + size / 2, x + size - 2, y + size / 2 + 3);
+                        break;
                 }
             }
         }
@@ -546,18 +579,18 @@ namespace CaroClient
 
             if (hasSubtitle)
             {
-                // Content height: Icon(20) + Title(18) + Subtitle(14) ~ 56px
-                float startY = Math.Max(8f, (Height - 56f) / 2f);
-                iconCenterY = startY + 10f;
-                titleY = startY + 23f;
-                subY = startY + 41f;
+                // Content height: Icon(20) + Title(18) + Subtitle(14) ~ 58px
+                float startY = Math.Max(8f, (Height - 58f) / 2f);
+                iconCenterY = startY + 11f;
+                titleY = startY + 26f;
+                subY = startY + 47f;
             }
             else
             {
                 // Content height: Icon(20) + Title(18) ~ 40px
                 float startY = Math.Max(8f, (Height - 40f) / 2f);
                 iconCenterY = startY + 10f;
-                titleY = startY + 24f;
+                titleY = startY + 25f;
                 subY = 0f;
             }
 

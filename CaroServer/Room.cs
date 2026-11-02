@@ -7,7 +7,7 @@ namespace CaroServer
         public string RoomId { get; }
         public GameMode Mode { get; }
         public AIDifficulty Difficulty { get; }
-        public ClientSession Player1 { get; }
+        public ClientSession Player1 { get; private set; }
         public ClientSession? Player2 { get; private set; }
         public GameEngine Engine { get; }
         private readonly System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession> _spectators = new System.Collections.Concurrent.ConcurrentDictionary<string, ClientSession>();
@@ -16,6 +16,13 @@ namespace CaroServer
         public bool BlockBothEndsRule { get; }
         private CancellationTokenSource? _turnTimeoutCts;
         private readonly object _timerLock = new object();
+        private bool _isEloRecorded = false;
+
+        public bool IsWaitingForReconnect { get; private set; } = false;
+        public string? DisconnectedPlayerId { get; private set; }
+        public string? DisconnectedPlayerName { get; private set; }
+        private CancellationTokenSource? _reconnectTimeoutCts;
+        private readonly object _reconnectLock = new object();
 
         public char Player1Symbol => 'X';
         public char Player2Symbol => 'O';
@@ -96,6 +103,7 @@ namespace CaroServer
             else
             {
                 StopTurnTimeoutTimer();
+                await CheckAndRecordMatchResultAsync();
             }
 
             // Check if game continues and it's AI turn
@@ -115,6 +123,7 @@ namespace CaroServer
                     else
                     {
                         StopTurnTimeoutTimer();
+                        await CheckAndRecordMatchResultAsync();
                     }
                 });
             }
@@ -136,6 +145,8 @@ namespace CaroServer
                 return;
             }
 
+            _isEloRecorded = false;
+            StopReconnectTimer();
             Engine.Reset();
             await BroadcastGameStateAsync();
             StartTurnTimeoutTimer();
@@ -147,6 +158,7 @@ namespace CaroServer
             if (Engine.Status != GameStateStatus.Playing) return;
 
             StopTurnTimeoutTimer();
+            StopReconnectTimer();
 
             char winner = (surrenderPlayer.PlayerId == Player1.PlayerId) ? Player2Symbol : Player1Symbol;
             string winnerName = (winner == 'X') ? Player1.PlayerName : (Player2?.PlayerName ?? "Máy (AI)");
@@ -160,6 +172,7 @@ namespace CaroServer
 
             var packet = Packet.Create(PacketType.GameStateUpdate, stateData);
             await BroadcastPacketAsync(packet);
+            await CheckAndRecordMatchResultAsync();
         }
 
         public async Task HandleTurnTimeoutAsync()
@@ -167,6 +180,7 @@ namespace CaroServer
             if (Engine.Status != GameStateStatus.Playing) return;
 
             StopTurnTimeoutTimer();
+            StopReconnectTimer();
 
             char timedOutSymbol = Engine.CurrentTurnSymbol;
             char winner = (timedOutSymbol == 'X') ? Player2Symbol : Player1Symbol;
@@ -182,6 +196,173 @@ namespace CaroServer
 
             var packet = Packet.Create(PacketType.GameStateUpdate, stateData);
             await BroadcastPacketAsync(packet);
+            await CheckAndRecordMatchResultAsync();
+        }
+
+        public async Task StartReconnectGracePeriodAsync(ClientSession disconnectedPlayer, Func<Room, Task>? onTimeoutCallback = null)
+        {
+            lock (_reconnectLock)
+            {
+                _reconnectTimeoutCts?.Cancel();
+                _reconnectTimeoutCts?.Dispose();
+                _reconnectTimeoutCts = new CancellationTokenSource();
+
+                IsWaitingForReconnect = true;
+                DisconnectedPlayerId = disconnectedPlayer.PlayerId;
+                DisconnectedPlayerName = disconnectedPlayer.PlayerName;
+
+                var token = _reconnectTimeoutCts.Token;
+
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        // Thời gian chờ kết nối lại: 30 giây (trong thời gian này, turn timer vẫn chạy như thường)
+                        await Task.Delay(30000, token);
+                        if (!token.IsCancellationRequested && IsWaitingForReconnect && Engine.Status == GameStateStatus.Playing)
+                        {
+                            await HandleReconnectTimeoutAsync(onTimeoutCallback);
+                        }
+                    }
+                    catch (OperationCanceledException) { }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"[ReconnectTimer] Lỗi: {ex.Message}");
+                    }
+                });
+            }
+            await Task.CompletedTask;
+        }
+
+        public async Task HandleReconnectTimeoutAsync(Func<Room, Task>? onTimeoutCallback = null)
+        {
+            lock (_reconnectLock)
+            {
+                if (!IsWaitingForReconnect || Engine.Status != GameStateStatus.Playing) return;
+                IsWaitingForReconnect = false;
+                _reconnectTimeoutCts?.Cancel();
+                _reconnectTimeoutCts = null;
+            }
+
+            StopTurnTimeoutTimer();
+
+            // Người mất kết nối quá 30s bị xử thua
+            char winner = (DisconnectedPlayerId == Player1.PlayerId) ? Player2Symbol : Player1Symbol;
+            string winnerName = (winner == 'X') ? Player1.PlayerName : (Player2?.PlayerName ?? "Máy (AI)");
+
+            Engine.Surrender(winner);
+
+            var stateData = CreateGameStateData();
+            stateData.Status = GameStateStatus.GameOver;
+            stateData.WinnerSymbol = winner;
+            stateData.StatusMessage = $"{DisconnectedPlayerName} đã mất kết nối quá 30 giây! {winnerName} giành chiến thắng!";
+
+            var packet = Packet.Create(PacketType.GameStateUpdate, stateData);
+            await BroadcastPacketAsync(packet);
+            await CheckAndRecordMatchResultAsync();
+
+            if (onTimeoutCallback != null)
+            {
+                try { await onTimeoutCallback(this); } catch { }
+            }
+        }
+
+        public async Task<bool> ReconnectPlayerAsync(ClientSession newSession)
+        {
+            if (!IsWaitingForReconnect) return false;
+            if (newSession.PlayerName != DisconnectedPlayerName && newSession.PlayerId != DisconnectedPlayerId)
+                return false;
+
+            lock (_reconnectLock)
+            {
+                _reconnectTimeoutCts?.Cancel();
+                _reconnectTimeoutCts?.Dispose();
+                _reconnectTimeoutCts = null;
+                IsWaitingForReconnect = false;
+            }
+
+            char mySymbol;
+            string opponentName;
+            if (Player1.PlayerName == DisconnectedPlayerName || Player1.PlayerId == DisconnectedPlayerId)
+            {
+                Player1 = newSession;
+                mySymbol = Player1Symbol;
+                opponentName = Player2?.PlayerName ?? "Máy (AI)";
+            }
+            else
+            {
+                Player2 = newSession;
+                mySymbol = Player2Symbol;
+                opponentName = Player1.PlayerName;
+            }
+
+            newSession.CurrentRoom = this;
+
+            // Phản hồi dữ liệu ván cờ hiện tại cho người vừa kết nối lại
+            var respData = new ReconnectRespData
+            {
+                Success = true,
+                RoomId = RoomId,
+                PlayerSymbol = mySymbol,
+                IsYourTurn = (Engine.CurrentTurnSymbol == mySymbol),
+                OpponentName = opponentName,
+                Mode = Mode,
+                BlockBothEndsRule = BlockBothEndsRule,
+                TimePerTurn = TimePerTurn,
+                CurrentState = GetCurrentGameStateData(),
+                Message = $"Đã kết nối lại phòng {RoomId} thành công!"
+            };
+            await newSession.SendPacketAsync(Packet.Create(PacketType.ReconnectResp, respData));
+
+            // Báo cho đối thủ và khán giả biết người chơi đã kết nối lại
+            var reconnectedPacket = Packet.Create(PacketType.OpponentReconnected, new OpponentReconnectedData
+            {
+                ReconnectedPlayerName = newSession.PlayerName,
+                Message = $"{newSession.PlayerName} đã kết nối lại ván đấu!"
+            });
+            await BroadcastPacketAsync(reconnectedPacket);
+
+            return true;
+        }
+
+        public void StopReconnectTimer()
+        {
+            lock (_reconnectLock)
+            {
+                try
+                {
+                    _reconnectTimeoutCts?.Cancel();
+                    _reconnectTimeoutCts?.Dispose();
+                }
+                catch { }
+                finally
+                {
+                    _reconnectTimeoutCts = null;
+                    IsWaitingForReconnect = false;
+                }
+            }
+        }
+
+        private async Task CheckAndRecordMatchResultAsync()
+        {
+            if (_isEloRecorded || Mode != GameMode.PvP || Player2 == null) return;
+            if (Engine.Status != GameStateStatus.GameOver) return;
+
+            _isEloRecorded = true;
+            double score1 = 0.5;
+            string? winnerUsername = null;
+            if (Engine.WinnerSymbol == 'X')
+            {
+                score1 = 1.0;
+                winnerUsername = Player1.PlayerName;
+            }
+            else if (Engine.WinnerSymbol == 'O')
+            {
+                score1 = 0.0;
+                winnerUsername = Player2.PlayerName;
+            }
+
+            await Program.RecordMatchResultAsync(Player1, Player2, winnerUsername, score1, Engine.TotalMovesCount);
         }
 
         private void StartTurnTimeoutTimer()

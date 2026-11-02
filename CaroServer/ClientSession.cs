@@ -7,6 +7,11 @@ namespace CaroServer
     {
         public string PlayerId { get; }
         public string PlayerName { get; set; } = "Player";
+        public int Elo { get; set; } = 1000;
+        public int Wins { get; set; }
+        public int Losses { get; set; }
+        public int Draws { get; set; }
+        public bool IsAuthenticated { get; set; } = false;
         public TcpClient Client { get; }
         public NetworkStream Stream { get; }
         public Room? CurrentRoom { get; set; }

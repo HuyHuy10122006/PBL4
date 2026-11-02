@@ -57,25 +57,16 @@ namespace CaroClient
             RelayoutCreateBox();
             this.Shown += (s, e) => RelayoutCreateBox();
 
-            // Khởi tạo NetworkClient sau khi Form và SynchronizationContext đã sẵn sàng
             _netClient = new NetworkClient();
-            _netClient.OnConnectionCompleted += NetClient_OnConnectionCompleted;
-            _netClient.OnCreateRoomResponse += NetClient_OnCreateRoomResponse;
-            _netClient.OnJoinRoomResponse += NetClient_OnJoinRoomResponse;
-            _netClient.OnLeaveRoomResponse += NetClient_OnLeaveRoomResponse;
-            _netClient.OnGameStateUpdated += NetClient_OnGameStateUpdated;
-            _netClient.OnChatMessageReceived += NetClient_OnChatMessageReceived;
-            _netClient.OnOpponentDisconnected += NetClient_OnOpponentDisconnected;
-            _netClient.OnErrorOccurred += NetClient_OnErrorOccurred;
-            _netClient.OnPlayerListReceived += NetClient_OnPlayerListReceived;
-            _netClient.OnRoomListReceived += NetClient_OnRoomListReceived;
-            _netClient.OnSpectateRoomResponse += NetClient_OnSpectateRoomResponse;
+            WireUpNetClientEvents();
 
             // Detect and display initial info
             InitLanInformation();
 
-            // Setup Featured Rooms table
+            // Setup Tables
             InitFeaturedRoomsTable();
+            InitMatchHistoryTable();
+            InitLeaderboardTable();
             UpdateRoomListUI(new List<RoomInfoData>());
 
             // Wire up Connected Players owner-draw
@@ -84,15 +75,46 @@ namespace CaroClient
             // Board Click Event
             boardControl1.OnCellClicked += BoardControl1_OnCellClicked;
 
-            // Start on Home View
-            SwitchToView(pnlHomeView, btnNavHome);
             UpdateUIState(false);
             UpdateServerAndPlayerInfo(false);
+            SwitchToView(pnlHomeView, btnNavHome);
+        }
+
+        private void WireUpNetClientEvents()
+        {
+            _netClient.OnConnectionCompleted += NetClient_OnConnectionCompleted;
+            _netClient.OnLoginCompleted += NetClient_OnLoginCompleted;
+            _netClient.OnRegisterCompleted += NetClient_OnRegisterCompleted;
+            _netClient.OnCreateRoomResponse += NetClient_OnCreateRoomResponse;
+            _netClient.OnJoinRoomResponse += NetClient_OnJoinRoomResponse;
+            _netClient.OnLeaveRoomResponse += NetClient_OnLeaveRoomResponse;
+            _netClient.OnGameStateUpdated += NetClient_OnGameStateUpdated;
+            _netClient.OnChatMessageReceived += NetClient_OnChatMessageReceived;
+            _netClient.OnOpponentDisconnected += NetClient_OnOpponentDisconnected;
+            _netClient.OnOpponentReconnecting += NetClient_OnOpponentReconnecting;
+            _netClient.OnOpponentReconnected += NetClient_OnOpponentReconnected;
+            _netClient.OnReconnectResponse += NetClient_OnReconnectResponse;
+            _netClient.OnErrorOccurred += NetClient_OnErrorOccurred;
+            _netClient.OnPlayerListReceived += NetClient_OnPlayerListReceived;
+            _netClient.OnRoomListReceived += NetClient_OnRoomListReceived;
+            _netClient.OnSpectateRoomResponse += NetClient_OnSpectateRoomResponse;
+            _netClient.OnMatchHistoryReceived += NetClient_OnMatchHistoryReceived;
+            _netClient.OnLeaderboardReceived += NetClient_OnLeaderboardReceived;
+            _netClient.OnEloUpdated += NetClient_OnEloUpdated;
         }
 
         private void InitLanInformation()
         {
-            lblProfileName.Text = string.IsNullOrWhiteSpace(txtName.Text) ? "Player" : txtName.Text.Trim();
+            string localIp = GetLocalIpAddress();
+            txtIp.Text = localIp;
+            txtPort.Text = "8888";
+            txtRegIp.Text = localIp;
+            txtRegPort.Text = "8888";
+            lblProfileName.Text = string.IsNullOrWhiteSpace(txtName.Text) ? "Khách (Offline)" : txtName.Text.Trim();
+            lblProfileLevel.Text = "Chế độ Offline";
+            lblProfileXp.Text = "Chơi với Máy";
+            btnLogout.Visible = false;
+            UpdateProfileViewUI();
         }
 
         private string GetLocalIpAddress()
@@ -399,10 +421,16 @@ namespace CaroClient
             pnlGameView.Visible = (targetView == pnlGameView);
             pnlCreateRoomView.Visible = (targetView == pnlCreateRoomView);
             pnlJoinRoomView.Visible = (targetView == pnlJoinRoomView);
+            pnlHistoryView.Visible = (targetView == pnlHistoryView);
+            pnlLeaderboardView.Visible = (targetView == pnlLeaderboardView);
             pnlSettingsView.Visible = (targetView == pnlSettingsView);
 
+            // Phần chat chỉ hiện ở phần bàn cờ khi 2 người chơi online đánh với nhau (hoặc đang xem phòng)
+            bool showChat = (targetView == pnlGameView) && !_isOfflineGame && (_isInRoom || _netClient.IsSpectator);
+            pnlRightBar.Visible = showChat;
+
             // Cập nhật trạng thái hiển thị của các nút menu thanh bên
-            CyberButton[] navs = { btnNavHome, btnNavGame, btnNavCreate, btnNavJoin, btnNavSettings };
+            CyberButton[] navs = { btnNavHome, btnNavGame, btnNavCreate, btnNavJoin, btnNavLeaderboard, btnNavHistory };
             foreach (var btn in navs)
             {
                 bool isActive = (btn == activeNav);
@@ -410,6 +438,20 @@ namespace CaroClient
                 btn.NormalColor = isActive ? UITheme.AccentBlue : Color.FromArgb(14, 24, 46);
                 btn.Invalidate();
             }
+
+            if (!_netClient.IsConnected)
+            {
+                btnNavSettings.Text = "⚡ ĐĂNG NHẬP";
+                btnNavSettings.IsPrimaryGradient = (activeNav == btnNavSettings);
+                btnNavSettings.NormalColor = (activeNav == btnNavSettings) ? UITheme.AccentBlue : Color.FromArgb(14, 24, 46);
+            }
+            else
+            {
+                btnNavSettings.Text = "⎋ Đăng xuất";
+                btnNavSettings.IsPrimaryGradient = false;
+                btnNavSettings.NormalColor = Color.FromArgb(36, 20, 32);
+            }
+            btnNavSettings.Invalidate();
 
             if (targetView == pnlCreateRoomView)
             {
@@ -420,6 +462,43 @@ namespace CaroClient
             if (targetView == pnlJoinRoomView && _netClient != null && _netClient.IsConnected)
             {
                 _ = _netClient.RequestRoomListAsync();
+            }
+
+            // Tự động làm mới hồ sơ & lịch sử đấu khi vào màn hình Hồ sơ cá nhân
+            if (targetView == pnlHistoryView)
+            {
+                UpdateProfileViewUI();
+                if (_netClient != null && _netClient.IsConnected)
+                {
+                    lblNoHistory.Text = "Đang tải dữ liệu lịch sử thi đấu...";
+                    lblNoHistory.Visible = true;
+                    dgvMatchHistory.Visible = false;
+                    _ = _netClient.RequestMatchHistoryAsync();
+                }
+                else
+                {
+                    lblNoHistory.Text = "Bạn đang chơi ở chế độ Ngoại tuyến (Khách).\nHãy bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để lưu trữ lịch sử thi đấu online!";
+                    lblNoHistory.Visible = true;
+                    dgvMatchHistory.Visible = false;
+                }
+            }
+
+            // Tự động làm mới bảng xếp hạng khi vào màn hình Bảng xếp hạng
+            if (targetView == pnlLeaderboardView)
+            {
+                if (_netClient != null && _netClient.IsConnected)
+                {
+                    lblNoLeaderboard.Text = "Đang tải dữ liệu Bảng xếp hạng...";
+                    lblNoLeaderboard.Visible = true;
+                    dgvLeaderboard.Visible = false;
+                    _ = _netClient.RequestLeaderboardAsync();
+                }
+                else
+                {
+                    lblNoLeaderboard.Text = "Bạn chưa kết nối Server.\nVui lòng bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để xem Bảng xếp hạng!";
+                    lblNoLeaderboard.Visible = true;
+                    dgvLeaderboard.Visible = false;
+                }
             }
         }
 
@@ -457,43 +536,311 @@ namespace CaroClient
         }
 
         // =============================================================
-        // Network Connection Logic
+        // Network Connection & Auth Logic
         // =============================================================
+
+        private void SwitchAuthTab(bool isLogin)
+        {
+            pnlAuthBodyLogin.Visible = isLogin;
+            pnlAuthBodyRegister.Visible = !isLogin;
+
+            if (isLogin)
+            {
+                btnTabLogin.IsPrimaryGradient = true;
+                btnTabLogin.NormalColor = Color.Empty;
+                btnTabRegister.IsPrimaryGradient = false;
+                btnTabRegister.NormalColor = Color.FromArgb(14, 25, 48);
+                txtName.Focus();
+            }
+            else
+            {
+                btnTabLogin.IsPrimaryGradient = false;
+                btnTabLogin.NormalColor = Color.FromArgb(14, 25, 48);
+                btnTabRegister.IsPrimaryGradient = true;
+                txtRegIp.Text = txtIp.Text;
+                txtRegPort.Text = txtPort.Text;
+                txtRegName.Focus();
+            }
+        }
+
+        private void HandleNavSettingsClick()
+        {
+            if (_netClient.IsConnected)
+            {
+                var ask = MessageBox.Show("Bạn đang đăng nhập. Bạn có muốn đăng xuất để chuyển về chế độ Khách (Offline)?", "Xác nhận đăng xuất", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (ask == DialogResult.Yes)
+                {
+                    btnLogout_Click(this, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                SwitchToView(pnlSettingsView, btnNavSettings);
+            }
+        }
 
         private async void btnConnect_Click(object sender, EventArgs e)
         {
             if (_netClient.IsConnected)
             {
-                _netClient.Disconnect();
-                UpdateUIState(false);
-                UpdateServerAndPlayerInfo(false);
-                UpdateRoomListUI(new List<RoomInfoData>());
-                lblStatusBadge.Text = "● Chưa kết nối";
-                lblStatusBadge.ForeColor = Color.FromArgb(255, 75, 75);
-                btnConnect.Text = "Kết nối Server";
-                AppendLog("Hệ thống", "Đã ngắt kết nối khỏi Server.");
+                btnLogout_Click(sender, e);
                 return;
             }
 
             string ip = txtIp.Text.Trim();
-            if (!int.TryParse(txtPort.Text.Trim(), out int port))
+            if (string.IsNullOrWhiteSpace(ip)) ip = "127.0.0.1";
+            int port = 8888;
+            if (int.TryParse(txtPort.Text.Trim(), out int customPort))
             {
-                MessageBox.Show("Cổng Port không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                port = customPort;
+            }
+
+            string username = txtName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                MessageBox.Show("Vui lòng nhập Tên đăng nhập (Username).", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtName.Focus();
                 return;
             }
 
-            string name = txtName.Text.Trim();
-            if (string.IsNullOrWhiteSpace(name))
+            string password = txtPassword.Text;
+            if (string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Vui lòng nhập tên người chơi.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập Mật khẩu (Password).", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword.Focus();
                 return;
             }
 
             btnConnect.Enabled = false;
-            lblStatusBadge.Text = "● Đang kết nối...";
+            lblStatusBadge.Text = "● Đang kết nối & đăng nhập...";
             lblStatusBadge.ForeColor = Color.FromArgb(255, 145, 0);
 
-            await _netClient.ConnectAsync(ip, port, name);
+            await _netClient.ConnectAndLoginAsync(ip, port, username, password);
+        }
+
+        private string _lastRegUsername = "";
+        private string _lastRegPassword = "";
+        private string _lastRegIp = "";
+        private int _lastRegPort = 8888;
+
+        private async void btnRegister_Click(object? sender, EventArgs e)
+        {
+            string ip = txtRegIp.Text.Trim();
+            if (string.IsNullOrWhiteSpace(ip)) ip = "127.0.0.1";
+            int port = 8888;
+            if (int.TryParse(txtRegPort.Text.Trim(), out int customPort))
+            {
+                port = customPort;
+            }
+
+            string username = txtRegName.Text.Trim();
+            if (string.IsNullOrWhiteSpace(username) || username.Length < 3)
+            {
+                MessageBox.Show("Vui lòng nhập tên tài khoản muốn tạo (ít nhất 3 ký tự).", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRegName.Focus();
+                return;
+            }
+
+            string password = txtRegPassword.Text;
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 4)
+            {
+                MessageBox.Show("Vui lòng nhập mật khẩu (ít nhất 4 ký tự).", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRegPassword.Focus();
+                return;
+            }
+
+            string confirm = txtRegConfirmPassword.Text;
+            if (password != confirm)
+            {
+                MessageBox.Show("Mật khẩu xác nhận không trùng khớp! Vui lòng nhập lại chính xác.", "Xác nhận không khớp", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRegConfirmPassword.Focus();
+                return;
+            }
+
+            _lastRegUsername = username;
+            _lastRegPassword = password;
+            _lastRegIp = ip;
+            _lastRegPort = port;
+
+            btnRegister.Enabled = false;
+            lblRegStatusBadge.Text = "● Đang gửi yêu cầu tạo tài khoản lên Server...";
+            lblRegStatusBadge.ForeColor = Color.FromArgb(255, 145, 0);
+
+            await _netClient.ConnectAndRegisterAsync(ip, port, username, password);
+        }
+
+        private void btnLogout_Click(object? sender, EventArgs e)
+        {
+            if (_netClient.IsConnected)
+            {
+                _netClient.Disconnect();
+            }
+
+            // Xóa mật khẩu trong các ô nhập
+            txtPassword.Text = "";
+            txtRegPassword.Text = "";
+            txtRegConfirmPassword.Text = "";
+
+            // Xóa sạch bảng lịch sử thi đấu và bảng xếp hạng trên giao diện
+            dgvMatchHistory.Rows.Clear();
+            lblNoHistory.Text = "Bạn đang ở chế độ Ngoại tuyến (Khách).\nHãy bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để lưu trữ lịch sử thi đấu online!";
+            lblNoHistory.Visible = true;
+            dgvMatchHistory.Visible = false;
+
+            dgvLeaderboard.Rows.Clear();
+            lblNoLeaderboard.Text = "Bạn chưa kết nối Server.\nVui lòng bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để xem Bảng xếp hạng!";
+            lblNoLeaderboard.Visible = true;
+            dgvLeaderboard.Visible = false;
+
+            UpdateUIState(false);
+            UpdateServerAndPlayerInfo(false);
+            UpdateProfileViewUI();
+            UpdateRoomListUI(new List<RoomInfoData>());
+
+            lblStatusBadge.Text = "● Chưa kết nối";
+            lblStatusBadge.ForeColor = Color.FromArgb(255, 75, 75);
+            btnConnect.Text = "⚡ KẾT NỐI & ĐĂNG NHẬP";
+            btnConnect.Enabled = true;
+
+            btnNavSettings.Text = "⚡ ĐĂNG NHẬP";
+            btnNavSettings.IsPrimaryGradient = true;
+            btnNavSettings.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavSettings.HoverColor = Color.FromArgb(24, 42, 80);
+
+            btnLogout.Visible = false;
+            SwitchToView(pnlHomeView, btnNavHome);
+        }
+
+        private void NetClient_OnLoginCompleted(LoginRespData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnLoginCompleted(data)));
+                return;
+            }
+
+            btnConnect.Enabled = true;
+
+            if (data.Success)
+            {
+                lblStatusBadge.Text = $"● Đã kết nối: {data.Username}";
+                lblStatusBadge.ForeColor = Color.FromArgb(0, 230, 118);
+                btnConnect.Text = "Ngắt kết nối";
+
+                btnNavSettings.Text = "⎋ Đăng xuất";
+                btnNavSettings.IsPrimaryGradient = false;
+                btnNavSettings.NormalColor = Color.FromArgb(36, 20, 32);
+                btnNavSettings.HoverColor = Color.FromArgb(200, 40, 70);
+
+                UpdateUIState(true);
+                UpdateServerAndPlayerInfo(true);
+                UpdateProfileViewUI();
+
+                // Chuyển tới màn hình Hồ sơ cá nhân & Lịch sử đấu
+                SwitchToView(pnlHistoryView, btnNavHistory);
+                _ = _netClient.RequestRoomListAsync();
+            }
+            else
+            {
+                UpdateServerAndPlayerInfo(false);
+                UpdateProfileViewUI();
+                UpdateRoomListUI(new List<RoomInfoData>());
+                lblStatusBadge.Text = "🔴 " + data.Message;
+                lblStatusBadge.ForeColor = Color.FromArgb(255, 75, 75);
+                MessageBox.Show(data.Message, "Đăng nhập thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private async void NetClient_OnRegisterCompleted(RegisterRespData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnRegisterCompleted(data)));
+                return;
+            }
+
+            btnRegister.Enabled = true;
+            if (data.Success)
+            {
+                lblRegStatusBadge.Text = "● Đăng ký thành công! Đang tự động đăng nhập...";
+                lblRegStatusBadge.ForeColor = Color.FromArgb(0, 230, 118);
+
+                txtName.Text = _lastRegUsername;
+                txtPassword.Text = _lastRegPassword;
+                txtIp.Text = _lastRegIp;
+                txtPort.Text = _lastRegPort.ToString();
+
+                MessageBox.Show($"{data.Message}\nHệ thống sẽ tự động đăng nhập ngay bây giờ!", "Đăng ký thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Tự động chuyển tab đăng nhập và thực hiện đăng nhập
+                SwitchAuthTab(true);
+                btnConnect.Enabled = false;
+                lblStatusBadge.Text = "● Đang tự động kết nối & đăng nhập...";
+                lblStatusBadge.ForeColor = Color.FromArgb(255, 145, 0);
+
+                await _netClient.ConnectAndLoginAsync(_lastRegIp, _lastRegPort, _lastRegUsername, _lastRegPassword);
+            }
+            else
+            {
+                lblRegStatusBadge.Text = "🔴 " + data.Message;
+                lblRegStatusBadge.ForeColor = Color.FromArgb(255, 75, 75);
+                MessageBox.Show(data.Message, "Đăng ký thất bại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void UpdateProfileViewUI()
+        {
+            if (_netClient.IsConnected)
+            {
+                string uname = _netClient.PlayerName;
+                int elo = _netClient.Elo;
+                int wins = _netClient.Wins;
+                int losses = _netClient.Losses;
+                int draws = _netClient.Draws;
+                int total = wins + losses + draws;
+                int winRate = total > 0 ? (int)Math.Round((double)wins / total * 100) : 0;
+
+                lblProfileAvatar.Text = string.IsNullOrEmpty(uname) ? "👤" : uname.Substring(0, 1).ToUpper();
+                lblProfileDetailName.Text = uname;
+                lblProfileDetailRank.Text = $"★ {elo} ELO — {GetRankTitle(elo)}";
+                lblProfileDetailStatus.Text = $"● Trực tuyến - Máy chủ LAN ({_netClient.ServerIp}:{_netClient.ServerPort})";
+                lblProfileDetailStatus.ForeColor = Color.FromArgb(0, 230, 118);
+
+                lblStatTotalVal.Text = total.ToString();
+                lblStatWinsVal.Text = wins.ToString();
+                lblStatLossesVal.Text = losses.ToString();
+                lblStatWinRateVal.Text = $"{winRate}%";
+
+                lblProfileName.Text = uname;
+                lblProfileLevel.Text = $"★ {elo} ELO";
+                lblProfileXp.Text = $"{wins}W - {losses}L - {draws}D ({winRate}%)";
+            }
+            else
+            {
+                lblProfileAvatar.Text = "👤";
+                lblProfileDetailName.Text = "Khách (Offline)";
+                lblProfileDetailRank.Text = "★ 1000 ELO — 🥉 Tập sự";
+                lblProfileDetailStatus.Text = "● Ngoại tuyến (Chế độ Khách - Đang chơi với Máy)";
+                lblProfileDetailStatus.ForeColor = Color.FromArgb(255, 145, 0);
+
+                lblStatTotalVal.Text = "0";
+                lblStatWinsVal.Text = "0";
+                lblStatLossesVal.Text = "0";
+                lblStatWinRateVal.Text = "0%";
+
+                lblProfileName.Text = "Khách (Offline)";
+                lblProfileLevel.Text = "Chế độ Offline";
+                lblProfileXp.Text = "Chơi với Máy";
+            }
+        }
+
+        private string GetRankTitle(int elo)
+        {
+            if (elo >= 1800) return "👑 Đại Kiện Tướng";
+            if (elo >= 1500) return "💎 Kiện Tướng";
+            if (elo >= 1300) return "🥇 Cao Thủ";
+            if (elo >= 1100) return "🥈 Chiến Binh";
+            return "🥉 Tập Sự";
         }
 
         private void NetClient_OnConnectionCompleted(bool success, string message)
@@ -513,7 +860,6 @@ namespace CaroClient
                 lblProfileName.Text = _netClient.PlayerName;
                 UpdateUIState(true);
                 UpdateServerAndPlayerInfo(true);
-                AppendLog("Hệ thống", message);
                 // Return to Home view upon connection
                 SwitchToView(pnlHomeView, btnNavHome);
                 _ = _netClient.RequestRoomListAsync();
@@ -553,8 +899,8 @@ namespace CaroClient
 
         private void RelayoutCreateBox()
         {
-            // Vị trí Y bắt đầu dưới Card thời gian (cardTime ở Y=228, cao 68 => 228 + 68 + 12 = 308)
-            int currentY = 308;
+            // Vị trí Y bắt đầu dưới Card thời gian (cardTime ở Y=248, cao 74 => 248 + 74 + 12 = 334)
+            int currentY = 334;
 
             bool showTimeLimit = _isTimeLimitMode;
             bool showAiDiff = cardModeAI.IsSelected;
@@ -562,35 +908,50 @@ namespace CaroClient
             pnlTimeLimitOptions.Visible = showTimeLimit;
             if (showTimeLimit)
             {
-                pnlTimeLimitOptions.Left = 24;
+                pnlTimeLimitOptions.Left = 28;
                 pnlTimeLimitOptions.Top = currentY;
-                currentY += pnlTimeLimitOptions.Height + 10;
+                pnlTimeLimitOptions.Width = 624;
+                currentY += pnlTimeLimitOptions.Height + 12;
             }
 
             pnlAiDifficultyOptions.Visible = showAiDiff;
             if (showAiDiff)
             {
-                pnlAiDifficultyOptions.Left = 24;
+                pnlAiDifficultyOptions.Left = 28;
                 pnlAiDifficultyOptions.Top = currentY;
-                currentY += pnlAiDifficultyOptions.Height + 10;
+                pnlAiDifficultyOptions.Width = 624;
+                currentY += pnlAiDifficultyOptions.Height + 12;
             }
 
-            secHeaderRule.Left = 24;
+            secHeaderRule.Left = 28;
             secHeaderRule.Top = currentY;
-            currentY += secHeaderRule.Height + 8;
+            secHeaderRule.Width = 624;
+            currentY += secHeaderRule.Height + 10;
 
-            pillRuleStandard.Left = 24;
+            pillRuleStandard.Left = 28;
             pillRuleStandard.Top = currentY;
-            pillRuleFree.Left = 276;
+            pillRuleStandard.Width = 306;
+            pillRuleStandard.Height = 42;
+
+            pillRuleFree.Left = 346;
             pillRuleFree.Top = currentY;
-            currentY += pillRuleStandard.Height + 18;
+            pillRuleFree.Width = 306;
+            pillRuleFree.Height = 42;
+            currentY += pillRuleStandard.Height + 22;
 
-            btnCreateRoom.Left = 24;
+            btnCreateRoom.Left = 28;
             btnCreateRoom.Top = currentY;
-            btnCancelCreate.Left = 376;
-            btnCancelCreate.Top = currentY;
-            currentY += btnCreateRoom.Height + 20;
+            btnCreateRoom.Width = 430;
+            btnCreateRoom.Height = 48;
+            btnCreateRoom.Enabled = true;
 
+            btnCancelCreate.Left = 470;
+            btnCancelCreate.Top = currentY;
+            btnCancelCreate.Width = 182;
+            btnCancelCreate.Height = 48;
+            currentY += btnCreateRoom.Height + 24;
+
+            cardCreateBox.Width = 680;
             cardCreateBox.Height = currentY;
             pnlCreateRoomView_Resize(null, EventArgs.Empty);
         }
@@ -632,18 +993,18 @@ namespace CaroClient
             bool blockBothEnds = _selectedBlockBothEnds;
             AIDifficulty diff = _selectedDifficulty;
 
-            // Nếu là chế độ Đấu với Máy (AI) và chưa kết nối Server -> Khởi động trận đấu Offline trực tiếp!
-            if (isAi && !_netClient.IsConnected)
+            // Nếu là chế độ Đấu với Máy (AI) -> Khởi động trận đấu Offline trực tiếp, không cần mạng
+            if (isAi)
             {
                 StartOfflineAiGame(diff, blockBothEnds, timeLimit);
                 return;
             }
 
-            // Chế độ PvP yêu cầu kết nối Server
+            // Chế độ PvP yêu cầu kết nối Server & đăng nhập
             if (!_netClient.IsConnected)
             {
                 SwitchToView(pnlSettingsView, btnNavSettings);
-                MessageBox.Show("Chế độ đấu Người 1v1 yêu cầu kết nối Server LAN! Bạn có thể kết nối trước hoặc chọn 'Vs AI' để chơi Offline trực tiếp.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Chế độ đấu Người 1v1 (PvP) yêu cầu kết nối Server và đăng nhập tài khoản.\nVui lòng nhập Server IP, Username, Password rồi bấm 'Kết nối & Đăng nhập'!", "Yêu cầu kết nối", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -684,9 +1045,12 @@ namespace CaroClient
 
             EnterRoomUI();
             boardControl1.InitEmptyBoard(15);
+            boardControl1.MySymbol = 'X';
+            boardControl1.IsMyTurn = true;
+            boardControl1.Status = GameStateStatus.Playing;
+            UpdateOfflineBoardUI();
             ResetTimer(_timePerTurn);
             UpdateGameActionButtons();
-            AppendLog("Hệ thống", $"Bắt đầu ván cờ Offline với Máy ({diffName}). Chúc bạn may mắn!");
 
             SwitchToView(pnlGameView, btnNavGame);
         }
@@ -776,7 +1140,7 @@ namespace CaroClient
             if (!_netClient.IsConnected)
             {
                 SwitchToView(pnlSettingsView, btnNavSettings);
-                MessageBox.Show("Vui lòng kết nối Server trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng kết nối Server & Đăng nhập tại mục 'Cài đặt & Kết nối' trước khi tham gia phòng đấu!", "Yêu cầu kết nối", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -996,7 +1360,6 @@ namespace CaroClient
                     turnTimer.Stop();
                     lblTimer.Text = "● KẾT THÚC";
                     UpdateGameActionButtons();
-                    AppendLog("Hệ thống", "Bạn đã đầu hàng. Máy (AI) thắng ván này!");
                 }
                 return;
             }
@@ -1031,7 +1394,6 @@ namespace CaroClient
                 UpdateOfflineBoardUI();
                 ResetTimer(_timePerTurn);
                 UpdateGameActionButtons();
-                AppendLog("Hệ thống", "Bắt đầu ván đấu mới với Máy. Bạn đi trước (X).");
                 return;
             }
 
@@ -1151,6 +1513,72 @@ namespace CaroClient
             MessageBox.Show(message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void NetClient_OnOpponentReconnecting(OpponentReconnectingData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnOpponentReconnecting(data)));
+                return;
+            }
+
+            AppendLog("Hệ thống", $"⚠ {data.DisconnectedPlayerName} đã mất kết nối! Đang chờ kết nối lại ({data.GracePeriodSeconds}s)... Thời gian ván đấu vẫn đang tiếp tục tính.");
+            lblTurnInfo.Text = $"⚠ {data.DisconnectedPlayerName} mất mạng! Chờ kết nối lại ({data.GracePeriodSeconds}s)...";
+            // Lưu ý: Không dừng turnTimer - thời gian lượt đi của ván đấu vẫn chạy bình thường theo yêu cầu
+        }
+
+        private void NetClient_OnOpponentReconnected(OpponentReconnectedData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnOpponentReconnected(data)));
+                return;
+            }
+
+            AppendLog("Hệ thống", $"✓ {data.ReconnectedPlayerName} đã kết nối lại ván đấu!");
+        }
+
+        private void NetClient_OnReconnectResponse(ReconnectRespData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnReconnectResponse(data)));
+                return;
+            }
+
+            if (data.Success)
+            {
+                _currentRoomMode = data.Mode;
+                _mySymbol = data.PlayerSymbol;
+                _currentRoomId = data.RoomId;
+                _isInRoom = true;
+                _currentGameStatus = data.CurrentState.Status;
+                _timePerTurn = data.TimePerTurn;
+                _currentTurnSymbol = data.CurrentState.CurrentTurnSymbol;
+
+                string ruleText = data.BlockBothEndsRule ? "Chặn 2 đầu" : "Tự do";
+                string timeText = data.TimePerTurn > 0 ? $"{data.TimePerTurn}s" : "Vô hạn";
+                lblRoomIdInfo.Text = $"Phòng: {data.RoomId} ({ruleText} | {timeText})";
+
+                string p1Name = (_mySymbol == 'X') ? _netClient.PlayerName : data.OpponentName;
+                string p2Name = (_mySymbol == 'O') ? _netClient.PlayerName : data.OpponentName;
+                lblPlayersInfo.Text = $"X: {p1Name}   VS   O: {p2Name}";
+
+                EnterRoomUI();
+                UpdateGameActionButtons();
+                boardControl1.UpdateBoardState(data.CurrentState, _mySymbol);
+                lblTurnInfo.Text = $"● {data.CurrentState.StatusMessage}";
+
+                if (data.CurrentState.Status == GameStateStatus.Playing)
+                {
+                    ResetTimer(data.TimePerTurn);
+                }
+
+                AppendLog("Hệ thống", data.Message);
+                SwitchToView(pnlGameView, btnNavGame);
+                MessageBox.Show($"Bạn đã kết nối lại ván đấu tại phòng {data.RoomId} thành công!", "Kết nối lại ván đấu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
         private void NetClient_OnErrorOccurred(string errorMsg)
         {
             if (InvokeRequired)
@@ -1165,7 +1593,15 @@ namespace CaroClient
             btnConnect.Text = "Kết nối Server";
             UpdateUIState(false);
             UpdateServerAndPlayerInfo(false);
-            AppendLog("Lỗi", errorMsg);
+
+            if (_isInRoom && !_isOfflineGame)
+            {
+                AppendLog("Lỗi", errorMsg);
+                if (_currentGameStatus == GameStateStatus.Playing)
+                {
+                    AppendLog("Hệ thống", "⚠ Bạn bị mất kết nối mạng! Bạn có 30 giây để Đăng nhập lại tiếp tục ván đấu.");
+                }
+            }
         }
 
         private async void turnTimer_Tick(object? sender, EventArgs e)
@@ -1199,7 +1635,6 @@ namespace CaroClient
                 {
                     if (_currentTurnSymbol == 'X' && _offlineEngine != null && _offlineEngine.Status == GameStateStatus.Playing)
                     {
-                        AppendLog("Hệ thống", "Hết thời gian lượt đi! Bạn bị xử thua vì quá giờ.");
                         _offlineEngine.Surrender('O');
                         UpdateOfflineBoardUI();
                         UpdateGameActionButtons();
@@ -1257,6 +1692,16 @@ namespace CaroClient
             pillRuleStandard.Enabled = false;
             pillRuleFree.Enabled = false;
             UpdateGameActionButtons();
+
+            if (!_isOfflineGame)
+            {
+                rtbChatLog.Clear();
+                pnlRightBar.Visible = true;
+            }
+            else
+            {
+                pnlRightBar.Visible = false;
+            }
         }
 
         private void ExitRoomUI()
@@ -1267,6 +1712,8 @@ namespace CaroClient
             _netClient.IsSpectator = false;
             _currentRoomId = string.Empty;
             _currentGameStatus = GameStateStatus.WaitingForOpponent;
+            pnlRightBar.Visible = false;
+            rtbChatLog.Clear();
             btnCreateRoom.Enabled = true;
             btnJoinRoom.Enabled = true;
             txtRoomId.ReadOnly = false;
@@ -1302,10 +1749,12 @@ namespace CaroClient
             txtIp.Enabled = !connected;
             txtPort.Enabled = !connected;
             txtName.Enabled = !connected;
+            txtPassword.Enabled = !connected;
+            btnRegister.Enabled = !connected;
 
             if (cardModeAI.IsSelected)
             {
-                btnCreateRoom.Text = connected ? "▶  Tạo phòng" : "▶  Chơi với Máy ngay";
+                btnCreateRoom.Text = "▶  Chơi với Máy ngay";
             }
 
             if (!connected && !_isOfflineGame)
@@ -1347,6 +1796,11 @@ namespace CaroClient
                 string hostName = string.IsNullOrWhiteSpace(_netClient.ServerHostName) ? Environment.MachineName : _netClient.ServerHostName;
                 lblHomeServerHost.Text = $"💻 Máy chủ: {hostName}";
                 lblHomeServerIp.Text = $"📡 IP: {txtIp.Text.Trim()}:{txtPort.Text.Trim()}";
+
+                lblProfileName.Text = _netClient.PlayerName;
+                lblProfileLevel.Text = $"★ {_netClient.Elo} ELO";
+                lblProfileXp.Text = $"{_netClient.Wins}W - {_netClient.Losses}L - {_netClient.Draws}D";
+                btnLogout.Visible = false; // Nút Đăng xuất chính đã được tích hợp ngay trên thẻ hồ sơ (btnNavSettings)
             }
             else
             {
@@ -1358,7 +1812,293 @@ namespace CaroClient
                 lstConnectedPlayers.Items.Clear();
                 lblNoPlayers.Text = "Chưa kết nối đến máy chủ";
                 lblNoPlayers.Visible = true;
+
+                lblProfileName.Text = "Khách (Offline)";
+                lblProfileLevel.Text = "Chế độ Offline";
+                lblProfileXp.Text = "Chơi với Máy";
+                btnLogout.Visible = false;
             }
+        }
+
+        private void InitMatchHistoryTable()
+        {
+            dgvMatchHistory.Columns.Clear();
+
+            var colDate = new DataGridViewTextBoxColumn
+            {
+                Name = "PlayedAt",
+                HeaderText = "Thời gian",
+                Width = 140,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colDate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colDate.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvMatchHistory.Columns.Add(colDate);
+
+            var colOpponent = new DataGridViewTextBoxColumn
+            {
+                Name = "Opponent",
+                HeaderText = "Đối thủ",
+                Width = 160,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colOpponent.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            colOpponent.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvMatchHistory.Columns.Add(colOpponent);
+
+            var colResult = new DataGridViewTextBoxColumn
+            {
+                Name = "Result",
+                HeaderText = "Kết quả",
+                Width = 100,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colResult.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colResult.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvMatchHistory.Columns.Add(colResult);
+
+            var colEloChange = new DataGridViewTextBoxColumn
+            {
+                Name = "EloChange",
+                HeaderText = "Biến động ELO",
+                Width = 120,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colEloChange.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colEloChange.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvMatchHistory.Columns.Add(colEloChange);
+
+            var colMoves = new DataGridViewTextBoxColumn
+            {
+                Name = "Moves",
+                HeaderText = "Số nước cờ",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colMoves.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colMoves.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvMatchHistory.Columns.Add(colMoves);
+        }
+
+        private void InitLeaderboardTable()
+        {
+            dgvLeaderboard.Columns.Clear();
+
+            var colRank = new DataGridViewTextBoxColumn
+            {
+                Name = "Rank",
+                HeaderText = "Hạng",
+                Width = 70,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colRank.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colRank.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvLeaderboard.Columns.Add(colRank);
+
+            var colUser = new DataGridViewTextBoxColumn
+            {
+                Name = "Username",
+                HeaderText = "Kỳ thủ",
+                Width = 180,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colUser.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            colUser.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dgvLeaderboard.Columns.Add(colUser);
+
+            var colElo = new DataGridViewTextBoxColumn
+            {
+                Name = "Elo",
+                HeaderText = "Điểm ELO",
+                Width = 110,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colElo.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colElo.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvLeaderboard.Columns.Add(colElo);
+
+            var colRecord = new DataGridViewTextBoxColumn
+            {
+                Name = "Record",
+                HeaderText = "Thắng - Thua - Hòa",
+                Width = 160,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colRecord.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colRecord.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvLeaderboard.Columns.Add(colRecord);
+
+            var colWinRate = new DataGridViewTextBoxColumn
+            {
+                Name = "WinRate",
+                HeaderText = "Tỉ lệ thắng",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill,
+                SortMode = DataGridViewColumnSortMode.NotSortable
+            };
+            colWinRate.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            colWinRate.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvLeaderboard.Columns.Add(colWinRate);
+        }
+
+        private void NetClient_OnMatchHistoryReceived(List<MatchHistoryItemData> list)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnMatchHistoryReceived(list)));
+                return;
+            }
+
+            dgvMatchHistory.Rows.Clear();
+            if (list == null || list.Count == 0)
+            {
+                if (_netClient != null && _netClient.IsConnected)
+                {
+                    lblNoHistory.Text = "Tài khoản của bạn chưa có lịch sử đấu online nào.\nHãy vào mục 'Tạo phòng' hoặc 'Tham gia phòng' để bắt đầu ván đấu đầu tiên!";
+                }
+                else
+                {
+                    lblNoHistory.Text = "Bạn đang chơi ở chế độ Ngoại tuyến (Khách).\nHãy bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để lưu trữ lịch sử thi đấu online!";
+                }
+                lblNoHistory.Visible = true;
+                dgvMatchHistory.Visible = false;
+                return;
+            }
+
+            lblNoHistory.Visible = false;
+            dgvMatchHistory.Visible = true;
+
+            foreach (var item in list)
+            {
+                string eloSign = item.EloChange > 0 ? $"+{item.EloChange}" : $"{item.EloChange}";
+                int idx = dgvMatchHistory.Rows.Add(
+                    item.PlayedAt,
+                    item.OpponentName,
+                    item.Result,
+                    eloSign,
+                    $"{item.TotalMoves} nước"
+                );
+
+                var row = dgvMatchHistory.Rows[idx];
+                if (item.Result == "Thắng")
+                {
+                    row.Cells["Result"].Style.ForeColor = UITheme.AccentGreen;
+                    row.Cells["EloChange"].Style.ForeColor = UITheme.AccentGreen;
+                    row.Cells["Result"].Style.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else if (item.Result == "Thua")
+                {
+                    row.Cells["Result"].Style.ForeColor = UITheme.AccentRed;
+                    row.Cells["EloChange"].Style.ForeColor = UITheme.AccentRed;
+                    row.Cells["Result"].Style.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+                }
+                else
+                {
+                    row.Cells["Result"].Style.ForeColor = UITheme.AccentOrange;
+                    row.Cells["EloChange"].Style.ForeColor = UITheme.AccentOrange;
+                }
+            }
+        }
+
+        private void NetClient_OnLeaderboardReceived(List<LeaderboardItemData> list)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnLeaderboardReceived(list)));
+                return;
+            }
+
+            dgvLeaderboard.Rows.Clear();
+            if (list == null || list.Count == 0)
+            {
+                if (_netClient != null && _netClient.IsConnected)
+                {
+                    lblNoLeaderboard.Text = "Chưa có dữ liệu người chơi trên Bảng xếp hạng Server.";
+                }
+                else
+                {
+                    lblNoLeaderboard.Text = "Bạn chưa kết nối Server.\nVui lòng bấm nút '⚡ ĐĂNG NHẬP' ở góc dưới bên trái để xem Bảng xếp hạng!";
+                }
+                lblNoLeaderboard.Visible = true;
+                dgvLeaderboard.Visible = false;
+                return;
+            }
+
+            lblNoLeaderboard.Visible = false;
+            dgvLeaderboard.Visible = true;
+
+            foreach (var item in list)
+            {
+                string rankStr = item.Rank switch
+                {
+                    1 => "🥇 #1",
+                    2 => "🥈 #2",
+                    3 => "🥉 #3",
+                    _ => $"#{item.Rank}"
+                };
+
+                int idx = dgvLeaderboard.Rows.Add(
+                    rankStr,
+                    item.Username,
+                    $"★ {item.Elo}",
+                    $"{item.Wins}W - {item.Losses}L - {item.Draws}D",
+                    $"{item.WinRate}%"
+                );
+
+                var row = dgvLeaderboard.Rows[idx];
+                if (item.Rank == 1)
+                {
+                    row.Cells["Rank"].Style.ForeColor = Color.FromArgb(255, 215, 0);
+                    row.Cells["Rank"].Style.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+                }
+                else if (item.Rank == 2)
+                {
+                    row.Cells["Rank"].Style.ForeColor = Color.FromArgb(192, 192, 192);
+                    row.Cells["Rank"].Style.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+                }
+                else if (item.Rank == 3)
+                {
+                    row.Cells["Rank"].Style.ForeColor = Color.FromArgb(205, 127, 50);
+                    row.Cells["Rank"].Style.Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+                }
+
+                row.Cells["Elo"].Style.ForeColor = UITheme.AccentCyan;
+                row.Cells["Elo"].Style.Font = new Font("Segoe UI", 9f, FontStyle.Bold);
+            }
+        }
+
+        private void NetClient_OnEloUpdated(EloUpdateData data)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new Action(() => NetClient_OnEloUpdated(data)));
+                return;
+            }
+
+            lblProfileLevel.Text = $"★ {data.NewElo} ELO";
+            lblProfileXp.Text = $"{data.Wins}W - {data.Losses}L - {data.Draws}D";
+            string changeSign = (data.EloChange >= 0) ? "+" : "";
+            AppendLog("Hệ thống", $"⭐ Điểm ELO của bạn đã cập nhật: {changeSign}{data.EloChange} (Hiện tại: {data.NewElo} ELO)!");
+            UpdateProfileViewUI();
+        }
+
+        private async void btnRefreshHistory_Click(object? sender, EventArgs e)
+        {
+            if (_netClient == null || !_netClient.IsConnected)
+            {
+                MessageBox.Show("Vui lòng kết nối Server để xem lịch sử đấu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            await _netClient.RequestMatchHistoryAsync();
+        }
+
+        private async void btnRefreshLeaderboard_Click(object? sender, EventArgs e)
+        {
+            if (_netClient == null || !_netClient.IsConnected)
+            {
+                MessageBox.Show("Vui lòng kết nối Server để xem Bảng xếp hạng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            await _netClient.RequestLeaderboardAsync();
         }
 
         private void NetClient_OnPlayerListReceived(List<PlayerInfoData> players)
@@ -1415,7 +2155,8 @@ namespace CaroClient
 
             // Player name
             bool isSelf = (player.PlayerId == _netClient.PlayerId);
-            string displayName = isSelf ? $"{player.PlayerName} (Bạn)" : player.PlayerName;
+            string eloBadge = player.Elo > 0 ? $" (★ {player.Elo})" : "";
+            string displayName = isSelf ? $"{player.PlayerName}{eloBadge} (Bạn)" : $"{player.PlayerName}{eloBadge}";
             Color nameColor = isSelf ? UITheme.AccentCyan : Color.White;
 
             using (Font nameFont = new Font("Segoe UI", 9f, isSelf ? FontStyle.Bold : FontStyle.Regular))

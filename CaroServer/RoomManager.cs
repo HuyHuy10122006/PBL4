@@ -290,6 +290,16 @@ namespace CaroServer
             }
         }
 
+        public Room? FindRoomWaitingForPlayer(string playerName)
+        {
+            if (string.IsNullOrWhiteSpace(playerName)) return null;
+
+            return _rooms.Values.FirstOrDefault(r =>
+                r.IsWaitingForReconnect &&
+                r.Engine.Status == GameStateStatus.Playing &&
+                string.Equals(r.DisconnectedPlayerName, playerName, StringComparison.OrdinalIgnoreCase));
+        }
+
         public async Task HandleClientDisconnectedAsync(ClientSession session)
         {
             if (session.CurrentRoom != null)
@@ -308,19 +318,55 @@ namespace CaroServer
                     return;
                 }
 
+                // Nếu là trận PvP đang đấu dở dang (Playing), kích hoạt 30s thời gian chờ kết nối lại!
+                // Đồng thời thời gian chơi của ván (turn timer) vẫn tiếp tục chạy
+                if (room.Mode == GameMode.PvP && room.IsFull && room.Engine.Status == GameStateStatus.Playing)
+                {
+                    await room.StartReconnectGracePeriodAsync(session, async (r) =>
+                    {
+                        // Callback khi hết 30s mà không vào lại: dọn dẹp phòng
+                        _rooms.TryRemove(r.RoomId, out _);
+                        if (OnRoomStateChanged != null)
+                        {
+                            await OnRoomStateChanged();
+                        }
+                    });
+
+                    // Gửi thông báo cho đối thủ và khán giả biết đang trong thời gian ân hạn 30s
+                    ClientSession? opponent = (session.PlayerId == room.Player1.PlayerId) ? room.Player2 : room.Player1;
+                    if (opponent != null && opponent.Client != null && opponent.Client.Connected)
+                    {
+                        var reconnectingPacket = Packet.Create(PacketType.OpponentReconnecting, new OpponentReconnectingData
+                        {
+                            DisconnectedPlayerName = session.PlayerName,
+                            GracePeriodSeconds = 30,
+                            Message = $"{session.PlayerName} đã mất kết nối. Đang chờ kết nối lại (30s)... Thời gian ván đấu vẫn đang tiếp tục tính."
+                        });
+                        await opponent.SendPacketAsync(reconnectingPacket);
+                    }
+
+                    if (OnRoomStateChanged != null)
+                    {
+                        await OnRoomStateChanged();
+                    }
+                    return;
+                }
+
+                // Các trường hợp khác: chưa bắt đầu, hoặc đấu AI, hoặc đã GameOver
                 room.StopTurnTimeoutTimer();
+                room.StopReconnectTimer();
                 _rooms.TryRemove(room.RoomId, out _);
 
-                ClientSession? opponent = (session.PlayerId == room.Player1.PlayerId) ? room.Player2 : room.Player1;
-                if (opponent != null && opponent.Client.Connected)
+                ClientSession? other = (session.PlayerId == room.Player1.PlayerId) ? room.Player2 : room.Player1;
+                if (other != null && other.Client != null && other.Client.Connected)
                 {
-                    opponent.CurrentRoom = null;
+                    other.CurrentRoom = null;
                     var dcPacket = Packet.Create(PacketType.OpponentDisconnected, new ChatMessageData
                     {
                         SenderName = "Hệ thống",
-                        Message = $"{session.PlayerName} đã ngắt kết nối. Trận đấu kết thúc!"
+                        Message = $"{session.PlayerName} đã rời phòng."
                     });
-                    await opponent.SendPacketAsync(dcPacket);
+                    await other.SendPacketAsync(dcPacket);
                 }
 
                 if (OnRoomStateChanged != null)

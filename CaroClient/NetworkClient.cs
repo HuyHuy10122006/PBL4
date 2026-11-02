@@ -12,55 +12,116 @@ namespace CaroClient
 
         public bool IsConnected => _tcpClient != null && _tcpClient.Connected;
         public string PlayerId { get; private set; } = string.Empty;
-        public string PlayerName { get; private set; } = string.Empty;
+        public string PlayerName { get; private set; } = "Player";
         public string ServerHostName { get; private set; } = string.Empty;
+        public string ServerIp { get; private set; } = string.Empty;
+        public int ServerPort { get; private set; } = 8888;
         public bool IsSpectator { get; set; } = false;
+
+        public int Elo { get; set; } = 1000;
+        public int Wins { get; set; } = 0;
+        public int Losses { get; set; } = 0;
+        public int Draws { get; set; } = 0;
 
         // --- UI Events ---
         public event Action<bool, string>? OnConnectionCompleted;
+        public event Action<LoginRespData>? OnLoginCompleted;
+        public event Action<RegisterRespData>? OnRegisterCompleted;
         public event Action<CreateRoomRespData>? OnCreateRoomResponse;
         public event Action<JoinRoomRespData>? OnJoinRoomResponse;
         public event Action<LeaveRoomRespData>? OnLeaveRoomResponse;
         public event Action<GameStateUpdateData>? OnGameStateUpdated;
         public event Action<ChatMessageData>? OnChatMessageReceived;
         public event Action<string>? OnOpponentDisconnected;
+        public event Action<OpponentReconnectingData>? OnOpponentReconnecting;
+        public event Action<OpponentReconnectedData>? OnOpponentReconnected;
+        public event Action<ReconnectRespData>? OnReconnectResponse;
         public event Action<string>? OnErrorOccurred;
         public event Action<List<PlayerInfoData>>? OnPlayerListReceived;
         public event Action<RoomListData>? OnRoomListReceived;
         public event Action<SpectateRoomRespData>? OnSpectateRoomResponse;
+        public event Action<List<MatchHistoryItemData>>? OnMatchHistoryReceived;
+        public event Action<List<LeaderboardItemData>>? OnLeaderboardReceived;
+        public event Action<EloUpdateData>? OnEloUpdated;
 
         public NetworkClient()
         {
             _syncContext = SynchronizationContext.Current;
         }
 
-        public async Task ConnectAsync(string ip, int port, string playerName)
+        public async Task<bool> EnsureConnectedAsync(string ip, int port)
         {
+            if (IsConnected) return true;
+
             if (_syncContext == null && SynchronizationContext.Current != null)
             {
                 _syncContext = SynchronizationContext.Current;
             }
 
-            PlayerName = playerName;
             try
             {
                 _tcpClient = new TcpClient();
                 using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 await _tcpClient.ConnectAsync(ip, port, timeoutCts.Token);
+                ServerIp = ip;
+                ServerPort = port;
                 _stream = _tcpClient.GetStream();
                 _cts = new CancellationTokenSource();
 
-                // Send ConnectReq
-                var packet = Packet.Create(PacketType.ConnectReq, new ConnectReqData { PlayerName = playerName });
-                await PacketFraming.SendPacketAsync(_stream, packet, _cts.Token);
-
                 // Start Listen Loop
                 _ = Task.Run(() => ListenLoopAsync(_cts.Token));
+                return true;
             }
             catch (Exception ex)
             {
                 Disconnect();
-                PostToUI(() => OnConnectionCompleted?.Invoke(false, $"Không thể kết nối đến Server ({ip}:{port}): {ex.Message}\n\nLưu ý: Hãy chắc chắn bạn đã chạy dự án CaroServer!"));
+                PostToUI(() => OnErrorOccurred?.Invoke($"Không thể kết nối đến máy chủ ({ip}:{port}): {ex.Message}"));
+                return false;
+            }
+        }
+
+        public async Task ConnectAndLoginAsync(string ip, int port, string username, string password)
+        {
+            if (!await EnsureConnectedAsync(ip, port)) return;
+
+            PlayerName = username;
+            var packet = Packet.Create(PacketType.LoginReq, new LoginReqData
+            {
+                Username = username,
+                Password = password
+            });
+
+            if (_stream != null && _cts != null)
+            {
+                await PacketFraming.SendPacketAsync(_stream, packet, _cts.Token);
+            }
+        }
+
+        public async Task ConnectAndRegisterAsync(string ip, int port, string username, string password)
+        {
+            if (!await EnsureConnectedAsync(ip, port)) return;
+
+            var packet = Packet.Create(PacketType.RegisterReq, new RegisterReqData
+            {
+                Username = username,
+                Password = password
+            });
+
+            if (_stream != null && _cts != null)
+            {
+                await PacketFraming.SendPacketAsync(_stream, packet, _cts.Token);
+            }
+        }
+
+        public async Task ConnectAsync(string ip, int port, string playerName)
+        {
+            if (!await EnsureConnectedAsync(ip, port)) return;
+
+            PlayerName = playerName;
+            var packet = Packet.Create(PacketType.ConnectReq, new ConnectReqData { PlayerName = playerName });
+            if (_stream != null && _cts != null)
+            {
+                await PacketFraming.SendPacketAsync(_stream, packet, _cts.Token);
             }
         }
 
@@ -90,12 +151,41 @@ namespace CaroClient
         {
             switch (packet.Type)
             {
+                case PacketType.LoginResp:
+                    var loginResp = packet.DeserializePayload<LoginRespData>();
+                    if (loginResp != null)
+                    {
+                        if (loginResp.Success)
+                        {
+                            PlayerId = loginResp.PlayerId;
+                            PlayerName = loginResp.Username;
+                            Elo = loginResp.Elo;
+                            Wins = loginResp.Wins;
+                            Losses = loginResp.Losses;
+                            Draws = loginResp.Draws;
+                        }
+                        PostToUI(() => OnLoginCompleted?.Invoke(loginResp));
+                    }
+                    break;
+
+                case PacketType.RegisterResp:
+                    var regResp = packet.DeserializePayload<RegisterRespData>();
+                    if (regResp != null)
+                    {
+                        PostToUI(() => OnRegisterCompleted?.Invoke(regResp));
+                    }
+                    break;
+
                 case PacketType.ConnectResp:
                     var connResp = packet.DeserializePayload<ConnectRespData>();
                     if (connResp != null)
                     {
                         PlayerId = connResp.PlayerId;
                         ServerHostName = connResp.ServerHostName;
+                        Elo = connResp.Elo;
+                        Wins = connResp.Wins;
+                        Losses = connResp.Losses;
+                        Draws = connResp.Draws;
                         PostToUI(() => OnConnectionCompleted?.Invoke(connResp.Success, connResp.Message));
                     }
                     break;
@@ -145,6 +235,30 @@ namespace CaroClient
                     PostToUI(() => OnOpponentDisconnected?.Invoke(dcData?.Message ?? "Đối thủ đã ngắt kết nối."));
                     break;
 
+                case PacketType.OpponentReconnecting:
+                    var reconnectingData = packet.DeserializePayload<OpponentReconnectingData>();
+                    if (reconnectingData != null)
+                    {
+                        PostToUI(() => OnOpponentReconnecting?.Invoke(reconnectingData));
+                    }
+                    break;
+
+                case PacketType.OpponentReconnected:
+                    var reconnectedData = packet.DeserializePayload<OpponentReconnectedData>();
+                    if (reconnectedData != null)
+                    {
+                        PostToUI(() => OnOpponentReconnected?.Invoke(reconnectedData));
+                    }
+                    break;
+
+                case PacketType.ReconnectResp:
+                    var reconnectResp = packet.DeserializePayload<ReconnectRespData>();
+                    if (reconnectResp != null)
+                    {
+                        PostToUI(() => OnReconnectResponse?.Invoke(reconnectResp));
+                    }
+                    break;
+
                 case PacketType.LeaveRoomResp:
                     var leaveResp = packet.DeserializePayload<LeaveRoomRespData>();
                     if (leaveResp != null)
@@ -176,7 +290,49 @@ namespace CaroClient
                         PostToUI(() => OnSpectateRoomResponse?.Invoke(specResp));
                     }
                     break;
+
+                case PacketType.GetHistoryResp:
+                    var historyResp = packet.DeserializePayload<MatchHistoryRespData>();
+                    if (historyResp != null)
+                    {
+                        PostToUI(() => OnMatchHistoryReceived?.Invoke(historyResp.History));
+                    }
+                    break;
+
+                case PacketType.GetLeaderboardResp:
+                    var lbResp = packet.DeserializePayload<LeaderboardRespData>();
+                    if (lbResp != null)
+                    {
+                        PostToUI(() => OnLeaderboardReceived?.Invoke(lbResp.TopPlayers));
+                    }
+                    break;
+
+                case PacketType.EloUpdate:
+                    var eloData = packet.DeserializePayload<EloUpdateData>();
+                    if (eloData != null)
+                    {
+                        Elo = eloData.NewElo;
+                        Wins = eloData.Wins;
+                        Losses = eloData.Losses;
+                        Draws = eloData.Draws;
+                        PostToUI(() => OnEloUpdated?.Invoke(eloData));
+                    }
+                    break;
             }
+        }
+
+        public async Task RequestMatchHistoryAsync()
+        {
+            if (!IsConnected || _stream == null) return;
+            var packet = Packet.Create(PacketType.GetHistoryReq, new object());
+            await PacketFraming.SendPacketAsync(_stream, packet);
+        }
+
+        public async Task RequestLeaderboardAsync()
+        {
+            if (!IsConnected || _stream == null) return;
+            var packet = Packet.Create(PacketType.GetLeaderboardReq, new object());
+            await PacketFraming.SendPacketAsync(_stream, packet);
         }
 
         public async Task RequestRoomListAsync()
@@ -258,6 +414,12 @@ namespace CaroClient
             _stream = null;
             IsSpectator = false;
             ServerHostName = string.Empty;
+            ServerIp = string.Empty;
+            PlayerName = "Khách (Offline)";
+            Elo = 1000;
+            Wins = 0;
+            Losses = 0;
+            Draws = 0;
         }
 
         private void PostToUI(Action action)

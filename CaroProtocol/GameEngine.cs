@@ -10,6 +10,7 @@ namespace CaroProtocol
         public List<Point> WinLine { get; private set; } = new List<Point>();
         public bool BlockBothEndsRule { get; set; } = true;
         public Point? LastMove { get; private set; }
+        public int TotalMovesCount { get; private set; } = 0;
 
         public GameEngine(int boardSize = 15, bool blockBothEndsRule = true)
         {
@@ -33,6 +34,7 @@ namespace CaroProtocol
             WinnerSymbol = ' ';
             WinLine.Clear();
             LastMove = null;
+            TotalMovesCount = 0;
         }
 
         public void Surrender(char winnerSymbol)
@@ -72,6 +74,7 @@ namespace CaroProtocol
             // Place symbol
             Board[row, col] = playerSymbol;
             LastMove = new Point(row, col);
+            TotalMovesCount++;
 
             // Check Win Condition
             if (CheckWinAt(row, col, playerSymbol, out List<Point> winningPoints))
