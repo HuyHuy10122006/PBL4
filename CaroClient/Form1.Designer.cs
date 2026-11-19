@@ -17,1579 +17,3632 @@ namespace CaroClient
 
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-
-            // Window Layout Panels
-            this.pnlTitleBar = new System.Windows.Forms.Panel();
-            this.pnlLogoBox = new System.Windows.Forms.Panel();
-            this.lblAppTitle = new System.Windows.Forms.Label();
-            this.lblAppSubtitle = new System.Windows.Forms.Label();
-            this.pnlWindowButtons = new System.Windows.Forms.Panel();
-            this.btnClose = new System.Windows.Forms.Button();
-            this.btnMax = new System.Windows.Forms.Button();
-            this.btnMin = new System.Windows.Forms.Button();
-
-            // Left Sidebar
-            this.pnlSidebar = new System.Windows.Forms.Panel();
-            this.pnlNavList = new System.Windows.Forms.Panel();
-            this.btnNavHome = new CaroClient.CyberButton();
-            this.btnNavGame = new CaroClient.CyberButton();
-            this.btnNavCreate = new CaroClient.CyberButton();
-            this.btnNavJoin = new CaroClient.CyberButton();
-            this.btnNavHistory = new CaroClient.CyberButton();
-            this.btnNavLeaderboard = new CaroClient.CyberButton();
-            this.btnNavSettings = new CaroClient.CyberButton();
-            this.pnlSidebarBottom = new System.Windows.Forms.Panel();
-            this.pnlProfileCard = new CaroClient.RoundedCard();
-            this.lblProfileName = new System.Windows.Forms.Label();
-            this.lblProfileLevel = new System.Windows.Forms.Label();
-            this.lblProfileXp = new System.Windows.Forms.Label();
-            this.btnLogout = new CaroClient.CyberButton();
-
-            // Right Panel
-            this.pnlRightBar = new System.Windows.Forms.Panel();
-            this.cardChat = new CaroClient.RoundedCard();
-            this.lblChatTitle = new System.Windows.Forms.Label();
-            this.rtbChatLog = new System.Windows.Forms.RichTextBox();
-            this.pnlChatBottom = new System.Windows.Forms.Panel();
-            this.txtChatInput = new System.Windows.Forms.TextBox();
-            this.btnSendChat = new CaroClient.CyberButton();
-
-            // Main Content Area & Views
-            this.pnlMainContent = new System.Windows.Forms.Panel();
-
-            // View 1: Home Dashboard
-            this.pnlHomeView = new System.Windows.Forms.Panel();
-            this.heroBanner = new CaroClient.HeroBannerPanel();
-            this.lblHeroTitle = new System.Windows.Forms.Label();
-            this.lblHeroSubtitle = new System.Windows.Forms.Label();
-
-
-
-            this.pnlMiddleGrid = new System.Windows.Forms.Panel();
-            this.cardFeaturedRooms = new CaroClient.RoundedCard();
-            this.pnlRoomsHeaderBar = new System.Windows.Forms.Panel();
-            this.lblRoomsHeader = new System.Windows.Forms.Label();
-            this.btnRefreshRooms = new System.Windows.Forms.Button();
-            this.dgvFeaturedRooms = new System.Windows.Forms.DataGridView();
-            this.lblNoRooms = new System.Windows.Forms.Label();
-
-            this.btnHomeCreateRoom = new CaroClient.CyberButton();
-            this.btnHomeJoinRoom = new CaroClient.CyberButton();
-            this.btnHomeSettings = new CaroClient.CyberButton();
-            this.pnlServerInfoContainer = new System.Windows.Forms.Panel();
-            this.cardServerInfo = new CaroClient.RoundedCard();
-            this.lblHomeServerHeader = new System.Windows.Forms.Label();
-            this.lblHomeServerStatus = new System.Windows.Forms.Label();
-            this.lblHomeServerHost = new System.Windows.Forms.Label();
-            this.lblHomeServerIp = new System.Windows.Forms.Label();
-            this.pnlPlayersContainer = new System.Windows.Forms.Panel();
-            this.cardConnectedPlayers = new CaroClient.RoundedCard();
-            this.lblHomePlayersHeader = new System.Windows.Forms.Label();
-            this.lstConnectedPlayers = new System.Windows.Forms.ListBox();
-            this.lblNoPlayers = new System.Windows.Forms.Label();
-
-            // View 2: Game Arena (Phòng thi đấu)
-            this.pnlGameView = new System.Windows.Forms.Panel();
-            this.pnlGameHeader = new CaroClient.RoundedCard();
-            this.pnlGameActions = new System.Windows.Forms.Panel();
-            this.btnSurrender = new CaroClient.CyberButton();
-            this.btnRestart = new CaroClient.CyberButton();
-            this.btnLeaveRoom = new CaroClient.CyberButton();
-            this.pnlGameInfo = new System.Windows.Forms.Panel();
-            this.lblRoomIdInfo = new System.Windows.Forms.Label();
-            this.lblTimer = new System.Windows.Forms.Label();
-            this.lblPlayersInfo = new System.Windows.Forms.Label();
-            this.lblTurnInfo = new System.Windows.Forms.Label();
-            this.boardControl1 = new CaroClient.BoardControl();
-
-            // View 3: Create Room
-            this.pnlCreateRoomView = new System.Windows.Forms.Panel();
-            this.cardCreateBox = new CaroClient.RoundedCard();
-            this.pnlCreateHeader = new System.Windows.Forms.Panel();
-            this.badgeCreatePlus = new CaroClient.CircleBadge();
-            this.lblCreateTitle = new System.Windows.Forms.Label();
-            this.lblCreateSubtitle = new System.Windows.Forms.Label();
-            this.secHeaderMode = new CaroClient.SectionHeaderLabel();
-            this.cardModePvP = new CaroClient.ModeSelectionCard();
-            this.cardModeAI = new CaroClient.ModeSelectionCard();
-            this.secHeaderTime = new CaroClient.SectionHeaderLabel();
-            this.cardTimeTurn = new CaroClient.ModeSelectionCard();
-            this.cardTimeFree = new CaroClient.ModeSelectionCard();
-            this.pnlTimeLimitOptions = new System.Windows.Forms.Panel();
-            this.lblTimePillLabel = new System.Windows.Forms.Label();
-            this.pillTime15 = new CaroClient.OptionPill();
-            this.pillTime30 = new CaroClient.OptionPill();
-            this.pillTime60 = new CaroClient.OptionPill();
-            this.pnlAiDifficultyOptions = new System.Windows.Forms.Panel();
-            this.lblAiDifficultyLabel = new System.Windows.Forms.Label();
-            this.pillAiEasy = new CaroClient.OptionPill();
-            this.pillAiMedium = new CaroClient.OptionPill();
-            this.pillAiHard = new CaroClient.OptionPill();
-            this.secHeaderRule = new CaroClient.SectionHeaderLabel();
-            this.pillRuleStandard = new CaroClient.OptionPill();
-            this.pillRuleFree = new CaroClient.OptionPill();
-            this.btnCreateRoom = new CaroClient.CyberButton();
-            this.btnCancelCreate = new CaroClient.CyberButton();
-
-            // View 4: Join Room
-            this.pnlJoinRoomView = new System.Windows.Forms.Panel();
-            this.cardJoinTopBar = new CaroClient.RoundedCard();
-            this.pnlJoinActions = new System.Windows.Forms.Panel();
-            this.lblJoinTitle = new System.Windows.Forms.Label();
-            this.lblJoinSubtitle = new System.Windows.Forms.Label();
-            this.lblRoomIdPrompt = new System.Windows.Forms.Label();
-            this.txtRoomId = new System.Windows.Forms.TextBox();
-            this.btnJoinRoom = new CaroClient.CyberButton();
-            this.btnCancelJoin = new CaroClient.CyberButton();
-
-            // View 5: Settings / Login
-            this.pnlSettingsView = new System.Windows.Forms.Panel();
-            this.cardSettingsBox = new CaroClient.RoundedCard();
-            this.btnTabLogin = new CaroClient.CyberButton();
-            this.btnTabRegister = new CaroClient.CyberButton();
-            this.pnlAuthBodyLogin = new System.Windows.Forms.Panel();
-            this.pnlAuthBodyRegister = new System.Windows.Forms.Panel();
-            this.lblSettingsTitle = new System.Windows.Forms.Label();
-            this.lblSettingsNotice = new System.Windows.Forms.Label();
-            this.lblServerIp = new System.Windows.Forms.Label();
-            this.txtIp = new System.Windows.Forms.TextBox();
-            this.lblPort = new System.Windows.Forms.Label();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.lblPlayerName = new System.Windows.Forms.Label();
-            this.txtName = new System.Windows.Forms.TextBox();
-            this.lblPassword = new System.Windows.Forms.Label();
-            this.txtPassword = new System.Windows.Forms.TextBox();
-            this.lblStatusBadge = new System.Windows.Forms.Label();
-            this.btnConnect = new CaroClient.CyberButton();
-            this.lblSwitchToRegister = new System.Windows.Forms.Label();
-            this.lblOfflineTip = new System.Windows.Forms.Label();
-
-            this.lblRegTitle = new System.Windows.Forms.Label();
-            this.lblRegNotice = new System.Windows.Forms.Label();
-            this.lblRegServerIp = new System.Windows.Forms.Label();
-            this.txtRegIp = new System.Windows.Forms.TextBox();
-            this.lblRegPort = new System.Windows.Forms.Label();
-            this.txtRegPort = new System.Windows.Forms.TextBox();
-            this.lblRegPlayerName = new System.Windows.Forms.Label();
-            this.txtRegName = new System.Windows.Forms.TextBox();
-            this.lblRegPassword = new System.Windows.Forms.Label();
-            this.txtRegPassword = new System.Windows.Forms.TextBox();
-            this.lblRegConfirmPassword = new System.Windows.Forms.Label();
-            this.txtRegConfirmPassword = new System.Windows.Forms.TextBox();
-            this.lblRegStatusBadge = new System.Windows.Forms.Label();
-            this.btnRegister = new CaroClient.CyberButton();
-            this.lblSwitchToLogin = new System.Windows.Forms.Label();
-
-            // View 6: Profile & Match History
-            this.pnlHistoryView = new System.Windows.Forms.Panel();
-            this.cardProfileSummary = new CaroClient.RoundedCard();
-            this.lblProfileAvatar = new System.Windows.Forms.Label();
-            this.lblProfileDetailName = new System.Windows.Forms.Label();
-            this.lblProfileDetailRank = new System.Windows.Forms.Label();
-            this.lblProfileDetailStatus = new System.Windows.Forms.Label();
-            this.cardStatTotal = new CaroClient.RoundedCard();
-            this.lblStatTotalVal = new System.Windows.Forms.Label();
-            this.lblStatTotalTitle = new System.Windows.Forms.Label();
-            this.cardStatWins = new CaroClient.RoundedCard();
-            this.lblStatWinsVal = new System.Windows.Forms.Label();
-            this.lblStatWinsTitle = new System.Windows.Forms.Label();
-            this.cardStatLosses = new CaroClient.RoundedCard();
-            this.lblStatLossesVal = new System.Windows.Forms.Label();
-            this.lblStatLossesTitle = new System.Windows.Forms.Label();
-            this.cardStatWinRate = new CaroClient.RoundedCard();
-            this.lblStatWinRateVal = new System.Windows.Forms.Label();
-            this.lblStatWinRateTitle = new System.Windows.Forms.Label();
-            this.pnlHistorySpacer = new System.Windows.Forms.Panel();
-            this.cardHistoryBox = new CaroClient.RoundedCard();
-            this.pnlHistoryHeaderBar = new System.Windows.Forms.Panel();
-            this.lblHistoryHeader = new System.Windows.Forms.Label();
-            this.btnRefreshHistory = new System.Windows.Forms.Button();
-            this.dgvMatchHistory = new System.Windows.Forms.DataGridView();
-            this.lblNoHistory = new System.Windows.Forms.Label();
-
-            // View 7: Leaderboard
-            this.pnlLeaderboardView = new System.Windows.Forms.Panel();
-            this.cardLeaderboardBox = new CaroClient.RoundedCard();
-            this.pnlLeaderboardHeaderBar = new System.Windows.Forms.Panel();
-            this.lblLeaderboardHeader = new System.Windows.Forms.Label();
-            this.btnRefreshLeaderboard = new System.Windows.Forms.Button();
-            this.dgvLeaderboard = new System.Windows.Forms.DataGridView();
-            this.lblNoLeaderboard = new System.Windows.Forms.Label();
-
-            // Turn Timer
-            this.turnTimer = new System.Windows.Forms.Timer(this.components);
-
-            this.SuspendLayout();
-
-            // -------------------------------------------------------------
-            // pnlTitleBar (Top Window Title Bar)
-            // -------------------------------------------------------------
-            this.pnlTitleBar.BackColor = System.Drawing.Color.FromArgb(7, 12, 24);
-            this.pnlTitleBar.Controls.Add(this.pnlLogoBox);
-            this.pnlTitleBar.Controls.Add(this.lblAppTitle);
-            this.pnlTitleBar.Controls.Add(this.lblAppSubtitle);
-            this.pnlTitleBar.Controls.Add(this.pnlWindowButtons);
-            this.pnlTitleBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTitleBar.Height = 48;
-            this.pnlTitleBar.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
-
+            components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
+            pnlTitleBar = new Panel();
+            pnlLogoBox = new Panel();
+            lblAppTitle = new Label();
+            lblAppSubtitle = new Label();
+            pnlWindowButtons = new Panel();
+            btnMin = new Button();
+            btnMax = new Button();
+            btnClose = new Button();
+            pnlSidebar = new Panel();
+            pnlNavList = new Panel();
+            btnNavHome = new CyberButton();
+            btnNavGame = new CyberButton();
+            btnNavCreate = new CyberButton();
+            btnNavJoin = new CyberButton();
+            btnNavLeaderboard = new CyberButton();
+            btnNavHistory = new CyberButton();
+            pnlSidebarBottom = new Panel();
+            btnNavSettings = new CyberButton();
+            pnlProfileCard = new RoundedCard();
+            lblProfileName = new Label();
+            lblProfileLevel = new Label();
+            lblProfileXp = new Label();
+            btnLogout = new CyberButton();
+            pnlRightBar = new Panel();
+            cardChat = new RoundedCard();
+            rtbChatLog = new RichTextBox();
+            pnlChatBottom = new Panel();
+            txtChatInput = new TextBox();
+            btnSendChat = new CyberButton();
+            lblChatTitle = new Label();
+            pnlMainContent = new Panel();
+            pnlHomeView = new Panel();
+            pnlMiddleGrid = new Panel();
+            pnlPlayersContainer = new Panel();
+            cardConnectedPlayers = new RoundedCard();
+            lblNoPlayers = new Label();
+            lstConnectedPlayers = new ListBox();
+            lblHomePlayersHeader = new Label();
+            pnlServerInfoContainer = new Panel();
+            cardServerInfo = new RoundedCard();
+            btnHomeSettings = new CyberButton();
+            btnHomeJoinRoom = new CyberButton();
+            btnHomeCreateRoom = new CyberButton();
+            lblHomeServerIp = new Label();
+            lblHomeServerHost = new Label();
+            lblHomeServerStatus = new Label();
+            lblHomeServerHeader = new Label();
+            heroBanner = new HeroBannerPanel();
+            lblHeroTitle = new Label();
+            lblHeroSubtitle = new Label();
+            pnlGameView = new Panel();
+            gameOverModal = new GameOverModal();
+            boardControl1 = new BoardControl();
+            pnlGameHeader = new RoundedCard();
+            pnlGameActions = new Panel();
+            btnSurrender = new CyberButton();
+            btnRestart = new CyberButton();
+            btnLeaveRoom = new CyberButton();
+            timerWidget = new CyberTimerWidget();
+            pnlGameInfo = new Panel();
+            lblRoomIdInfo = new Label();
+            lblPlayersInfo = new Label();
+            lblTurnInfo = new Label();
+            pnlCreateRoomView = new Panel();
+            cardCreateBox = new RoundedCard();
+            btnCancelCreate = new CyberButton();
+            btnCreateRoom = new CyberButton();
+            pillRuleFree = new OptionPill();
+            pillRuleStandard = new OptionPill();
+            secHeaderRule = new SectionHeaderLabel();
+            pnlAiDifficultyOptions = new Panel();
+            lblAiDifficultyLabel = new Label();
+            pillAiEasy = new OptionPill();
+            pillAiMedium = new OptionPill();
+            pillAiHard = new OptionPill();
+            pnlTimeLimitOptions = new Panel();
+            lblTimePillLabel = new Label();
+            pillTime15 = new OptionPill();
+            pillTime30 = new OptionPill();
+            pillTime60 = new OptionPill();
+            pillCountdown1m = new OptionPill();
+            pillCountdown3m = new OptionPill();
+            pillCountdown5m = new OptionPill();
+            pillCountdownCustom = new OptionPill();
+            txtCustomMinutes = new TextBox();
+            lblCustomMinutesUnit = new Label();
+            cardTimeFree = new ModeSelectionCard();
+            cardTimeTurn = new ModeSelectionCard();
+            secHeaderTime = new SectionHeaderLabel();
+            cardModeAI = new ModeSelectionCard();
+            cardModePvP = new ModeSelectionCard();
+            secHeaderMode = new SectionHeaderLabel();
+            pnlCreateHeader = new Panel();
+            badgeCreatePlus = new CircleBadge();
+            lblCreateTitle = new Label();
+            lblCreateSubtitle = new Label();
+            pnlJoinRoomView = new Panel();
+            lblLobbyLastUpdated = new Label();
+            pnlLobbyBody = new Panel();
+            pnlLobbyRightCol = new Panel();
+            cardFeaturedRoom = new RoundedCard();
+            btnFeaturedAction = new CyberButton();
+            lblFeaturedStatus = new Label();
+            lblFeaturedMode = new Label();
+            lblFeaturedHost = new Label();
+            lblFeaturedRoomName = new Label();
+            miniBoardPreview = new MiniBoardPreviewControl();
+            lblViewAllRooms = new Label();
+            lblFeaturedTitle = new Label();
+            cardJoinByCode = new RoundedCard();
+            lblCodeFootnote = new Label();
+            btnJoinRoom = new CyberButton();
+            pnlCodeWrapper = new RoundedCard();
+            txtRoomId = new TextBox();
+            lblCodeHash = new Label();
+            lblJoinByCodeTitle = new Label();
+            cardOpenRooms = new RoundedCard();
+            pnlOpenRoomsScroll = new Panel();
+            lblNoRooms = new Label();
+            pnlOpenRoomsHeader = new Panel();
+            lblOpenRoomsCount = new Label();
+            lblOpenRoomsTitle = new Label();
+            pnlLobbyFilterBar = new Panel();
+            btnRefreshLobby = new CyberButton();
+            pnlFilterPills = new Panel();
+            pillFilterWaiting = new LobbyFilterPill();
+            pillFilter4p = new LobbyFilterPill();
+            pillFilter2p = new LobbyFilterPill();
+            pillFilterAll = new LobbyFilterPill();
+            pnlSearchBox = new RoundedCard();
+            txtSearchRoom = new TextBox();
+            lblSearchIcon = new VectorIconLabel();
+            pnlLobbyHeaderBar = new LobbyBannerPanel();
+            lblLobbySubtitle = new Label();
+            lblLobbyTitle = new Label();
+            pnlLobbyIconBox = new LobbyHeaderIconBox();
+            pnlHistoryView = new Panel();
+            cardHistoryBox = new RoundedCard();
+            lblNoHistory = new Label();
+            dgvMatchHistory = new DataGridView();
+            pnlHistoryHeaderBar = new Panel();
+            btnRefreshHistory = new Button();
+            lblHistoryHeader = new Label();
+            pnlHistorySpacer2 = new Panel();
+            pnlMiddleRow = new Panel();
+            cardAchievements = new RoundedCard();
+            lblAchievementsHeader = new Label();
+            badgeTanThu = new AchievementBadgeControl();
+            badgeChienBinh = new AchievementBadgeControl();
+            badgeCaoThu = new AchievementBadgeControl();
+            badgeLocked = new AchievementBadgeControl();
+            pnlMiddleSpacer = new Panel();
+            cardQuickStats = new RoundedCard();
+            lblQuickStatsHeader = new Label();
+            quickStatTotal = new QuickStatItem();
+            quickStatWins = new QuickStatItem();
+            quickStatElo = new QuickStatItem();
+            pnlHistorySpacer1 = new Panel();
+            cardProfileHero = new RoundedCard();
+            avatarControl = new CircularAvatarControl();
+            lblProfileDetailName = new Label();
+            lblEditNameIcon = new VectorIconLabel();
+            lblProfileDetailElo = new Label();
+            lblProfileDetailRank = new Label();
+            lblProfileDetailStatus = new Label();
+            kpiTotal = new KpiStatBox();
+            kpiWins = new KpiStatBox();
+            kpiLosses = new KpiStatBox();
+            gaugeWinRate = new WinRateDonutGauge();
+            pnlLeaderboardView = new Panel();
+            cardLeaderboardBox = new RoundedCard();
+            lblNoLeaderboard = new Label();
+            dgvLeaderboard = new DataGridView();
+            pnlLeaderboardHeaderBar = new Panel();
+            btnRefreshLeaderboard = new Button();
+            lblLeaderboardHeader = new Label();
+            pnlSettingsView = new SettingsBackgroundPanel();
+            cardSettingsBox = new CyberLoginCard();
+            btnTabLogin = new CyberButton();
+            btnTabRegister = new CyberButton();
+            pnlAuthBodyLogin = new Panel();
+            lblSettingsTitle = new Label();
+            lblSettingsNotice = new Label();
+            lblServerIp = new Label();
+            lblPort = new Label();
+            pnlIpWrapper = new RoundedCard();
+            lblIpPrefix = new Label();
+            txtIp = new TextBox();
+            pnlPortWrapper = new RoundedCard();
+            txtPort = new TextBox();
+            pnlUserWrapper = new RoundedCard();
+            lblUserPrefix = new VectorIconLabel();
+            txtName = new TextBox();
+            pnlPassWrapper = new RoundedCard();
+            lblPassPrefix = new VectorIconLabel();
+            txtPassword = new TextBox();
+            lblTogglePassword = new VectorIconLabel();
+            lblStatusBadge = new Label();
+            btnConnect = new CyberButton();
+            lblSwitchToRegister = new Label();
+            lblOfflineTip = new Label();
+            pnlAuthBodyRegister = new Panel();
+            lblRegTitle = new Label();
+            lblRegNotice = new Label();
+            lblRegServerIp = new Label();
+            lblRegPort = new Label();
+            pnlRegIpWrapper = new RoundedCard();
+            lblRegIpPrefix = new Label();
+            txtRegIp = new TextBox();
+            pnlRegPortWrapper = new RoundedCard();
+            txtRegPort = new TextBox();
+            pnlRegUserWrapper = new RoundedCard();
+            lblRegUserPrefix = new VectorIconLabel();
+            txtRegName = new TextBox();
+            pnlRegPassWrapper = new RoundedCard();
+            lblRegPassPrefix = new VectorIconLabel();
+            txtRegPassword = new TextBox();
+            lblToggleRegPass = new VectorIconLabel();
+            pnlRegConfirmPassWrapper = new RoundedCard();
+            lblRegConfirmPassPrefix = new VectorIconLabel();
+            txtRegConfirmPassword = new TextBox();
+            lblToggleRegConfirm = new VectorIconLabel();
+            lblRegStatusBadge = new Label();
+            btnRegister = new CyberButton();
+            lblSwitchToLogin = new Label();
+            lblRegOfflineTip = new Label();
+            lblTimer = new Label();
+            lblPlayerName = new Label();
+            lblPassword = new Label();
+            lblRegPlayerName = new Label();
+            lblRegPassword = new Label();
+            lblRegConfirmPassword = new Label();
+            turnTimer = new System.Windows.Forms.Timer(components);
+            pnlTitleBar.SuspendLayout();
+            pnlWindowButtons.SuspendLayout();
+            pnlSidebar.SuspendLayout();
+            pnlNavList.SuspendLayout();
+            pnlSidebarBottom.SuspendLayout();
+            pnlProfileCard.SuspendLayout();
+            pnlRightBar.SuspendLayout();
+            cardChat.SuspendLayout();
+            pnlChatBottom.SuspendLayout();
+            pnlMainContent.SuspendLayout();
+            pnlHomeView.SuspendLayout();
+            pnlMiddleGrid.SuspendLayout();
+            pnlPlayersContainer.SuspendLayout();
+            cardConnectedPlayers.SuspendLayout();
+            pnlServerInfoContainer.SuspendLayout();
+            cardServerInfo.SuspendLayout();
+            heroBanner.SuspendLayout();
+            pnlGameView.SuspendLayout();
+            pnlGameHeader.SuspendLayout();
+            pnlGameActions.SuspendLayout();
+            pnlGameInfo.SuspendLayout();
+            pnlCreateRoomView.SuspendLayout();
+            cardCreateBox.SuspendLayout();
+            pnlAiDifficultyOptions.SuspendLayout();
+            pnlTimeLimitOptions.SuspendLayout();
+            pnlCreateHeader.SuspendLayout();
+            pnlJoinRoomView.SuspendLayout();
+            pnlLobbyBody.SuspendLayout();
+            pnlLobbyRightCol.SuspendLayout();
+            cardFeaturedRoom.SuspendLayout();
+            cardJoinByCode.SuspendLayout();
+            pnlCodeWrapper.SuspendLayout();
+            cardOpenRooms.SuspendLayout();
+            pnlOpenRoomsScroll.SuspendLayout();
+            pnlOpenRoomsHeader.SuspendLayout();
+            pnlLobbyFilterBar.SuspendLayout();
+            pnlFilterPills.SuspendLayout();
+            pnlSearchBox.SuspendLayout();
+            pnlLobbyHeaderBar.SuspendLayout();
+            pnlHistoryView.SuspendLayout();
+            cardHistoryBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvMatchHistory).BeginInit();
+            pnlHistoryHeaderBar.SuspendLayout();
+            pnlMiddleRow.SuspendLayout();
+            cardAchievements.SuspendLayout();
+            cardQuickStats.SuspendLayout();
+            cardProfileHero.SuspendLayout();
+            pnlLeaderboardView.SuspendLayout();
+            cardLeaderboardBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvLeaderboard).BeginInit();
+            pnlLeaderboardHeaderBar.SuspendLayout();
+            pnlSettingsView.SuspendLayout();
+            cardSettingsBox.SuspendLayout();
+            pnlAuthBodyLogin.SuspendLayout();
+            pnlIpWrapper.SuspendLayout();
+            pnlPortWrapper.SuspendLayout();
+            pnlUserWrapper.SuspendLayout();
+            pnlPassWrapper.SuspendLayout();
+            pnlAuthBodyRegister.SuspendLayout();
+            pnlRegIpWrapper.SuspendLayout();
+            pnlRegPortWrapper.SuspendLayout();
+            pnlRegUserWrapper.SuspendLayout();
+            pnlRegPassWrapper.SuspendLayout();
+            pnlRegConfirmPassWrapper.SuspendLayout();
+            SuspendLayout();
+            // 
+            // pnlTitleBar
+            // 
+            pnlTitleBar.BackColor = Color.FromArgb(7, 12, 24);
+            pnlTitleBar.Controls.Add(pnlLogoBox);
+            pnlTitleBar.Controls.Add(lblAppTitle);
+            pnlTitleBar.Controls.Add(lblAppSubtitle);
+            pnlTitleBar.Controls.Add(pnlWindowButtons);
+            pnlTitleBar.Dock = DockStyle.Top;
+            pnlTitleBar.Location = new Point(0, 0);
+            pnlTitleBar.Name = "pnlTitleBar";
+            pnlTitleBar.Size = new Size(1260, 48);
+            pnlTitleBar.TabIndex = 3;
+            pnlTitleBar.MouseDown += TitleBar_MouseDown;
+            // 
             // pnlLogoBox
-            this.pnlLogoBox.Location = new System.Drawing.Point(12, 8);
-            this.pnlLogoBox.Size = new System.Drawing.Size(32, 32);
-            this.pnlLogoBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlLogoBox_Paint);
-
+            // 
+            pnlLogoBox.Location = new Point(12, 8);
+            pnlLogoBox.Name = "pnlLogoBox";
+            pnlLogoBox.Size = new Size(32, 32);
+            pnlLogoBox.TabIndex = 0;
+            pnlLogoBox.Paint += pnlLogoBox_Paint;
+            // 
             // lblAppTitle
-            this.lblAppTitle.AutoSize = true;
-            this.lblAppTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblAppTitle.ForeColor = System.Drawing.Color.White;
-            this.lblAppTitle.Location = new System.Drawing.Point(50, 6);
-            this.lblAppTitle.Text = "CaroKan";
-            this.lblAppTitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
-
+            // 
+            lblAppTitle.AutoSize = true;
+            lblAppTitle.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblAppTitle.ForeColor = Color.White;
+            lblAppTitle.Location = new Point(50, 6);
+            lblAppTitle.Name = "lblAppTitle";
+            lblAppTitle.Size = new Size(91, 28);
+            lblAppTitle.TabIndex = 1;
+            lblAppTitle.Text = "CaroKan";
+            lblAppTitle.MouseDown += TitleBar_MouseDown;
+            // 
             // lblAppSubtitle
-            this.lblAppSubtitle.AutoSize = true;
-            this.lblAppSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblAppSubtitle.ForeColor = System.Drawing.Color.FromArgb(130, 150, 185);
-            this.lblAppSubtitle.Location = new System.Drawing.Point(51, 27);
-            this.lblAppSubtitle.Text = "Kết nối bạn bè - Thắng trong từng ván cờ";
-            this.lblAppSubtitle.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TitleBar_MouseDown);
-
+            // 
+            lblAppSubtitle.AutoSize = true;
+            lblAppSubtitle.Font = new Font("Segoe UI", 8.5F);
+            lblAppSubtitle.ForeColor = Color.FromArgb(130, 150, 185);
+            lblAppSubtitle.Location = new Point(51, 27);
+            lblAppSubtitle.Name = "lblAppSubtitle";
+            lblAppSubtitle.Size = new Size(283, 20);
+            lblAppSubtitle.TabIndex = 2;
+            lblAppSubtitle.Text = "Kết nối bạn bè - Thắng trong từng ván cờ";
+            lblAppSubtitle.MouseDown += TitleBar_MouseDown;
+            // 
             // pnlWindowButtons
-            this.pnlWindowButtons.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlWindowButtons.Width = 135;
-            this.pnlWindowButtons.BackColor = System.Drawing.Color.Transparent;
-            this.pnlWindowButtons.Controls.Add(this.btnMin);
-            this.pnlWindowButtons.Controls.Add(this.btnMax);
-            this.pnlWindowButtons.Controls.Add(this.btnClose);
-
-            this.btnMin.Location = new System.Drawing.Point(4, 9);
-            this.btnMin.Size = new System.Drawing.Size(38, 30);
-            this.btnMin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMin.FlatAppearance.BorderSize = 0;
-            this.btnMin.BackColor = System.Drawing.Color.FromArgb(16, 26, 50);
-            this.btnMin.ForeColor = System.Drawing.Color.FromArgb(200, 215, 240);
-            this.btnMin.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnMin.Text = "—";
-            this.btnMin.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMin.Click += (s, e) => this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
-
-            this.btnMax.Location = new System.Drawing.Point(46, 9);
-            this.btnMax.Size = new System.Drawing.Size(38, 30);
-            this.btnMax.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnMax.FlatAppearance.BorderSize = 0;
-            this.btnMax.BackColor = System.Drawing.Color.FromArgb(16, 26, 50);
-            this.btnMax.ForeColor = System.Drawing.Color.FromArgb(200, 215, 240);
-            this.btnMax.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnMax.Text = "▢";
-            this.btnMax.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnMax.Click += (s, e) => this.WindowState = (this.WindowState == System.Windows.Forms.FormWindowState.Maximized) ? System.Windows.Forms.FormWindowState.Normal : System.Windows.Forms.FormWindowState.Maximized;
-
-            this.btnClose.Location = new System.Drawing.Point(88, 9);
-            this.btnClose.Size = new System.Drawing.Size(38, 30);
-            this.btnClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClose.FlatAppearance.BorderSize = 0;
-            this.btnClose.BackColor = System.Drawing.Color.FromArgb(16, 26, 50);
-            this.btnClose.ForeColor = System.Drawing.Color.FromArgb(200, 215, 240);
-            this.btnClose.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnClose.Text = "✕";
-            this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnClose.Click += (s, e) => this.Close();
-
-            // -------------------------------------------------------------
-            // pnlSidebar (Left Navigation) - Width 230px
-            // -------------------------------------------------------------
-            this.pnlSidebar.BackColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSidebar.Width = 230;
-            this.pnlSidebar.Padding = new System.Windows.Forms.Padding(12, 14, 12, 14);
-            this.pnlSidebar.Controls.Add(this.pnlNavList);
-            this.pnlSidebar.Controls.Add(this.pnlSidebarBottom);
-
+            // 
+            pnlWindowButtons.BackColor = Color.Transparent;
+            pnlWindowButtons.Controls.Add(btnMin);
+            pnlWindowButtons.Controls.Add(btnMax);
+            pnlWindowButtons.Controls.Add(btnClose);
+            pnlWindowButtons.Dock = DockStyle.Right;
+            pnlWindowButtons.Location = new Point(1125, 0);
+            pnlWindowButtons.Name = "pnlWindowButtons";
+            pnlWindowButtons.Size = new Size(135, 48);
+            pnlWindowButtons.TabIndex = 3;
+            // 
+            // btnMin
+            // 
+            btnMin.BackColor = Color.FromArgb(16, 26, 50);
+            btnMin.Cursor = Cursors.Hand;
+            btnMin.FlatAppearance.BorderSize = 0;
+            btnMin.FlatStyle = FlatStyle.Flat;
+            btnMin.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnMin.ForeColor = Color.FromArgb(200, 215, 240);
+            btnMin.Location = new Point(4, 9);
+            btnMin.Name = "btnMin";
+            btnMin.Size = new Size(38, 30);
+            btnMin.TabIndex = 0;
+            btnMin.Text = "—";
+            btnMin.UseVisualStyleBackColor = false;
+            btnMin.Click += btnMin_Click;
+            // 
+            // btnMax
+            // 
+            btnMax.BackColor = Color.FromArgb(16, 26, 50);
+            btnMax.Cursor = Cursors.Hand;
+            btnMax.FlatAppearance.BorderSize = 0;
+            btnMax.FlatStyle = FlatStyle.Flat;
+            btnMax.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnMax.ForeColor = Color.FromArgb(200, 215, 240);
+            btnMax.Location = new Point(46, 9);
+            btnMax.Name = "btnMax";
+            btnMax.Size = new Size(38, 30);
+            btnMax.TabIndex = 1;
+            btnMax.Text = "▢";
+            btnMax.UseVisualStyleBackColor = false;
+            btnMax.Click += btnMax_Click;
+            // 
+            // btnClose
+            // 
+            btnClose.BackColor = Color.FromArgb(16, 26, 50);
+            btnClose.Cursor = Cursors.Hand;
+            btnClose.FlatAppearance.BorderSize = 0;
+            btnClose.FlatStyle = FlatStyle.Flat;
+            btnClose.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnClose.ForeColor = Color.FromArgb(200, 215, 240);
+            btnClose.Location = new Point(88, 9);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(38, 30);
+            btnClose.TabIndex = 2;
+            btnClose.Text = "✕";
+            btnClose.UseVisualStyleBackColor = false;
+            btnClose.Click += btnClose_Click;
+            // 
+            // pnlSidebar
+            // 
+            pnlSidebar.BackColor = Color.FromArgb(9, 15, 30);
+            pnlSidebar.Controls.Add(pnlNavList);
+            pnlSidebar.Controls.Add(pnlSidebarBottom);
+            pnlSidebar.Dock = DockStyle.Left;
+            pnlSidebar.Location = new Point(0, 48);
+            pnlSidebar.Name = "pnlSidebar";
+            pnlSidebar.Padding = new Padding(12, 14, 12, 14);
+            pnlSidebar.Size = new Size(230, 732);
+            pnlSidebar.TabIndex = 2;
+            // 
             // pnlNavList
-            this.pnlNavList.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlNavList.Height = 270;
-            this.pnlNavList.BackColor = System.Drawing.Color.Transparent;
-            this.pnlNavList.Controls.Add(this.btnNavHome);
-            this.pnlNavList.Controls.Add(this.btnNavGame);
-            this.pnlNavList.Controls.Add(this.btnNavCreate);
-            this.pnlNavList.Controls.Add(this.btnNavJoin);
-            this.pnlNavList.Controls.Add(this.btnNavLeaderboard);
-            this.pnlNavList.Controls.Add(this.btnNavHistory);
-
-            // Nav Buttons with CyberIcon: Crisp, modern vector icons that never glitch or wrap
-            this.btnNavHome.Location = new System.Drawing.Point(0, 5);
-            this.btnNavHome.Size = new System.Drawing.Size(206, 38);
-            this.btnNavHome.Text = "Trang chủ";
-            this.btnNavHome.NavIcon = CaroClient.CyberIcon.Home;
-            this.btnNavHome.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavHome.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavHome.IsPrimaryGradient = true;
-            this.btnNavHome.Click += (s, e) => SwitchToView(this.pnlHomeView, this.btnNavHome);
-
-            this.btnNavGame.Location = new System.Drawing.Point(0, 48);
-            this.btnNavGame.Size = new System.Drawing.Size(206, 38);
-            this.btnNavGame.Text = "Bàn cờ";
-            this.btnNavGame.NavIcon = CaroClient.CyberIcon.Gamepad;
-            this.btnNavGame.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavGame.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavGame.NormalColor = System.Drawing.Color.FromArgb(14, 24, 46);
-            this.btnNavGame.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnNavGame.Click += new System.EventHandler(this.btnNavGame_Click);
-
-            this.btnNavCreate.Location = new System.Drawing.Point(0, 91);
-            this.btnNavCreate.Size = new System.Drawing.Size(206, 38);
-            this.btnNavCreate.Text = "Tạo phòng";
-            this.btnNavCreate.NavIcon = CaroClient.CyberIcon.Plus;
-            this.btnNavCreate.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavCreate.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCreate.NormalColor = System.Drawing.Color.FromArgb(14, 24, 46);
-            this.btnNavCreate.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnNavCreate.Click += (s, e) => SwitchToView(this.pnlCreateRoomView, this.btnNavCreate);
-
-            this.btnNavJoin.Location = new System.Drawing.Point(0, 134);
-            this.btnNavJoin.Size = new System.Drawing.Size(206, 38);
-            this.btnNavJoin.Text = "Tham gia phòng";
-            this.btnNavJoin.NavIcon = CaroClient.CyberIcon.Link;
-            this.btnNavJoin.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavJoin.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavJoin.NormalColor = System.Drawing.Color.FromArgb(14, 24, 46);
-            this.btnNavJoin.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnNavJoin.Click += (s, e) => SwitchToView(this.pnlJoinRoomView, this.btnNavJoin);
-
-            this.btnNavLeaderboard.Location = new System.Drawing.Point(0, 177);
-            this.btnNavLeaderboard.Size = new System.Drawing.Size(206, 38);
-            this.btnNavLeaderboard.Text = "Bảng xếp hạng";
-            this.btnNavLeaderboard.NavIcon = CaroClient.CyberIcon.Trophy;
-            this.btnNavLeaderboard.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavLeaderboard.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavLeaderboard.NormalColor = System.Drawing.Color.FromArgb(14, 24, 46);
-            this.btnNavLeaderboard.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnNavLeaderboard.Click += (s, e) => SwitchToView(this.pnlLeaderboardView, this.btnNavLeaderboard);
-
-            this.btnNavHistory.Location = new System.Drawing.Point(0, 220);
-            this.btnNavHistory.Size = new System.Drawing.Size(206, 38);
-            this.btnNavHistory.Text = "Hồ sơ cá nhân";
-            this.btnNavHistory.NavIcon = CaroClient.CyberIcon.User;
-            this.btnNavHistory.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavHistory.CustomTextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavHistory.NormalColor = System.Drawing.Color.FromArgb(14, 24, 46);
-            this.btnNavHistory.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnNavHistory.Click += (s, e) => SwitchToView(this.pnlHistoryView, this.btnNavHistory);
-
-            // -------------------------------------------------------------
-            // pnlSidebarBottom (Bottom Sidebar: Nút Đăng nhập nổi bật + Card Hồ sơ)
-            // -------------------------------------------------------------
-            this.pnlSidebarBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlSidebarBottom.Height = 126;
-            this.pnlSidebarBottom.BackColor = System.Drawing.Color.Transparent;
-            this.pnlSidebarBottom.Controls.Add(this.btnNavSettings);
-            this.pnlSidebarBottom.Controls.Add(this.pnlProfileCard);
-
-            // btnNavSettings: Nút ĐĂNG NHẬP đặt ngay gần hồ sơ luôn cho nổi bật
-            this.btnNavSettings.Location = new System.Drawing.Point(0, 0);
-            this.btnNavSettings.Size = new System.Drawing.Size(206, 42);
-            this.btnNavSettings.Text = "⚡ ĐĂNG NHẬP";
-            this.btnNavSettings.NavIcon = CaroClient.CyberIcon.Login;
-            this.btnNavSettings.ParentBgColor = System.Drawing.Color.FromArgb(9, 15, 30);
-            this.btnNavSettings.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnNavSettings.IsPrimaryGradient = true;
-            this.btnNavSettings.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnNavSettings.Click += (s, e) => HandleNavSettingsClick();
-
-            // pnlProfileCard (Thẻ hồ sơ tóm tắt ở góc dưới)
-            this.pnlProfileCard.Location = new System.Drawing.Point(0, 48);
-            this.pnlProfileCard.Size = new System.Drawing.Size(206, 74);
-            this.pnlProfileCard.FillColor = System.Drawing.Color.FromArgb(14, 25, 50);
-            this.pnlProfileCard.BorderColor = System.Drawing.Color.FromArgb(24, 44, 84);
-            this.pnlProfileCard.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pnlProfileCard.Click += (s, e) => SwitchToView(this.pnlHistoryView, this.btnNavHistory);
-            this.pnlProfileCard.Controls.Add(this.lblProfileName);
-            this.pnlProfileCard.Controls.Add(this.lblProfileLevel);
-            this.pnlProfileCard.Controls.Add(this.lblProfileXp);
-
-            this.lblProfileName.Text = "Khách (Offline)";
-            this.lblProfileName.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblProfileName.ForeColor = System.Drawing.Color.White;
-            this.lblProfileName.Location = new System.Drawing.Point(12, 8);
-            this.lblProfileName.AutoSize = true;
-            this.lblProfileName.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblProfileName.Click += (s, e) => SwitchToView(this.pnlHistoryView, this.btnNavHistory);
-
-            this.lblProfileLevel.Text = "Chế độ Offline";
-            this.lblProfileLevel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.lblProfileLevel.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblProfileLevel.Location = new System.Drawing.Point(12, 28);
-            this.lblProfileLevel.AutoSize = true;
-            this.lblProfileLevel.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblProfileLevel.Click += (s, e) => SwitchToView(this.pnlHistoryView, this.btnNavHistory);
-
-            this.lblProfileXp.Text = "Chơi với Máy";
-            this.lblProfileXp.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.lblProfileXp.ForeColor = System.Drawing.Color.FromArgb(160, 185, 220);
-            this.lblProfileXp.Location = new System.Drawing.Point(12, 46);
-            this.lblProfileXp.AutoSize = true;
-            this.lblProfileXp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblProfileXp.Click += (s, e) => SwitchToView(this.pnlHistoryView, this.btnNavHistory);
-
-            this.btnLogout.Location = new System.Drawing.Point(12, 68);
-            this.btnLogout.Size = new System.Drawing.Size(182, 30);
-            this.btnLogout.Text = "⎋ Đăng xuất";
-            this.btnLogout.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.btnLogout.ForeColor = System.Drawing.Color.White;
-            this.btnLogout.ParentBgColor = System.Drawing.Color.FromArgb(14, 25, 50);
-            this.btnLogout.NormalColor = System.Drawing.Color.FromArgb(28, 42, 70);
-            this.btnLogout.HoverColor = System.Drawing.Color.FromArgb(255, 46, 99);
-            this.btnLogout.CornerRadius = 6;
-            this.btnLogout.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnLogout.Visible = false;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
-
-            // -------------------------------------------------------------
-            // pnlRightBar (Right Panel - Dedicated strictly to Chat)
-            // -------------------------------------------------------------
-            this.pnlRightBar.BackColor = System.Drawing.Color.FromArgb(8, 14, 28);
-            this.pnlRightBar.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlRightBar.Width = 280;
-            this.pnlRightBar.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlRightBar.Visible = false;
-            this.pnlRightBar.Controls.Add(this.cardChat);
-
-            // cardChat (Takes full vertical height of right sidebar)
-            this.cardChat.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardChat.Padding = new System.Windows.Forms.Padding(10, 8, 10, 8);
-            this.cardChat.Controls.Add(this.rtbChatLog);
-            this.cardChat.Controls.Add(this.pnlChatBottom);
-            this.cardChat.Controls.Add(this.lblChatTitle);
-
-            this.lblChatTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblChatTitle.Height = 28;
-            this.lblChatTitle.Text = "Chat phòng";
-            this.lblChatTitle.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblChatTitle.ForeColor = System.Drawing.Color.White;
-
-            this.pnlChatBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlChatBottom.Height = 40;
-            this.pnlChatBottom.Padding = new System.Windows.Forms.Padding(0, 4, 0, 0);
-            this.pnlChatBottom.Controls.Add(this.txtChatInput);
-            this.pnlChatBottom.Controls.Add(this.btnSendChat);
-
-            this.txtChatInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtChatInput.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtChatInput.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtChatInput.ForeColor = System.Drawing.Color.White;
-            this.txtChatInput.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.txtChatInput.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtChatInput_KeyDown);
-
-            this.btnSendChat.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnSendChat.Width = 46;
-            this.btnSendChat.Text = "➤";
-            this.btnSendChat.IsPrimaryGradient = true;
-            this.btnSendChat.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnSendChat.Click += new System.EventHandler(this.btnSendChat_Click);
-
-            this.rtbChatLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbChatLog.BackColor = System.Drawing.Color.FromArgb(10, 18, 36);
-            this.rtbChatLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.rtbChatLog.ForeColor = System.Drawing.Color.FromArgb(220, 235, 255);
-            this.rtbChatLog.Font = new System.Drawing.Font("Segoe UI", 8.75F);
-            this.rtbChatLog.ReadOnly = true;
-
-            // -------------------------------------------------------------
-            // pnlMainContent (Center Multi-View Container)
-            // -------------------------------------------------------------
-            this.pnlMainContent.BackColor = System.Drawing.Color.FromArgb(8, 13, 26);
-            this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMainContent.Controls.Add(this.pnlHomeView);
-            this.pnlMainContent.Controls.Add(this.pnlGameView);
-            this.pnlMainContent.Controls.Add(this.pnlCreateRoomView);
-            this.pnlMainContent.Controls.Add(this.pnlJoinRoomView);
-            this.pnlMainContent.Controls.Add(this.pnlHistoryView);
-            this.pnlMainContent.Controls.Add(this.pnlLeaderboardView);
-            this.pnlMainContent.Controls.Add(this.pnlSettingsView);
-
-            // =============================================================
-            // View 1: pnlHomeView (Dashboard / Trang chủ)
-            // =============================================================
-            this.pnlHomeView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlHomeView.Padding = new System.Windows.Forms.Padding(16, 12, 16, 14);
-            this.pnlHomeView.Controls.Add(this.pnlMiddleGrid);
-            this.pnlHomeView.Controls.Add(this.heroBanner);
-
-            // heroBanner
-            this.heroBanner.Dock = System.Windows.Forms.DockStyle.Top;
-            this.heroBanner.Height = 115;
-            this.heroBanner.Controls.Add(this.lblHeroTitle);
-            this.heroBanner.Controls.Add(this.lblHeroSubtitle);
-
-            this.lblHeroTitle.Text = "Chơi cờ caro qua mạng LAN - CaroKan";
-            this.lblHeroTitle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.lblHeroTitle.ForeColor = System.Drawing.Color.White;
-            this.lblHeroTitle.Location = new System.Drawing.Point(24, 20);
-            this.lblHeroTitle.AutoSize = true;
-
-            this.lblHeroSubtitle.Text = "Kết nối cùng bạn bè trong cùng một mạng LAN.\nKhông cần Internet, giao đấu trực tiếp hoặc luyện tập cùng AI!";
-            this.lblHeroSubtitle.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblHeroSubtitle.ForeColor = System.Drawing.Color.FromArgb(160, 185, 225);
-            this.lblHeroSubtitle.Location = new System.Drawing.Point(25, 56);
-            this.lblHeroSubtitle.AutoSize = true;
-
-            // pnlMiddleGrid (Khung chính trang chủ: Thông tin máy chủ & Người chơi Online)
-            this.pnlMiddleGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMiddleGrid.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
-            this.pnlMiddleGrid.Controls.Add(this.pnlPlayersContainer);
-            this.pnlMiddleGrid.Controls.Add(this.pnlServerInfoContainer);
-
-            // pnlServerInfoContainer (Cột trái: Thông tin máy chủ & Thao tác nhanh)
-            this.pnlServerInfoContainer.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlServerInfoContainer.Width = 330;
-            this.pnlServerInfoContainer.Padding = new System.Windows.Forms.Padding(0, 0, 12, 0);
-            this.pnlServerInfoContainer.Controls.Add(this.cardServerInfo);
-
-            // cardServerInfo
-            this.cardServerInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardServerInfo.Padding = new System.Windows.Forms.Padding(18, 16, 18, 16);
-            this.cardServerInfo.Controls.Add(this.btnHomeSettings);
-            this.cardServerInfo.Controls.Add(this.btnHomeJoinRoom);
-            this.cardServerInfo.Controls.Add(this.btnHomeCreateRoom);
-            this.cardServerInfo.Controls.Add(this.lblHomeServerIp);
-            this.cardServerInfo.Controls.Add(this.lblHomeServerHost);
-            this.cardServerInfo.Controls.Add(this.lblHomeServerStatus);
-            this.cardServerInfo.Controls.Add(this.lblHomeServerHeader);
-
-            this.lblHomeServerHeader.Text = "THÔNG TIN MÁY CHỦ";
-            this.lblHomeServerHeader.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-            this.lblHomeServerHeader.ForeColor = System.Drawing.Color.White;
-            this.lblHomeServerHeader.Location = new System.Drawing.Point(18, 16);
-            this.lblHomeServerHeader.AutoSize = true;
-
-            this.lblHomeServerStatus.Text = "○ Chưa kết nối";
-            this.lblHomeServerStatus.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblHomeServerStatus.ForeColor = System.Drawing.Color.FromArgb(255, 75, 75);
-            this.lblHomeServerStatus.Location = new System.Drawing.Point(18, 48);
-            this.lblHomeServerStatus.AutoSize = true;
-
-            this.lblHomeServerHost.Text = "💻 Tên máy chủ: ---";
-            this.lblHomeServerHost.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblHomeServerHost.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblHomeServerHost.Location = new System.Drawing.Point(18, 76);
-            this.lblHomeServerHost.AutoSize = true;
-
-            this.lblHomeServerIp.Text = "📡 IP & Cổng: ---";
-            this.lblHomeServerIp.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblHomeServerIp.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblHomeServerIp.Location = new System.Drawing.Point(18, 102);
-            this.lblHomeServerIp.AutoSize = true;
-
-            // btnHomeCreateRoom
-            this.btnHomeCreateRoom.Location = new System.Drawing.Point(18, 150);
-            this.btnHomeCreateRoom.Size = new System.Drawing.Size(284, 42);
-            this.btnHomeCreateRoom.Text = "+  Tạo phòng mới";
-            this.btnHomeCreateRoom.IsPrimaryGradient = true;
-            this.btnHomeCreateRoom.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnHomeCreateRoom.Click += (s, e) => SwitchToView(this.pnlCreateRoomView, this.btnNavCreate);
-
-            // btnHomeJoinRoom
-            this.btnHomeJoinRoom.Location = new System.Drawing.Point(18, 202);
-            this.btnHomeJoinRoom.Size = new System.Drawing.Size(284, 40);
-            this.btnHomeJoinRoom.NormalColor = System.Drawing.Color.FromArgb(16, 32, 64);
-            this.btnHomeJoinRoom.HoverColor = System.Drawing.Color.FromArgb(24, 48, 96);
-            this.btnHomeJoinRoom.BorderLineColor = System.Drawing.Color.FromArgb(32, 60, 115);
-            this.btnHomeJoinRoom.Text = "➜  Danh sách phòng đấu";
-            this.btnHomeJoinRoom.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnHomeJoinRoom.Click += (s, e) => SwitchToView(this.pnlJoinRoomView, this.btnNavJoin);
-
-            // btnHomeSettings
-            this.btnHomeSettings.Location = new System.Drawing.Point(18, 252);
-            this.btnHomeSettings.Size = new System.Drawing.Size(284, 38);
-            this.btnHomeSettings.NormalColor = System.Drawing.Color.FromArgb(20, 36, 68);
-            this.btnHomeSettings.HoverColor = System.Drawing.Color.FromArgb(30, 52, 95);
-            this.btnHomeSettings.BorderLineColor = System.Drawing.Color.FromArgb(38, 65, 110);
-            this.btnHomeSettings.Text = "⚙  Cài đặt kết nối...";
-            this.btnHomeSettings.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnHomeSettings.Click += (s, e) => SwitchToView(this.pnlSettingsView, this.btnNavSettings);
-
-            // pnlPlayersContainer (Cột phải: Danh sách người chơi online)
-            this.pnlPlayersContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPlayersContainer.Padding = new System.Windows.Forms.Padding(0);
-            this.pnlPlayersContainer.Controls.Add(this.cardConnectedPlayers);
-
+            // 
+            pnlNavList.BackColor = Color.Transparent;
+            pnlNavList.Controls.Add(btnNavHome);
+            pnlNavList.Controls.Add(btnNavGame);
+            pnlNavList.Controls.Add(btnNavCreate);
+            pnlNavList.Controls.Add(btnNavJoin);
+            pnlNavList.Controls.Add(btnNavLeaderboard);
+            pnlNavList.Controls.Add(btnNavHistory);
+            pnlNavList.Dock = DockStyle.Top;
+            pnlNavList.Location = new Point(12, 14);
+            pnlNavList.Name = "pnlNavList";
+            pnlNavList.Size = new Size(206, 270);
+            pnlNavList.TabIndex = 0;
+            // 
+            // btnNavHome
+            // 
+            btnNavHome.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavHome.BorderLineColor = Color.Transparent;
+            btnNavHome.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavHome.CornerRadius = 10;
+            btnNavHome.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavHome.FlatStyle = FlatStyle.Flat;
+            btnNavHome.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavHome.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavHome.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavHome.IsPrimaryGradient = false;
+            btnNavHome.IsPurpleGradient = false;
+            btnNavHome.Location = new Point(0, 5);
+            btnNavHome.Name = "btnNavHome";
+            btnNavHome.NavIcon = CyberIcon.None;
+            btnNavHome.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavHome.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavHome.Size = new Size(206, 38);
+            btnNavHome.TabIndex = 0;
+            btnNavHome.Text = "Trang chủ";
+            btnNavHome.TextLeftPadding = 16;
+            btnNavHome.UseVisualStyleBackColor = false;
+            btnNavHome.Click += btnNavHome_Click;
+            // 
+            // btnNavGame
+            // 
+            btnNavGame.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavGame.BorderLineColor = Color.Transparent;
+            btnNavGame.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavGame.CornerRadius = 10;
+            btnNavGame.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavGame.FlatStyle = FlatStyle.Flat;
+            btnNavGame.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavGame.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavGame.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavGame.IsPrimaryGradient = false;
+            btnNavGame.IsPurpleGradient = false;
+            btnNavGame.Location = new Point(0, 48);
+            btnNavGame.Name = "btnNavGame";
+            btnNavGame.NavIcon = CyberIcon.None;
+            btnNavGame.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavGame.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavGame.Size = new Size(206, 38);
+            btnNavGame.TabIndex = 1;
+            btnNavGame.Text = "Bàn cờ";
+            btnNavGame.TextLeftPadding = 16;
+            btnNavGame.UseVisualStyleBackColor = false;
+            btnNavGame.Click += btnNavGame_Click;
+            // 
+            // btnNavCreate
+            // 
+            btnNavCreate.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavCreate.BorderLineColor = Color.Transparent;
+            btnNavCreate.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavCreate.CornerRadius = 10;
+            btnNavCreate.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavCreate.FlatStyle = FlatStyle.Flat;
+            btnNavCreate.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavCreate.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavCreate.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavCreate.IsPrimaryGradient = false;
+            btnNavCreate.IsPurpleGradient = false;
+            btnNavCreate.Location = new Point(0, 91);
+            btnNavCreate.Name = "btnNavCreate";
+            btnNavCreate.NavIcon = CyberIcon.None;
+            btnNavCreate.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavCreate.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavCreate.Size = new Size(206, 38);
+            btnNavCreate.TabIndex = 2;
+            btnNavCreate.Text = "Tạo phòng";
+            btnNavCreate.TextLeftPadding = 16;
+            btnNavCreate.UseVisualStyleBackColor = false;
+            btnNavCreate.Click += btnNavCreate_Click;
+            // 
+            // btnNavJoin
+            // 
+            btnNavJoin.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavJoin.BorderLineColor = Color.Transparent;
+            btnNavJoin.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavJoin.CornerRadius = 10;
+            btnNavJoin.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavJoin.FlatStyle = FlatStyle.Flat;
+            btnNavJoin.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavJoin.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavJoin.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavJoin.IsPrimaryGradient = false;
+            btnNavJoin.IsPurpleGradient = false;
+            btnNavJoin.Location = new Point(0, 134);
+            btnNavJoin.Name = "btnNavJoin";
+            btnNavJoin.NavIcon = CyberIcon.None;
+            btnNavJoin.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavJoin.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavJoin.Size = new Size(206, 38);
+            btnNavJoin.TabIndex = 3;
+            btnNavJoin.Text = "Tham gia phòng";
+            btnNavJoin.TextLeftPadding = 16;
+            btnNavJoin.UseVisualStyleBackColor = false;
+            btnNavJoin.Click += btnNavJoin_Click;
+            // 
+            // btnNavLeaderboard
+            // 
+            btnNavLeaderboard.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavLeaderboard.BorderLineColor = Color.Transparent;
+            btnNavLeaderboard.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavLeaderboard.CornerRadius = 10;
+            btnNavLeaderboard.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavLeaderboard.FlatStyle = FlatStyle.Flat;
+            btnNavLeaderboard.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavLeaderboard.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavLeaderboard.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavLeaderboard.IsPrimaryGradient = false;
+            btnNavLeaderboard.IsPurpleGradient = false;
+            btnNavLeaderboard.Location = new Point(0, 177);
+            btnNavLeaderboard.Name = "btnNavLeaderboard";
+            btnNavLeaderboard.NavIcon = CyberIcon.None;
+            btnNavLeaderboard.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavLeaderboard.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavLeaderboard.Size = new Size(206, 38);
+            btnNavLeaderboard.TabIndex = 4;
+            btnNavLeaderboard.Text = "Bảng xếp hạng";
+            btnNavLeaderboard.TextLeftPadding = 16;
+            btnNavLeaderboard.UseVisualStyleBackColor = false;
+            btnNavLeaderboard.Click += btnNavLeaderboard_Click;
+            // 
+            // btnNavHistory
+            // 
+            btnNavHistory.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavHistory.BorderLineColor = Color.Transparent;
+            btnNavHistory.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavHistory.CornerRadius = 10;
+            btnNavHistory.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavHistory.FlatStyle = FlatStyle.Flat;
+            btnNavHistory.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavHistory.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavHistory.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavHistory.IsPrimaryGradient = false;
+            btnNavHistory.IsPurpleGradient = false;
+            btnNavHistory.Location = new Point(0, 220);
+            btnNavHistory.Name = "btnNavHistory";
+            btnNavHistory.NavIcon = CyberIcon.None;
+            btnNavHistory.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavHistory.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavHistory.Size = new Size(206, 38);
+            btnNavHistory.TabIndex = 5;
+            btnNavHistory.Text = "Hồ sơ cá nhân";
+            btnNavHistory.TextLeftPadding = 16;
+            btnNavHistory.UseVisualStyleBackColor = false;
+            btnNavHistory.Click += btnNavHistory_Click;
+            // 
+            // pnlSidebarBottom
+            // 
+            pnlSidebarBottom.BackColor = Color.Transparent;
+            pnlSidebarBottom.Controls.Add(btnNavSettings);
+            pnlSidebarBottom.Controls.Add(pnlProfileCard);
+            pnlSidebarBottom.Dock = DockStyle.Bottom;
+            pnlSidebarBottom.Location = new Point(12, 592);
+            pnlSidebarBottom.Name = "pnlSidebarBottom";
+            pnlSidebarBottom.Size = new Size(206, 126);
+            pnlSidebarBottom.TabIndex = 1;
+            // 
+            // btnNavSettings
+            // 
+            btnNavSettings.BackColor = Color.FromArgb(9, 15, 30);
+            btnNavSettings.BorderLineColor = Color.Transparent;
+            btnNavSettings.ClickColor = Color.FromArgb(10, 18, 36);
+            btnNavSettings.CornerRadius = 10;
+            btnNavSettings.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnNavSettings.FlatStyle = FlatStyle.Flat;
+            btnNavSettings.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnNavSettings.ForeColor = Color.FromArgb(245, 248, 255);
+            btnNavSettings.HoverColor = Color.FromArgb(24, 42, 80);
+            btnNavSettings.IsPrimaryGradient = false;
+            btnNavSettings.IsPurpleGradient = false;
+            btnNavSettings.Location = new Point(0, 0);
+            btnNavSettings.Name = "btnNavSettings";
+            btnNavSettings.NavIcon = CyberIcon.None;
+            btnNavSettings.NormalColor = Color.FromArgb(14, 24, 46);
+            btnNavSettings.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnNavSettings.Size = new Size(206, 42);
+            btnNavSettings.TabIndex = 0;
+            btnNavSettings.Text = "⚡ ĐĂNG NHẬP";
+            btnNavSettings.TextLeftPadding = 16;
+            btnNavSettings.UseVisualStyleBackColor = false;
+            btnNavSettings.Click += btnNavSettings_Click;
+            // 
+            // pnlProfileCard
+            // 
+            pnlProfileCard.BackColor = Color.Transparent;
+            pnlProfileCard.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlProfileCard.BorderWidth = 1.2F;
+            pnlProfileCard.Controls.Add(lblProfileName);
+            pnlProfileCard.Controls.Add(lblProfileLevel);
+            pnlProfileCard.Controls.Add(lblProfileXp);
+            pnlProfileCard.CornerRadius = 14;
+            pnlProfileCard.Cursor = Cursors.Hand;
+            pnlProfileCard.FillColor = Color.FromArgb(13, 24, 48);
+            pnlProfileCard.Location = new Point(0, 48);
+            pnlProfileCard.Name = "pnlProfileCard";
+            pnlProfileCard.Padding = new Padding(12);
+            pnlProfileCard.Size = new Size(206, 74);
+            pnlProfileCard.TabIndex = 1;
+            pnlProfileCard.Click += pnlProfileCard_Click;
+            // 
+            // lblProfileName
+            // 
+            lblProfileName.AutoSize = true;
+            lblProfileName.Cursor = Cursors.Hand;
+            lblProfileName.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblProfileName.ForeColor = Color.White;
+            lblProfileName.Location = new Point(12, 8);
+            lblProfileName.Name = "lblProfileName";
+            lblProfileName.Size = new Size(126, 21);
+            lblProfileName.TabIndex = 0;
+            lblProfileName.Text = "Khách (Offline)";
+            lblProfileName.Click += pnlProfileCard_Click;
+            // 
+            // lblProfileLevel
+            // 
+            lblProfileLevel.AutoSize = true;
+            lblProfileLevel.Cursor = Cursors.Hand;
+            lblProfileLevel.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblProfileLevel.ForeColor = Color.FromArgb(0, 194, 255);
+            lblProfileLevel.Location = new Point(12, 28);
+            lblProfileLevel.Name = "lblProfileLevel";
+            lblProfileLevel.Size = new Size(105, 19);
+            lblProfileLevel.TabIndex = 1;
+            lblProfileLevel.Text = "Chế độ Offline";
+            lblProfileLevel.Click += pnlProfileCard_Click;
+            // 
+            // lblProfileXp
+            // 
+            lblProfileXp.AutoSize = true;
+            lblProfileXp.Cursor = Cursors.Hand;
+            lblProfileXp.Font = new Font("Segoe UI", 7.5F);
+            lblProfileXp.ForeColor = Color.FromArgb(160, 185, 220);
+            lblProfileXp.Location = new Point(12, 46);
+            lblProfileXp.Name = "lblProfileXp";
+            lblProfileXp.Size = new Size(84, 17);
+            lblProfileXp.TabIndex = 2;
+            lblProfileXp.Text = "Chơi với Máy";
+            lblProfileXp.Click += pnlProfileCard_Click;
+            // 
+            // btnLogout
+            // 
+            btnLogout.BackColor = Color.FromArgb(9, 15, 30);
+            btnLogout.BorderLineColor = Color.Transparent;
+            btnLogout.ClickColor = Color.FromArgb(10, 18, 36);
+            btnLogout.CornerRadius = 10;
+            btnLogout.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            btnLogout.ForeColor = Color.White;
+            btnLogout.HoverColor = Color.FromArgb(24, 42, 80);
+            btnLogout.IsPrimaryGradient = false;
+            btnLogout.IsPurpleGradient = false;
+            btnLogout.Location = new Point(12, 68);
+            btnLogout.Name = "btnLogout";
+            btnLogout.NavIcon = CyberIcon.None;
+            btnLogout.NormalColor = Color.FromArgb(14, 24, 46);
+            btnLogout.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnLogout.Size = new Size(182, 30);
+            btnLogout.TabIndex = 0;
+            btnLogout.Text = "⎋ Đăng xuất";
+            btnLogout.TextLeftPadding = 16;
+            btnLogout.UseVisualStyleBackColor = false;
+            btnLogout.Visible = false;
+            btnLogout.Click += btnLogout_Click;
+            // 
+            // pnlRightBar
+            // 
+            pnlRightBar.BackColor = Color.FromArgb(8, 14, 28);
+            pnlRightBar.Controls.Add(cardChat);
+            pnlRightBar.Dock = DockStyle.Right;
+            pnlRightBar.Location = new Point(980, 48);
+            pnlRightBar.Name = "pnlRightBar";
+            pnlRightBar.Padding = new Padding(10);
+            pnlRightBar.Size = new Size(280, 732);
+            pnlRightBar.TabIndex = 1;
+            pnlRightBar.Visible = false;
+            // 
+            // cardChat
+            // 
+            cardChat.BackColor = Color.Transparent;
+            cardChat.BorderColor = Color.FromArgb(25, 45, 85);
+            cardChat.BorderWidth = 1.2F;
+            cardChat.Controls.Add(rtbChatLog);
+            cardChat.Controls.Add(pnlChatBottom);
+            cardChat.Controls.Add(lblChatTitle);
+            cardChat.CornerRadius = 14;
+            cardChat.Dock = DockStyle.Fill;
+            cardChat.FillColor = Color.FromArgb(13, 24, 48);
+            cardChat.Location = new Point(10, 10);
+            cardChat.Name = "cardChat";
+            cardChat.Padding = new Padding(10, 8, 10, 8);
+            cardChat.Size = new Size(260, 712);
+            cardChat.TabIndex = 0;
+            // 
+            // rtbChatLog
+            // 
+            rtbChatLog.BackColor = Color.FromArgb(10, 18, 36);
+            rtbChatLog.BorderStyle = BorderStyle.None;
+            rtbChatLog.Dock = DockStyle.Fill;
+            rtbChatLog.Font = new Font("Segoe UI", 8.75F);
+            rtbChatLog.ForeColor = Color.FromArgb(220, 235, 255);
+            rtbChatLog.Location = new Point(10, 36);
+            rtbChatLog.Name = "rtbChatLog";
+            rtbChatLog.ReadOnly = true;
+            rtbChatLog.Size = new Size(240, 628);
+            rtbChatLog.TabIndex = 0;
+            rtbChatLog.Text = "";
+            // 
+            // pnlChatBottom
+            // 
+            pnlChatBottom.Controls.Add(txtChatInput);
+            pnlChatBottom.Controls.Add(btnSendChat);
+            pnlChatBottom.Dock = DockStyle.Bottom;
+            pnlChatBottom.Location = new Point(10, 664);
+            pnlChatBottom.Name = "pnlChatBottom";
+            pnlChatBottom.Padding = new Padding(0, 4, 0, 0);
+            pnlChatBottom.Size = new Size(240, 40);
+            pnlChatBottom.TabIndex = 1;
+            // 
+            // txtChatInput
+            // 
+            txtChatInput.BackColor = Color.FromArgb(14, 25, 48);
+            txtChatInput.BorderStyle = BorderStyle.FixedSingle;
+            txtChatInput.Dock = DockStyle.Fill;
+            txtChatInput.Font = new Font("Segoe UI", 9.5F);
+            txtChatInput.ForeColor = Color.White;
+            txtChatInput.Location = new Point(0, 4);
+            txtChatInput.Name = "txtChatInput";
+            txtChatInput.Size = new Size(194, 29);
+            txtChatInput.TabIndex = 0;
+            txtChatInput.KeyDown += txtChatInput_KeyDown;
+            // 
+            // btnSendChat
+            // 
+            btnSendChat.BackColor = Color.FromArgb(9, 15, 30);
+            btnSendChat.BorderLineColor = Color.Transparent;
+            btnSendChat.ClickColor = Color.FromArgb(10, 18, 36);
+            btnSendChat.CornerRadius = 10;
+            btnSendChat.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnSendChat.Dock = DockStyle.Right;
+            btnSendChat.FlatStyle = FlatStyle.Flat;
+            btnSendChat.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnSendChat.ForeColor = Color.FromArgb(245, 248, 255);
+            btnSendChat.HoverColor = Color.FromArgb(24, 42, 80);
+            btnSendChat.IsPrimaryGradient = false;
+            btnSendChat.IsPurpleGradient = false;
+            btnSendChat.Location = new Point(194, 4);
+            btnSendChat.Name = "btnSendChat";
+            btnSendChat.NavIcon = CyberIcon.None;
+            btnSendChat.NormalColor = Color.FromArgb(14, 24, 46);
+            btnSendChat.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnSendChat.Size = new Size(46, 36);
+            btnSendChat.TabIndex = 1;
+            btnSendChat.Text = "➤";
+            btnSendChat.TextLeftPadding = 16;
+            btnSendChat.UseVisualStyleBackColor = false;
+            btnSendChat.Click += btnSendChat_Click;
+            // 
+            // lblChatTitle
+            // 
+            lblChatTitle.Dock = DockStyle.Top;
+            lblChatTitle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblChatTitle.ForeColor = Color.White;
+            lblChatTitle.Location = new Point(10, 8);
+            lblChatTitle.Name = "lblChatTitle";
+            lblChatTitle.Size = new Size(240, 28);
+            lblChatTitle.TabIndex = 2;
+            lblChatTitle.Text = "Chat phòng";
+            // 
+            // pnlMainContent
+            // 
+            pnlMainContent.BackColor = Color.FromArgb(8, 13, 26);
+            pnlMainContent.Controls.Add(pnlHomeView);
+            pnlMainContent.Controls.Add(pnlGameView);
+            pnlMainContent.Controls.Add(pnlCreateRoomView);
+            pnlMainContent.Controls.Add(pnlJoinRoomView);
+            pnlMainContent.Controls.Add(pnlHistoryView);
+            pnlMainContent.Controls.Add(pnlLeaderboardView);
+            pnlMainContent.Controls.Add(pnlSettingsView);
+            pnlMainContent.Dock = DockStyle.Fill;
+            pnlMainContent.Location = new Point(230, 48);
+            pnlMainContent.Name = "pnlMainContent";
+            pnlMainContent.Size = new Size(750, 732);
+            pnlMainContent.TabIndex = 0;
+            // 
+            // pnlHomeView
+            // 
+            pnlHomeView.Controls.Add(pnlMiddleGrid);
+            pnlHomeView.Controls.Add(heroBanner);
+            pnlHomeView.Dock = DockStyle.Fill;
+            pnlHomeView.Location = new Point(0, 0);
+            pnlHomeView.Name = "pnlHomeView";
+            pnlHomeView.Padding = new Padding(16, 12, 16, 14);
+            pnlHomeView.Size = new Size(750, 732);
+            pnlHomeView.TabIndex = 0;
+            // 
+            // pnlMiddleGrid
+            // 
+            pnlMiddleGrid.Controls.Add(pnlPlayersContainer);
+            pnlMiddleGrid.Controls.Add(pnlServerInfoContainer);
+            pnlMiddleGrid.Dock = DockStyle.Fill;
+            pnlMiddleGrid.Location = new Point(16, 127);
+            pnlMiddleGrid.Name = "pnlMiddleGrid";
+            pnlMiddleGrid.Padding = new Padding(0, 10, 0, 0);
+            pnlMiddleGrid.Size = new Size(718, 591);
+            pnlMiddleGrid.TabIndex = 0;
+            // 
+            // pnlPlayersContainer
+            // 
+            pnlPlayersContainer.Controls.Add(cardConnectedPlayers);
+            pnlPlayersContainer.Dock = DockStyle.Fill;
+            pnlPlayersContainer.Location = new Point(330, 10);
+            pnlPlayersContainer.Name = "pnlPlayersContainer";
+            pnlPlayersContainer.Size = new Size(388, 581);
+            pnlPlayersContainer.TabIndex = 0;
+            // 
             // cardConnectedPlayers
-            this.cardConnectedPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardConnectedPlayers.Padding = new System.Windows.Forms.Padding(16, 14, 16, 14);
-            this.cardConnectedPlayers.Controls.Add(this.lblNoPlayers);
-            this.cardConnectedPlayers.Controls.Add(this.lstConnectedPlayers);
-            this.cardConnectedPlayers.Controls.Add(this.lblHomePlayersHeader);
-
-            this.lblHomePlayersHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblHomePlayersHeader.Height = 32;
-            this.lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE (0)";
-            this.lblHomePlayersHeader.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-            this.lblHomePlayersHeader.ForeColor = System.Drawing.Color.White;
-
-            this.lstConnectedPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstConnectedPlayers.BackColor = System.Drawing.Color.FromArgb(13, 24, 48);
-            this.lstConnectedPlayers.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lstConnectedPlayers.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.lstConnectedPlayers.ItemHeight = 34;
-            this.lstConnectedPlayers.SelectionMode = System.Windows.Forms.SelectionMode.None;
-
-            this.lblNoPlayers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoPlayers.Text = "Chưa kết nối đến máy chủ";
-            this.lblNoPlayers.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblNoPlayers.ForeColor = System.Drawing.Color.FromArgb(120, 140, 175);
-            this.lblNoPlayers.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            this.lblNoPlayers.Visible = true;
-
-            // =============================================================
-            // View 2: pnlGameView (Bàn cờ / Phòng đấu)
-            // =============================================================
-            this.pnlGameView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlGameView.Padding = new System.Windows.Forms.Padding(12);
-            this.pnlGameView.Controls.Add(this.boardControl1);
-            this.pnlGameView.Controls.Add(this.pnlGameHeader);
-
-            // pnlGameHeader (Height 85px, clean 2-column layout)
-            this.pnlGameHeader.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlGameHeader.Height = 85;
-            this.pnlGameHeader.Controls.Add(this.pnlGameActions);
-            this.pnlGameHeader.Controls.Add(this.pnlGameInfo);
-
-            // pnlGameActions (Right side: Action Buttons ALWAYS visible side-by-side, never clipped)
-            this.pnlGameActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlGameActions.Width = 320;
-            this.pnlGameActions.BackColor = System.Drawing.Color.Transparent;
-            this.pnlGameActions.Controls.Add(this.btnSurrender);
-            this.pnlGameActions.Controls.Add(this.btnRestart);
-            this.pnlGameActions.Controls.Add(this.btnLeaveRoom);
-
-            this.btnSurrender.Location = new System.Drawing.Point(10, 22);
-            this.btnSurrender.Size = new System.Drawing.Size(95, 40);
-            this.btnSurrender.Text = "Đầu hàng";
-            this.btnSurrender.NormalColor = System.Drawing.Color.FromArgb(190, 35, 70);
-            this.btnSurrender.HoverColor = System.Drawing.Color.FromArgb(230, 45, 90);
-            this.btnSurrender.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnSurrender.Click += new System.EventHandler(this.btnSurrender_Click);
-
-            this.btnRestart.Location = new System.Drawing.Point(112, 22);
-            this.btnRestart.Size = new System.Drawing.Size(95, 40);
-            this.btnRestart.Text = "Chơi lại";
-            this.btnRestart.NormalColor = System.Drawing.Color.FromArgb(0, 160, 90);
-            this.btnRestart.HoverColor = System.Drawing.Color.FromArgb(0, 200, 110);
-            this.btnRestart.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
-
-            this.btnLeaveRoom.Location = new System.Drawing.Point(214, 22);
-            this.btnLeaveRoom.Size = new System.Drawing.Size(95, 40);
-            this.btnLeaveRoom.Text = "Thoát phòng";
-            this.btnLeaveRoom.NormalColor = System.Drawing.Color.FromArgb(40, 50, 75);
-            this.btnLeaveRoom.HoverColor = System.Drawing.Color.FromArgb(60, 75, 110);
-            this.btnLeaveRoom.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnLeaveRoom.Click += new System.EventHandler(this.btnLeaveRoom_Click);
-
-            // pnlGameInfo (Left side: Room, Timer, Players, Turn - each on its own row, never overlapping buttons)
-            this.pnlGameInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlGameInfo.BackColor = System.Drawing.Color.Transparent;
-            this.pnlGameInfo.Controls.Add(this.lblRoomIdInfo);
-            this.pnlGameInfo.Controls.Add(this.lblTimer);
-            this.pnlGameInfo.Controls.Add(this.lblPlayersInfo);
-            this.pnlGameInfo.Controls.Add(this.lblTurnInfo);
-
-            // Row 1: Room ID & Timer
-            this.lblRoomIdInfo.Location = new System.Drawing.Point(14, 10);
-            this.lblRoomIdInfo.AutoSize = true;
-            this.lblRoomIdInfo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblRoomIdInfo.ForeColor = System.Drawing.Color.White;
-            this.lblRoomIdInfo.Text = "Phòng: ---";
-
-            this.lblTimer.Location = new System.Drawing.Point(150, 10);
-            this.lblTimer.AutoSize = true;
-            this.lblTimer.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblTimer.ForeColor = System.Drawing.Color.FromArgb(255, 145, 0);
-            this.lblTimer.Text = "● 30 Giây";
-
-            // Row 2: Players
-            this.lblPlayersInfo.Location = new System.Drawing.Point(14, 34);
-            this.lblPlayersInfo.AutoSize = true;
-            this.lblPlayersInfo.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblPlayersInfo.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblPlayersInfo.Text = "X: ---   VS   O: ---";
-
-            // Row 3: Turn & Match Status (AutoEllipsis so it never overflows or touches action buttons)
-            this.lblTurnInfo.Location = new System.Drawing.Point(14, 56);
-            this.lblTurnInfo.Size = new System.Drawing.Size(380, 22);
-            this.lblTurnInfo.AutoSize = false;
-            this.lblTurnInfo.AutoEllipsis = true;
-            this.lblTurnInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTurnInfo.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblTurnInfo.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblTurnInfo.Text = "● Lượt đi: ---";
-
+            // 
+            cardConnectedPlayers.BackColor = Color.Transparent;
+            cardConnectedPlayers.BorderColor = Color.FromArgb(25, 45, 85);
+            cardConnectedPlayers.BorderWidth = 1.2F;
+            cardConnectedPlayers.Controls.Add(lblNoPlayers);
+            cardConnectedPlayers.Controls.Add(lstConnectedPlayers);
+            cardConnectedPlayers.Controls.Add(lblHomePlayersHeader);
+            cardConnectedPlayers.CornerRadius = 14;
+            cardConnectedPlayers.Dock = DockStyle.Fill;
+            cardConnectedPlayers.FillColor = Color.FromArgb(13, 24, 48);
+            cardConnectedPlayers.Location = new Point(0, 0);
+            cardConnectedPlayers.Name = "cardConnectedPlayers";
+            cardConnectedPlayers.Padding = new Padding(16, 14, 16, 14);
+            cardConnectedPlayers.Size = new Size(388, 581);
+            cardConnectedPlayers.TabIndex = 0;
+            // 
+            // lblNoPlayers
+            // 
+            lblNoPlayers.Dock = DockStyle.Fill;
+            lblNoPlayers.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            lblNoPlayers.ForeColor = Color.FromArgb(120, 140, 175);
+            lblNoPlayers.Location = new Point(16, 46);
+            lblNoPlayers.Name = "lblNoPlayers";
+            lblNoPlayers.Size = new Size(356, 521);
+            lblNoPlayers.TabIndex = 0;
+            lblNoPlayers.Text = "Chưa kết nối đến máy chủ";
+            lblNoPlayers.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lstConnectedPlayers
+            // 
+            lstConnectedPlayers.BackColor = Color.FromArgb(13, 24, 48);
+            lstConnectedPlayers.BorderStyle = BorderStyle.None;
+            lstConnectedPlayers.Dock = DockStyle.Fill;
+            lstConnectedPlayers.DrawMode = DrawMode.OwnerDrawFixed;
+            lstConnectedPlayers.ItemHeight = 34;
+            lstConnectedPlayers.Location = new Point(16, 46);
+            lstConnectedPlayers.Name = "lstConnectedPlayers";
+            lstConnectedPlayers.SelectionMode = SelectionMode.None;
+            lstConnectedPlayers.Size = new Size(356, 521);
+            lstConnectedPlayers.TabIndex = 1;
+            // 
+            // lblHomePlayersHeader
+            // 
+            lblHomePlayersHeader.Dock = DockStyle.Top;
+            lblHomePlayersHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblHomePlayersHeader.ForeColor = Color.White;
+            lblHomePlayersHeader.Location = new Point(16, 14);
+            lblHomePlayersHeader.Name = "lblHomePlayersHeader";
+            lblHomePlayersHeader.Size = new Size(356, 32);
+            lblHomePlayersHeader.TabIndex = 2;
+            lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE (0)";
+            // 
+            // pnlServerInfoContainer
+            // 
+            pnlServerInfoContainer.Controls.Add(cardServerInfo);
+            pnlServerInfoContainer.Dock = DockStyle.Left;
+            pnlServerInfoContainer.Location = new Point(0, 10);
+            pnlServerInfoContainer.Name = "pnlServerInfoContainer";
+            pnlServerInfoContainer.Padding = new Padding(0, 0, 12, 0);
+            pnlServerInfoContainer.Size = new Size(330, 581);
+            pnlServerInfoContainer.TabIndex = 1;
+            // 
+            // cardServerInfo
+            // 
+            cardServerInfo.BackColor = Color.Transparent;
+            cardServerInfo.BorderColor = Color.FromArgb(25, 45, 85);
+            cardServerInfo.BorderWidth = 1.2F;
+            cardServerInfo.Controls.Add(btnHomeSettings);
+            cardServerInfo.Controls.Add(btnHomeJoinRoom);
+            cardServerInfo.Controls.Add(btnHomeCreateRoom);
+            cardServerInfo.Controls.Add(lblHomeServerIp);
+            cardServerInfo.Controls.Add(lblHomeServerHost);
+            cardServerInfo.Controls.Add(lblHomeServerStatus);
+            cardServerInfo.Controls.Add(lblHomeServerHeader);
+            cardServerInfo.CornerRadius = 14;
+            cardServerInfo.Dock = DockStyle.Fill;
+            cardServerInfo.FillColor = Color.FromArgb(13, 24, 48);
+            cardServerInfo.Location = new Point(0, 0);
+            cardServerInfo.Name = "cardServerInfo";
+            cardServerInfo.Padding = new Padding(18, 16, 18, 16);
+            cardServerInfo.Size = new Size(318, 581);
+            cardServerInfo.TabIndex = 0;
+            // 
+            // btnHomeSettings
+            // 
+            btnHomeSettings.BackColor = Color.FromArgb(9, 15, 30);
+            btnHomeSettings.BorderLineColor = Color.FromArgb(42, 70, 120);
+            btnHomeSettings.ClickColor = Color.FromArgb(10, 18, 36);
+            btnHomeSettings.CornerRadius = 10;
+            btnHomeSettings.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnHomeSettings.FlatStyle = FlatStyle.Flat;
+            btnHomeSettings.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnHomeSettings.ForeColor = Color.FromArgb(220, 235, 255);
+            btnHomeSettings.HoverColor = Color.FromArgb(24, 44, 82);
+            btnHomeSettings.IsPrimaryGradient = false;
+            btnHomeSettings.IsPurpleGradient = false;
+            btnHomeSettings.Location = new Point(18, 252);
+            btnHomeSettings.Name = "btnHomeSettings";
+            btnHomeSettings.NavIcon = CyberIcon.None;
+            btnHomeSettings.NormalColor = Color.FromArgb(14, 26, 50);
+            btnHomeSettings.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnHomeSettings.Size = new Size(284, 40);
+            btnHomeSettings.TabIndex = 0;
+            btnHomeSettings.Text = "⚙  Cài đặt kết nối...";
+            btnHomeSettings.TextLeftPadding = 16;
+            btnHomeSettings.UseVisualStyleBackColor = false;
+            btnHomeSettings.Click += btnHomeSettings_Click;
+            // 
+            // btnHomeJoinRoom
+            // 
+            btnHomeJoinRoom.BackColor = Color.FromArgb(9, 15, 30);
+            btnHomeJoinRoom.BorderLineColor = Color.FromArgb(0, 194, 255);
+            btnHomeJoinRoom.ClickColor = Color.FromArgb(10, 18, 36);
+            btnHomeJoinRoom.CornerRadius = 10;
+            btnHomeJoinRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnHomeJoinRoom.FlatStyle = FlatStyle.Flat;
+            btnHomeJoinRoom.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnHomeJoinRoom.ForeColor = Color.FromArgb(245, 248, 255);
+            btnHomeJoinRoom.HoverColor = Color.FromArgb(26, 50, 96);
+            btnHomeJoinRoom.IsPrimaryGradient = false;
+            btnHomeJoinRoom.IsPurpleGradient = false;
+            btnHomeJoinRoom.Location = new Point(18, 202);
+            btnHomeJoinRoom.Name = "btnHomeJoinRoom";
+            btnHomeJoinRoom.NavIcon = CyberIcon.None;
+            btnHomeJoinRoom.NormalColor = Color.FromArgb(16, 32, 64);
+            btnHomeJoinRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnHomeJoinRoom.Size = new Size(284, 42);
+            btnHomeJoinRoom.TabIndex = 1;
+            btnHomeJoinRoom.Text = "➜  Danh sách phòng đấu";
+            btnHomeJoinRoom.TextLeftPadding = 16;
+            btnHomeJoinRoom.UseVisualStyleBackColor = false;
+            btnHomeJoinRoom.Click += btnHomeJoinRoom_Click;
+            // 
+            // btnHomeCreateRoom
+            // 
+            btnHomeCreateRoom.BackColor = Color.FromArgb(9, 15, 30);
+            btnHomeCreateRoom.BorderLineColor = Color.FromArgb(0, 220, 255);
+            btnHomeCreateRoom.ClickColor = Color.FromArgb(10, 18, 36);
+            btnHomeCreateRoom.CornerRadius = 10;
+            btnHomeCreateRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnHomeCreateRoom.FlatStyle = FlatStyle.Flat;
+            btnHomeCreateRoom.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnHomeCreateRoom.ForeColor = Color.White;
+            btnHomeCreateRoom.HoverColor = Color.FromArgb(24, 42, 80);
+            btnHomeCreateRoom.IsPrimaryGradient = true;
+            btnHomeCreateRoom.IsPurpleGradient = false;
+            btnHomeCreateRoom.Location = new Point(18, 150);
+            btnHomeCreateRoom.Name = "btnHomeCreateRoom";
+            btnHomeCreateRoom.NavIcon = CyberIcon.None;
+            btnHomeCreateRoom.NormalColor = Color.FromArgb(14, 24, 46);
+            btnHomeCreateRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnHomeCreateRoom.Size = new Size(284, 44);
+            btnHomeCreateRoom.TabIndex = 2;
+            btnHomeCreateRoom.Text = "＋  Tạo phòng mới";
+            btnHomeCreateRoom.TextLeftPadding = 16;
+            btnHomeCreateRoom.UseVisualStyleBackColor = false;
+            btnHomeCreateRoom.Click += btnHomeCreateRoom_Click;
+            // 
+            // lblHomeServerIp
+            // 
+            lblHomeServerIp.AutoSize = true;
+            lblHomeServerIp.Font = new Font("Segoe UI", 8.5F);
+            lblHomeServerIp.ForeColor = Color.FromArgb(0, 194, 255);
+            lblHomeServerIp.Location = new Point(18, 102);
+            lblHomeServerIp.Name = "lblHomeServerIp";
+            lblHomeServerIp.Size = new Size(114, 20);
+            lblHomeServerIp.TabIndex = 3;
+            lblHomeServerIp.Text = "📡 IP & Cổng: ---";
+            // 
+            // lblHomeServerHost
+            // 
+            lblHomeServerHost.AutoSize = true;
+            lblHomeServerHost.Font = new Font("Segoe UI", 8.5F);
+            lblHomeServerHost.ForeColor = Color.FromArgb(170, 190, 220);
+            lblHomeServerHost.Location = new Point(18, 76);
+            lblHomeServerHost.Name = "lblHomeServerHost";
+            lblHomeServerHost.Size = new Size(141, 20);
+            lblHomeServerHost.TabIndex = 4;
+            lblHomeServerHost.Text = "💻 Tên máy chủ: ---";
+            // 
+            // lblHomeServerStatus
+            // 
+            lblHomeServerStatus.AutoSize = true;
+            lblHomeServerStatus.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblHomeServerStatus.ForeColor = Color.FromArgb(255, 75, 75);
+            lblHomeServerStatus.Location = new Point(18, 48);
+            lblHomeServerStatus.Name = "lblHomeServerStatus";
+            lblHomeServerStatus.Size = new Size(125, 21);
+            lblHomeServerStatus.TabIndex = 5;
+            lblHomeServerStatus.Text = "○ Chưa kết nối";
+            // 
+            // lblHomeServerHeader
+            // 
+            lblHomeServerHeader.AutoSize = true;
+            lblHomeServerHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblHomeServerHeader.ForeColor = Color.White;
+            lblHomeServerHeader.Location = new Point(18, 16);
+            lblHomeServerHeader.Name = "lblHomeServerHeader";
+            lblHomeServerHeader.Size = new Size(202, 25);
+            lblHomeServerHeader.TabIndex = 6;
+            lblHomeServerHeader.Text = "THÔNG TIN MÁY CHỦ";
+            // 
+            // heroBanner
+            // 
+            heroBanner.BackColor = Color.Transparent;
+            heroBanner.Controls.Add(lblHeroTitle);
+            heroBanner.Controls.Add(lblHeroSubtitle);
+            heroBanner.Dock = DockStyle.Top;
+            heroBanner.Location = new Point(16, 12);
+            heroBanner.Name = "heroBanner";
+            heroBanner.Size = new Size(718, 115);
+            heroBanner.TabIndex = 1;
+            // 
+            // lblHeroTitle
+            // 
+            lblHeroTitle.AutoSize = true;
+            lblHeroTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblHeroTitle.ForeColor = Color.White;
+            lblHeroTitle.Location = new Point(24, 20);
+            lblHeroTitle.Name = "lblHeroTitle";
+            lblHeroTitle.Size = new Size(506, 37);
+            lblHeroTitle.TabIndex = 0;
+            lblHeroTitle.Text = "Chơi cờ caro qua mạng LAN - CaroKan";
+            // 
+            // lblHeroSubtitle
+            // 
+            lblHeroSubtitle.AutoSize = true;
+            lblHeroSubtitle.Font = new Font("Segoe UI", 9.5F);
+            lblHeroSubtitle.ForeColor = Color.FromArgb(160, 185, 225);
+            lblHeroSubtitle.Location = new Point(25, 56);
+            lblHeroSubtitle.Name = "lblHeroSubtitle";
+            lblHeroSubtitle.Size = new Size(435, 42);
+            lblHeroSubtitle.TabIndex = 1;
+            lblHeroSubtitle.Text = "Kết nối cùng bạn bè trong cùng một mạng LAN.\nKhông cần Internet, giao đấu trực tiếp hoặc luyện tập cùng AI!";
+            // 
+            // pnlGameView
+            // 
+            pnlGameView.Controls.Add(gameOverModal);
+            pnlGameView.Controls.Add(boardControl1);
+            pnlGameView.Controls.Add(pnlGameHeader);
+            pnlGameView.Dock = DockStyle.Fill;
+            pnlGameView.Location = new Point(0, 0);
+            pnlGameView.Name = "pnlGameView";
+            pnlGameView.Padding = new Padding(12);
+            pnlGameView.Size = new Size(750, 732);
+            pnlGameView.TabIndex = 1;
+            // 
+            // gameOverModal
+            // 
+            gameOverModal.BackColor = Color.FromArgb(170, 5, 10, 22);
+            gameOverModal.Dock = DockStyle.Fill;
+            gameOverModal.Location = new Point(12, 108);
+            gameOverModal.Name = "gameOverModal";
+            gameOverModal.Size = new Size(726, 612);
+            gameOverModal.TabIndex = 0;
+            gameOverModal.Visible = false;
+            // 
             // boardControl1
-            this.boardControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-
-            // =============================================================
-            // View 3: pnlCreateRoomView (Tạo phòng)
-            // =============================================================
-            this.pnlCreateRoomView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlCreateRoomView.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlCreateRoomView.Controls.Add(this.cardCreateBox);
-            this.pnlCreateRoomView.Resize += new System.EventHandler(this.pnlCreateRoomView_Resize);
-
-            this.cardCreateBox.Size = new System.Drawing.Size(680, 560);
-            this.cardCreateBox.Location = new System.Drawing.Point(80, 20);
-            this.cardCreateBox.Padding = new System.Windows.Forms.Padding(28, 20, 28, 20);
-            this.cardCreateBox.Controls.Add(this.btnCancelCreate);
-            this.cardCreateBox.Controls.Add(this.btnCreateRoom);
-            this.cardCreateBox.Controls.Add(this.pillRuleFree);
-            this.cardCreateBox.Controls.Add(this.pillRuleStandard);
-            this.cardCreateBox.Controls.Add(this.secHeaderRule);
-            this.cardCreateBox.Controls.Add(this.pnlAiDifficultyOptions);
-            this.cardCreateBox.Controls.Add(this.pnlTimeLimitOptions);
-            this.cardCreateBox.Controls.Add(this.cardTimeFree);
-            this.cardCreateBox.Controls.Add(this.cardTimeTurn);
-            this.cardCreateBox.Controls.Add(this.secHeaderTime);
-            this.cardCreateBox.Controls.Add(this.cardModeAI);
-            this.cardCreateBox.Controls.Add(this.cardModePvP);
-            this.cardCreateBox.Controls.Add(this.secHeaderMode);
-            this.cardCreateBox.Controls.Add(this.pnlCreateHeader);
-
-            // pnlCreateHeader
-            this.pnlCreateHeader.Location = new System.Drawing.Point(28, 20);
-            this.pnlCreateHeader.Size = new System.Drawing.Size(624, 58);
-            this.pnlCreateHeader.BackColor = System.Drawing.Color.Transparent;
-            this.pnlCreateHeader.Controls.Add(this.badgeCreatePlus);
-            this.pnlCreateHeader.Controls.Add(this.lblCreateTitle);
-            this.pnlCreateHeader.Controls.Add(this.lblCreateSubtitle);
-
-            this.badgeCreatePlus.Location = new System.Drawing.Point(0, 6);
-            this.badgeCreatePlus.Size = new System.Drawing.Size(42, 42);
-
-            this.lblCreateTitle.Text = "Tạo phòng mới";
-            this.lblCreateTitle.Font = new System.Drawing.Font("Segoe UI", 14.5F, System.Drawing.FontStyle.Bold);
-            this.lblCreateTitle.ForeColor = System.Drawing.Color.White;
-            this.lblCreateTitle.Location = new System.Drawing.Point(52, 2);
-            this.lblCreateTitle.AutoSize = true;
-
-            this.lblCreateSubtitle.Text = "Thiết lập chế độ chơi và mời bạn bè cùng tham gia!";
-            this.lblCreateSubtitle.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblCreateSubtitle.ForeColor = System.Drawing.Color.FromArgb(140, 168, 208);
-            this.lblCreateSubtitle.Location = new System.Drawing.Point(54, 32);
-            this.lblCreateSubtitle.AutoSize = true;
-
-            // Section 1: Mode
-            this.secHeaderMode.Location = new System.Drawing.Point(28, 86);
-            this.secHeaderMode.Size = new System.Drawing.Size(624, 26);
-            this.secHeaderMode.StepNumber = 1;
-            this.secHeaderMode.HeaderText = "Chọn chế độ chơi";
-
-            this.cardModePvP.Location = new System.Drawing.Point(28, 116);
-            this.cardModePvP.Size = new System.Drawing.Size(306, 90);
-            this.cardModePvP.IconType = CaroClient.CardIconType.TwoPlayers;
-            this.cardModePvP.Title = "2 người";
-            this.cardModePvP.Subtitle = "Đấu trực tiếp";
-            this.cardModePvP.IsSelected = true;
-
-            this.cardModeAI.Location = new System.Drawing.Point(346, 116);
-            this.cardModeAI.Size = new System.Drawing.Size(306, 90);
-            this.cardModeAI.IconType = CaroClient.CardIconType.RobotAI;
-            this.cardModeAI.Title = "Vs AI";
-            this.cardModeAI.Subtitle = "Chơi với máy";
-            this.cardModeAI.IsSelected = false;
-
-            // Section 2: Time
-            this.secHeaderTime.Location = new System.Drawing.Point(28, 218);
-            this.secHeaderTime.Size = new System.Drawing.Size(624, 26);
-            this.secHeaderTime.StepNumber = 2;
-            this.secHeaderTime.HeaderText = "Quy định thời gian";
-
-            this.cardTimeTurn.Location = new System.Drawing.Point(28, 248);
-            this.cardTimeTurn.Size = new System.Drawing.Size(306, 74);
-            this.cardTimeTurn.IconType = CaroClient.CardIconType.ClockTurn;
-            this.cardTimeTurn.Title = "Theo lượt";
-            this.cardTimeTurn.Subtitle = "";
-            this.cardTimeTurn.IsSelected = true;
-
-            this.cardTimeFree.Location = new System.Drawing.Point(346, 248);
-            this.cardTimeFree.Size = new System.Drawing.Size(306, 74);
-            this.cardTimeFree.IconType = CaroClient.CardIconType.Stopwatch;
-            this.cardTimeFree.Title = "Đếm ngược";
-            this.cardTimeFree.Subtitle = "";
-            this.cardTimeFree.IsSelected = false;
-
+            // 
+            boardControl1.Dock = DockStyle.Fill;
+            boardControl1.Location = new Point(12, 108);
+            boardControl1.Name = "boardControl1";
+            boardControl1.Size = new Size(726, 612);
+            boardControl1.TabIndex = 1;
+            // 
+            // pnlGameHeader
+            // 
+            pnlGameHeader.BackColor = Color.Transparent;
+            pnlGameHeader.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlGameHeader.BorderWidth = 1.2F;
+            pnlGameHeader.Controls.Add(pnlGameActions);
+            pnlGameHeader.Controls.Add(timerWidget);
+            pnlGameHeader.Controls.Add(pnlGameInfo);
+            pnlGameHeader.CornerRadius = 14;
+            pnlGameHeader.Dock = DockStyle.Top;
+            pnlGameHeader.FillColor = Color.FromArgb(13, 24, 48);
+            pnlGameHeader.Location = new Point(12, 12);
+            pnlGameHeader.Name = "pnlGameHeader";
+            pnlGameHeader.Padding = new Padding(12, 10, 12, 10);
+            pnlGameHeader.Size = new Size(726, 96);
+            pnlGameHeader.TabIndex = 2;
+            // 
+            // pnlGameActions
+            // 
+            pnlGameActions.BackColor = Color.Transparent;
+            pnlGameActions.Controls.Add(btnSurrender);
+            pnlGameActions.Controls.Add(btnRestart);
+            pnlGameActions.Controls.Add(btnLeaveRoom);
+            pnlGameActions.Location = new Point(428, 10);
+            pnlGameActions.Name = "pnlGameActions";
+            pnlGameActions.Size = new Size(136, 76);
+            pnlGameActions.TabIndex = 0;
+            // 
+            // btnSurrender
+            // 
+            btnSurrender.BackColor = Color.FromArgb(9, 15, 30);
+            btnSurrender.BorderLineColor = Color.Transparent;
+            btnSurrender.ClickColor = Color.FromArgb(150, 25, 55);
+            btnSurrender.CornerRadius = 10;
+            btnSurrender.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnSurrender.FlatStyle = FlatStyle.Flat;
+            btnSurrender.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnSurrender.ForeColor = Color.White;
+            btnSurrender.HoverColor = Color.FromArgb(225, 45, 85);
+            btnSurrender.IsPrimaryGradient = false;
+            btnSurrender.IsPurpleGradient = false;
+            btnSurrender.Location = new Point(6, 17);
+            btnSurrender.Name = "btnSurrender";
+            btnSurrender.NavIcon = CyberIcon.None;
+            btnSurrender.NormalColor = Color.FromArgb(190, 35, 70);
+            btnSurrender.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnSurrender.Size = new Size(124, 42);
+            btnSurrender.TabIndex = 0;
+            btnSurrender.Text = "Đầu hàng";
+            btnSurrender.TextLeftPadding = 0;
+            btnSurrender.UseVisualStyleBackColor = false;
+            btnSurrender.Click += btnSurrender_Click;
+            // 
+            // btnRestart
+            // 
+            btnRestart.BackColor = Color.FromArgb(9, 15, 30);
+            btnRestart.BorderLineColor = Color.Transparent;
+            btnRestart.ClickColor = Color.FromArgb(0, 130, 75);
+            btnRestart.CornerRadius = 10;
+            btnRestart.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnRestart.FlatStyle = FlatStyle.Flat;
+            btnRestart.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnRestart.ForeColor = Color.White;
+            btnRestart.HoverColor = Color.FromArgb(0, 200, 110);
+            btnRestart.IsPrimaryGradient = false;
+            btnRestart.IsPurpleGradient = false;
+            btnRestart.Location = new Point(6, 17);
+            btnRestart.Name = "btnRestart";
+            btnRestart.NavIcon = CyberIcon.None;
+            btnRestart.NormalColor = Color.FromArgb(0, 160, 90);
+            btnRestart.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnRestart.Size = new Size(124, 42);
+            btnRestart.TabIndex = 1;
+            btnRestart.Text = "Chơi lại";
+            btnRestart.TextLeftPadding = 0;
+            btnRestart.UseVisualStyleBackColor = false;
+            btnRestart.Visible = false;
+            btnRestart.Click += btnRestart_Click;
+            // 
+            // btnLeaveRoom
+            // 
+            btnLeaveRoom.BackColor = Color.FromArgb(9, 15, 30);
+            btnLeaveRoom.BorderLineColor = Color.Transparent;
+            btnLeaveRoom.ClickColor = Color.FromArgb(140, 25, 50);
+            btnLeaveRoom.CornerRadius = 10;
+            btnLeaveRoom.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnLeaveRoom.FlatStyle = FlatStyle.Flat;
+            btnLeaveRoom.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnLeaveRoom.ForeColor = Color.White;
+            btnLeaveRoom.HoverColor = Color.FromArgb(215, 50, 80);
+            btnLeaveRoom.IsPrimaryGradient = false;
+            btnLeaveRoom.IsPurpleGradient = false;
+            btnLeaveRoom.Location = new Point(6, 17);
+            btnLeaveRoom.Name = "btnLeaveRoom";
+            btnLeaveRoom.NavIcon = CyberIcon.None;
+            btnLeaveRoom.NormalColor = Color.FromArgb(180, 40, 65);
+            btnLeaveRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnLeaveRoom.Size = new Size(124, 42);
+            btnLeaveRoom.TabIndex = 2;
+            btnLeaveRoom.Text = "Thoát phòng";
+            btnLeaveRoom.TextLeftPadding = 0;
+            btnLeaveRoom.UseVisualStyleBackColor = false;
+            btnLeaveRoom.Visible = false;
+            btnLeaveRoom.Click += btnLeaveRoom_Click;
+            // 
+            // timerWidget
+            // 
+            timerWidget.BackColor = Color.Transparent;
+            timerWidget.CornerRadius = 12;
+            timerWidget.IsCountdownMode = false;
+            timerWidget.Location = new Point(564, 10);
+            timerWidget.Name = "timerWidget";
+            timerWidget.Size = new Size(150, 76);
+            timerWidget.TabIndex = 1;
+            // 
+            // pnlGameInfo
+            // 
+            pnlGameInfo.BackColor = Color.Transparent;
+            pnlGameInfo.Controls.Add(lblRoomIdInfo);
+            pnlGameInfo.Controls.Add(lblPlayersInfo);
+            pnlGameInfo.Controls.Add(lblTurnInfo);
+            pnlGameInfo.Location = new Point(12, 10);
+            pnlGameInfo.Name = "pnlGameInfo";
+            pnlGameInfo.Size = new Size(702, 76);
+            pnlGameInfo.TabIndex = 2;
+            // 
+            // lblRoomIdInfo
+            // 
+            lblRoomIdInfo.AutoSize = true;
+            lblRoomIdInfo.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblRoomIdInfo.ForeColor = Color.White;
+            lblRoomIdInfo.Location = new Point(6, 4);
+            lblRoomIdInfo.Name = "lblRoomIdInfo";
+            lblRoomIdInfo.Size = new Size(92, 23);
+            lblRoomIdInfo.TabIndex = 0;
+            lblRoomIdInfo.Text = "Phòng: ---";
+            // 
+            // lblPlayersInfo
+            // 
+            lblPlayersInfo.AutoSize = true;
+            lblPlayersInfo.Font = new Font("Segoe UI", 9F);
+            lblPlayersInfo.ForeColor = Color.FromArgb(170, 190, 220);
+            lblPlayersInfo.Location = new Point(6, 26);
+            lblPlayersInfo.Name = "lblPlayersInfo";
+            lblPlayersInfo.Size = new Size(120, 20);
+            lblPlayersInfo.TabIndex = 1;
+            lblPlayersInfo.Text = "X: ---   VS   O: ---";
+            // 
+            // lblTurnInfo
+            // 
+            lblTurnInfo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblTurnInfo.AutoEllipsis = true;
+            lblTurnInfo.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblTurnInfo.ForeColor = Color.FromArgb(0, 194, 255);
+            lblTurnInfo.Location = new Point(6, 48);
+            lblTurnInfo.Name = "lblTurnInfo";
+            lblTurnInfo.Size = new Size(962, 22);
+            lblTurnInfo.TabIndex = 2;
+            lblTurnInfo.Text = "● Lượt đi: ---";
+            // 
+            // pnlCreateRoomView
+            // 
+            pnlCreateRoomView.Controls.Add(cardCreateBox);
+            pnlCreateRoomView.Dock = DockStyle.Fill;
+            pnlCreateRoomView.Location = new Point(0, 0);
+            pnlCreateRoomView.Name = "pnlCreateRoomView";
+            pnlCreateRoomView.Padding = new Padding(20);
+            pnlCreateRoomView.Size = new Size(750, 732);
+            pnlCreateRoomView.TabIndex = 2;
+            pnlCreateRoomView.Resize += pnlCreateRoomView_Resize;
+            // 
+            // cardCreateBox
+            // 
+            cardCreateBox.BackColor = Color.Transparent;
+            cardCreateBox.BorderColor = Color.FromArgb(25, 45, 85);
+            cardCreateBox.BorderWidth = 1.2F;
+            cardCreateBox.Controls.Add(btnCancelCreate);
+            cardCreateBox.Controls.Add(btnCreateRoom);
+            cardCreateBox.Controls.Add(pillRuleFree);
+            cardCreateBox.Controls.Add(pillRuleStandard);
+            cardCreateBox.Controls.Add(secHeaderRule);
+            cardCreateBox.Controls.Add(pnlAiDifficultyOptions);
+            cardCreateBox.Controls.Add(pnlTimeLimitOptions);
+            cardCreateBox.Controls.Add(cardTimeFree);
+            cardCreateBox.Controls.Add(cardTimeTurn);
+            cardCreateBox.Controls.Add(secHeaderTime);
+            cardCreateBox.Controls.Add(cardModeAI);
+            cardCreateBox.Controls.Add(cardModePvP);
+            cardCreateBox.Controls.Add(secHeaderMode);
+            cardCreateBox.Controls.Add(pnlCreateHeader);
+            cardCreateBox.CornerRadius = 14;
+            cardCreateBox.FillColor = Color.FromArgb(13, 24, 48);
+            cardCreateBox.Location = new Point(80, 20);
+            cardCreateBox.Name = "cardCreateBox";
+            cardCreateBox.Padding = new Padding(28, 20, 28, 20);
+            cardCreateBox.Size = new Size(680, 560);
+            cardCreateBox.TabIndex = 0;
+            // 
+            // btnCancelCreate
+            // 
+            btnCancelCreate.BackColor = Color.FromArgb(9, 15, 30);
+            btnCancelCreate.BorderLineColor = Color.FromArgb(40, 70, 125);
+            btnCancelCreate.ClickColor = Color.FromArgb(10, 18, 36);
+            btnCancelCreate.CornerRadius = 12;
+            btnCancelCreate.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnCancelCreate.FlatStyle = FlatStyle.Flat;
+            btnCancelCreate.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnCancelCreate.ForeColor = Color.FromArgb(200, 220, 255);
+            btnCancelCreate.HoverColor = Color.FromArgb(32, 52, 92);
+            btnCancelCreate.IsPrimaryGradient = false;
+            btnCancelCreate.IsPurpleGradient = false;
+            btnCancelCreate.Location = new Point(470, 510);
+            btnCancelCreate.Name = "btnCancelCreate";
+            btnCancelCreate.NavIcon = CyberIcon.None;
+            btnCancelCreate.NormalColor = Color.FromArgb(20, 32, 58);
+            btnCancelCreate.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnCancelCreate.Size = new Size(182, 48);
+            btnCancelCreate.TabIndex = 0;
+            btnCancelCreate.Text = "←  Quay lại";
+            btnCancelCreate.TextLeftPadding = 16;
+            btnCancelCreate.UseVisualStyleBackColor = false;
+            btnCancelCreate.Click += btnCancelCreate_Click;
+            // 
+            // btnCreateRoom
+            // 
+            btnCreateRoom.BackColor = Color.FromArgb(9, 15, 30);
+            btnCreateRoom.BorderLineColor = Color.FromArgb(0, 220, 255);
+            btnCreateRoom.ClickColor = Color.FromArgb(10, 18, 36);
+            btnCreateRoom.CornerRadius = 12;
+            btnCreateRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnCreateRoom.FlatStyle = FlatStyle.Flat;
+            btnCreateRoom.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnCreateRoom.ForeColor = Color.White;
+            btnCreateRoom.HoverColor = Color.FromArgb(24, 42, 80);
+            btnCreateRoom.IsPrimaryGradient = true;
+            btnCreateRoom.IsPurpleGradient = false;
+            btnCreateRoom.Location = new Point(28, 510);
+            btnCreateRoom.Name = "btnCreateRoom";
+            btnCreateRoom.NavIcon = CyberIcon.None;
+            btnCreateRoom.NormalColor = Color.FromArgb(14, 24, 46);
+            btnCreateRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnCreateRoom.Size = new Size(430, 48);
+            btnCreateRoom.TabIndex = 1;
+            btnCreateRoom.Text = "▶  Tạo phòng";
+            btnCreateRoom.TextLeftPadding = 16;
+            btnCreateRoom.UseVisualStyleBackColor = false;
+            btnCreateRoom.Click += btnCreateRoom_Click;
+            // 
+            // pillRuleFree
+            // 
+            pillRuleFree.CornerRadius = 8;
+            pillRuleFree.IsSelected = false;
+            pillRuleFree.Location = new Point(346, 452);
+            pillRuleFree.Name = "pillRuleFree";
+            pillRuleFree.OptionText = "Tự do (5 ô là thắng)";
+            pillRuleFree.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillRuleFree.PillText = "Tự do (5 ô là thắng)";
+            pillRuleFree.Size = new Size(306, 42);
+            pillRuleFree.TabIndex = 2;
+            // 
+            // pillRuleStandard
+            // 
+            pillRuleStandard.CornerRadius = 8;
+            pillRuleStandard.IsSelected = true;
+            pillRuleStandard.Location = new Point(28, 452);
+            pillRuleStandard.Name = "pillRuleStandard";
+            pillRuleStandard.OptionText = "Chặn 2 đầu không thắng";
+            pillRuleStandard.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillRuleStandard.PillText = "Chặn 2 đầu không thắng";
+            pillRuleStandard.Size = new Size(306, 42);
+            pillRuleStandard.TabIndex = 3;
+            // 
+            // secHeaderRule
+            // 
+            secHeaderRule.HeaderText = "Luật thi đấu";
+            secHeaderRule.Location = new Point(28, 420);
+            secHeaderRule.Name = "secHeaderRule";
+            secHeaderRule.ParentBgColor = Color.FromArgb(13, 24, 48);
+            secHeaderRule.Size = new Size(624, 26);
+            secHeaderRule.StepNumber = 3;
+            secHeaderRule.TabIndex = 4;
+            // 
+            // pnlAiDifficultyOptions
+            // 
+            pnlAiDifficultyOptions.BackColor = Color.Transparent;
+            pnlAiDifficultyOptions.Controls.Add(lblAiDifficultyLabel);
+            pnlAiDifficultyOptions.Controls.Add(pillAiEasy);
+            pnlAiDifficultyOptions.Controls.Add(pillAiMedium);
+            pnlAiDifficultyOptions.Controls.Add(pillAiHard);
+            pnlAiDifficultyOptions.Location = new Point(28, 376);
+            pnlAiDifficultyOptions.Name = "pnlAiDifficultyOptions";
+            pnlAiDifficultyOptions.Size = new Size(624, 38);
+            pnlAiDifficultyOptions.TabIndex = 5;
+            pnlAiDifficultyOptions.Visible = false;
+            // 
+            // lblAiDifficultyLabel
+            // 
+            lblAiDifficultyLabel.AutoSize = true;
+            lblAiDifficultyLabel.Font = new Font("Segoe UI", 9F);
+            lblAiDifficultyLabel.ForeColor = Color.FromArgb(150, 175, 215);
+            lblAiDifficultyLabel.Location = new Point(0, 10);
+            lblAiDifficultyLabel.Name = "lblAiDifficultyLabel";
+            lblAiDifficultyLabel.Size = new Size(81, 20);
+            lblAiDifficultyLabel.TabIndex = 0;
+            lblAiDifficultyLabel.Text = "Mức độ AI:";
+            // 
+            // pillAiEasy
+            // 
+            pillAiEasy.CornerRadius = 8;
+            pillAiEasy.IsSelected = false;
+            pillAiEasy.Location = new Point(165, 1);
+            pillAiEasy.Name = "pillAiEasy";
+            pillAiEasy.OptionText = "Dễ";
+            pillAiEasy.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillAiEasy.PillText = "Dễ";
+            pillAiEasy.Size = new Size(95, 36);
+            pillAiEasy.TabIndex = 1;
+            // 
+            // pillAiMedium
+            // 
+            pillAiMedium.CornerRadius = 8;
+            pillAiMedium.IsSelected = true;
+            pillAiMedium.Location = new Point(272, 1);
+            pillAiMedium.Name = "pillAiMedium";
+            pillAiMedium.OptionText = "Trung bình";
+            pillAiMedium.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillAiMedium.PillText = "Trung bình";
+            pillAiMedium.Size = new Size(115, 36);
+            pillAiMedium.TabIndex = 2;
+            // 
+            // pillAiHard
+            // 
+            pillAiHard.CornerRadius = 8;
+            pillAiHard.IsSelected = false;
+            pillAiHard.Location = new Point(399, 1);
+            pillAiHard.Name = "pillAiHard";
+            pillAiHard.OptionText = "Khó";
+            pillAiHard.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillAiHard.PillText = "Khó";
+            pillAiHard.Size = new Size(95, 36);
+            pillAiHard.TabIndex = 3;
+            // 
             // pnlTimeLimitOptions
-            this.pnlTimeLimitOptions.Location = new System.Drawing.Point(28, 332);
-            this.pnlTimeLimitOptions.Size = new System.Drawing.Size(624, 38);
-            this.pnlTimeLimitOptions.BackColor = System.Drawing.Color.Transparent;
-            this.pnlTimeLimitOptions.Controls.Add(this.lblTimePillLabel);
-            this.pnlTimeLimitOptions.Controls.Add(this.pillTime15);
-            this.pnlTimeLimitOptions.Controls.Add(this.pillTime30);
-            this.pnlTimeLimitOptions.Controls.Add(this.pillTime60);
-
-            this.lblTimePillLabel.Text = "Thời gian mỗi lượt:";
-            this.lblTimePillLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblTimePillLabel.ForeColor = System.Drawing.Color.FromArgb(150, 175, 215);
-            this.lblTimePillLabel.Location = new System.Drawing.Point(0, 8);
-            this.lblTimePillLabel.AutoSize = true;
-
-            this.pillTime15.Location = new System.Drawing.Point(145, 0);
-            this.pillTime15.Size = new System.Drawing.Size(95, 36);
-            this.pillTime15.PillText = "15 giây";
-            this.pillTime15.IsSelected = false;
-
-            this.pillTime30.Location = new System.Drawing.Point(250, 0);
-            this.pillTime30.Size = new System.Drawing.Size(95, 36);
-            this.pillTime30.PillText = "30 giây";
-            this.pillTime30.IsSelected = true;
-
-            this.pillTime60.Location = new System.Drawing.Point(355, 0);
-            this.pillTime60.Size = new System.Drawing.Size(95, 36);
-            this.pillTime60.PillText = "60 giây";
-            this.pillTime60.IsSelected = false;
-
-            // pnlAiDifficultyOptions (Shown when Vs AI is selected)
-            this.pnlAiDifficultyOptions.Location = new System.Drawing.Point(28, 376);
-            this.pnlAiDifficultyOptions.Size = new System.Drawing.Size(624, 38);
-            this.pnlAiDifficultyOptions.BackColor = System.Drawing.Color.Transparent;
-            this.pnlAiDifficultyOptions.Visible = false;
-            this.pnlAiDifficultyOptions.Controls.Add(this.lblAiDifficultyLabel);
-            this.pnlAiDifficultyOptions.Controls.Add(this.pillAiEasy);
-            this.pnlAiDifficultyOptions.Controls.Add(this.pillAiMedium);
-            this.pnlAiDifficultyOptions.Controls.Add(this.pillAiHard);
-
-            this.lblAiDifficultyLabel.Text = "Mức độ AI:";
-            this.lblAiDifficultyLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblAiDifficultyLabel.ForeColor = System.Drawing.Color.FromArgb(150, 175, 215);
-            this.lblAiDifficultyLabel.Location = new System.Drawing.Point(0, 8);
-            this.lblAiDifficultyLabel.AutoSize = true;
-
-            this.pillAiEasy.Location = new System.Drawing.Point(145, 0);
-            this.pillAiEasy.Size = new System.Drawing.Size(95, 36);
-            this.pillAiEasy.PillText = "Dễ";
-            this.pillAiEasy.IsSelected = false;
-
-            this.pillAiMedium.Location = new System.Drawing.Point(250, 0);
-            this.pillAiMedium.Size = new System.Drawing.Size(115, 36);
-            this.pillAiMedium.PillText = "Trung bình";
-            this.pillAiMedium.IsSelected = true;
-
-            this.pillAiHard.Location = new System.Drawing.Point(375, 0);
-            this.pillAiHard.Size = new System.Drawing.Size(95, 36);
-            this.pillAiHard.PillText = "Khó";
-            this.pillAiHard.IsSelected = false;
-
-            // Section 3: Rule
-            this.secHeaderRule.Location = new System.Drawing.Point(28, 420);
-            this.secHeaderRule.Size = new System.Drawing.Size(624, 26);
-            this.secHeaderRule.StepNumber = 3;
-            this.secHeaderRule.HeaderText = "Luật thi đấu";
-
-            this.pillRuleStandard.Location = new System.Drawing.Point(28, 452);
-            this.pillRuleStandard.Size = new System.Drawing.Size(306, 42);
-            this.pillRuleStandard.PillText = "Chặn 2 đầu không thắng";
-            this.pillRuleStandard.IsSelected = true;
-
-            this.pillRuleFree.Location = new System.Drawing.Point(346, 452);
-            this.pillRuleFree.Size = new System.Drawing.Size(306, 42);
-            this.pillRuleFree.PillText = "Luật tự do (5 con liên tiếp)";
-            this.pillRuleFree.IsSelected = false;
-
-            // Action Buttons
-            this.btnCreateRoom.Location = new System.Drawing.Point(28, 510);
-            this.btnCreateRoom.Size = new System.Drawing.Size(430, 48);
-            this.btnCreateRoom.Text = "▶  Tạo phòng";
-            this.btnCreateRoom.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-            this.btnCreateRoom.IsPrimaryGradient = true;
-            this.btnCreateRoom.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnCreateRoom.Click += new System.EventHandler(this.btnCreateRoom_Click);
-
-            this.btnCancelCreate.Location = new System.Drawing.Point(470, 510);
-            this.btnCancelCreate.Size = new System.Drawing.Size(182, 48);
-            this.btnCancelCreate.Text = "← Quay lại";
-            this.btnCancelCreate.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnCancelCreate.NormalColor = System.Drawing.Color.FromArgb(28, 42, 70);
-            this.btnCancelCreate.HoverColor = System.Drawing.Color.FromArgb(42, 62, 100);
-            this.btnCancelCreate.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnCancelCreate.Click += (s, e) => SwitchToView(this.pnlHomeView, this.btnNavHome);
-
-            // =============================================================
-            // View 4: pnlJoinRoomView (Tham gia phòng & Danh sách phòng)
-            // =============================================================
-            this.pnlJoinRoomView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlJoinRoomView.Padding = new System.Windows.Forms.Padding(14, 10, 14, 12);
-            this.pnlJoinRoomView.Controls.Add(this.cardFeaturedRooms);
-            this.pnlJoinRoomView.Controls.Add(this.cardJoinTopBar);
-
-            // cardJoinTopBar (Header bar with title and quick join by room ID)
-            this.cardJoinTopBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cardJoinTopBar.Height = 72;
-            this.cardJoinTopBar.Padding = new System.Windows.Forms.Padding(16, 8, 16, 8);
-            this.cardJoinTopBar.Controls.Add(this.pnlJoinActions);
-            this.cardJoinTopBar.Controls.Add(this.lblJoinSubtitle);
-            this.cardJoinTopBar.Controls.Add(this.lblJoinTitle);
-
-            this.lblJoinTitle.Text = "THAM GIA PHÒNG ĐẤU";
-            this.lblJoinTitle.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold);
-            this.lblJoinTitle.ForeColor = System.Drawing.Color.White;
-            this.lblJoinTitle.Location = new System.Drawing.Point(14, 12);
-            this.lblJoinTitle.AutoSize = true;
-
-            this.lblJoinSubtitle.Text = "Nhập mã phòng hoặc chọn phòng bên dưới để vào chơi / xem trực tiếp";
-            this.lblJoinSubtitle.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblJoinSubtitle.ForeColor = System.Drawing.Color.FromArgb(160, 185, 220);
-            this.lblJoinSubtitle.Location = new System.Drawing.Point(14, 38);
-            this.lblJoinSubtitle.AutoSize = true;
-
-            // pnlJoinActions (Right container for room input & buttons)
-            this.pnlJoinActions.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlJoinActions.Width = 460;
-            this.pnlJoinActions.BackColor = System.Drawing.Color.Transparent;
-            this.pnlJoinActions.Controls.Add(this.btnCancelJoin);
-            this.pnlJoinActions.Controls.Add(this.btnJoinRoom);
-            this.pnlJoinActions.Controls.Add(this.txtRoomId);
-            this.pnlJoinActions.Controls.Add(this.lblRoomIdPrompt);
-
-            this.lblRoomIdPrompt.Text = "Mã phòng:";
-            this.lblRoomIdPrompt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblRoomIdPrompt.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRoomIdPrompt.Location = new System.Drawing.Point(6, 18);
-            this.lblRoomIdPrompt.AutoSize = true;
-
-            this.txtRoomId.Location = new System.Drawing.Point(82, 14);
-            this.txtRoomId.Size = new System.Drawing.Size(115, 28);
-            this.txtRoomId.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
-            this.txtRoomId.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRoomId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRoomId.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.txtRoomId.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-
-            this.btnJoinRoom.Location = new System.Drawing.Point(208, 12);
-            this.btnJoinRoom.Size = new System.Drawing.Size(115, 34);
-            this.btnJoinRoom.Text = "➜ Vào phòng";
-            this.btnJoinRoom.IsPrimaryGradient = true;
-            this.btnJoinRoom.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnJoinRoom.Click += new System.EventHandler(this.btnJoinRoom_Click);
-
-            this.btnCancelJoin.Location = new System.Drawing.Point(333, 12);
-            this.btnCancelJoin.Size = new System.Drawing.Size(115, 34);
-            this.btnCancelJoin.Text = "← Trang chủ";
-            this.btnCancelJoin.NormalColor = System.Drawing.Color.FromArgb(28, 42, 70);
-            this.btnCancelJoin.HoverColor = System.Drawing.Color.FromArgb(42, 62, 100);
-            this.btnCancelJoin.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnCancelJoin.Click += (s, e) => SwitchToView(this.pnlHomeView, this.btnNavHome);
-
-            // cardFeaturedRooms (Bảng danh sách phòng chơi đang mở)
-            this.cardFeaturedRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardFeaturedRooms.Padding = new System.Windows.Forms.Padding(12, 10, 12, 12);
-            this.cardFeaturedRooms.Controls.Add(this.lblNoRooms);
-            this.cardFeaturedRooms.Controls.Add(this.dgvFeaturedRooms);
-            this.cardFeaturedRooms.Controls.Add(this.pnlRoomsHeaderBar);
-
-            // pnlRoomsHeaderBar
-            this.pnlRoomsHeaderBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlRoomsHeaderBar.Height = 36;
-            this.pnlRoomsHeaderBar.BackColor = System.Drawing.Color.Transparent;
-            this.pnlRoomsHeaderBar.Controls.Add(this.btnRefreshRooms);
-            this.pnlRoomsHeaderBar.Controls.Add(this.lblRoomsHeader);
-
-            this.lblRoomsHeader.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblRoomsHeader.Text = "PHÒNG CHƠI ĐANG MỞ";
-            this.lblRoomsHeader.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.lblRoomsHeader.ForeColor = System.Drawing.Color.White;
-            this.lblRoomsHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblRoomsHeader.AutoSize = true;
-
-            this.btnRefreshRooms.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnRefreshRooms.Width = 92;
-            this.btnRefreshRooms.Text = "🔄 Làm mới";
-            this.btnRefreshRooms.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefreshRooms.FlatAppearance.BorderSize = 0;
-            this.btnRefreshRooms.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnRefreshRooms.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.btnRefreshRooms.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRefreshRooms.Click += new System.EventHandler(this.btnRefreshRooms_Click);
-
-            // dgvFeaturedRooms (Fixed sizes, no dragging, professional UI)
-            this.dgvFeaturedRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvFeaturedRooms.BackgroundColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvFeaturedRooms.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvFeaturedRooms.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvFeaturedRooms.GridColor = System.Drawing.Color.FromArgb(20, 36, 70);
-            this.dgvFeaturedRooms.DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvFeaturedRooms.DefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            this.dgvFeaturedRooms.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(20, 45, 90);
-            this.dgvFeaturedRooms.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.White;
-            this.dgvFeaturedRooms.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(14, 28, 56);
-            this.dgvFeaturedRooms.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 215);
-            this.dgvFeaturedRooms.EnableHeadersVisualStyles = false;
-            this.dgvFeaturedRooms.ReadOnly = true;
-            this.dgvFeaturedRooms.RowHeadersVisible = false;
-            this.dgvFeaturedRooms.AllowUserToAddRows = false;
-            this.dgvFeaturedRooms.AllowUserToDeleteRows = false;
-            this.dgvFeaturedRooms.AllowUserToResizeRows = false;
-            this.dgvFeaturedRooms.AllowUserToResizeColumns = false;
-            this.dgvFeaturedRooms.RowTemplate.Height = 36;
-            this.dgvFeaturedRooms.ColumnHeadersHeight = 32;
-            this.dgvFeaturedRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvFeaturedRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvFeaturedRooms.MultiSelect = false;
-            this.dgvFeaturedRooms.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFeaturedRooms_CellDoubleClick);
-            this.dgvFeaturedRooms.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFeaturedRooms_CellContentClick);
-
+            // 
+            pnlTimeLimitOptions.BackColor = Color.Transparent;
+            pnlTimeLimitOptions.Controls.Add(lblTimePillLabel);
+            pnlTimeLimitOptions.Controls.Add(pillTime15);
+            pnlTimeLimitOptions.Controls.Add(pillTime30);
+            pnlTimeLimitOptions.Controls.Add(pillTime60);
+            pnlTimeLimitOptions.Controls.Add(pillCountdown1m);
+            pnlTimeLimitOptions.Controls.Add(pillCountdown3m);
+            pnlTimeLimitOptions.Controls.Add(pillCountdown5m);
+            pnlTimeLimitOptions.Controls.Add(pillCountdownCustom);
+            pnlTimeLimitOptions.Controls.Add(txtCustomMinutes);
+            pnlTimeLimitOptions.Controls.Add(lblCustomMinutesUnit);
+            pnlTimeLimitOptions.Location = new Point(28, 332);
+            pnlTimeLimitOptions.Name = "pnlTimeLimitOptions";
+            pnlTimeLimitOptions.Size = new Size(624, 38);
+            pnlTimeLimitOptions.TabIndex = 6;
+            // 
+            // lblTimePillLabel
+            // 
+            lblTimePillLabel.AutoSize = true;
+            lblTimePillLabel.Font = new Font("Segoe UI", 9F);
+            lblTimePillLabel.ForeColor = Color.FromArgb(150, 175, 215);
+            lblTimePillLabel.Location = new Point(0, 10);
+            lblTimePillLabel.Name = "lblTimePillLabel";
+            lblTimePillLabel.Size = new Size(135, 20);
+            lblTimePillLabel.TabIndex = 0;
+            lblTimePillLabel.Text = "Thời gian mỗi lượt:";
+            // 
+            // pillTime15
+            // 
+            pillTime15.CornerRadius = 8;
+            pillTime15.IsSelected = false;
+            pillTime15.Location = new Point(165, 1);
+            pillTime15.Name = "pillTime15";
+            pillTime15.OptionText = "15s";
+            pillTime15.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillTime15.PillText = "15s";
+            pillTime15.Size = new Size(95, 36);
+            pillTime15.TabIndex = 1;
+            // 
+            // pillTime30
+            // 
+            pillTime30.CornerRadius = 8;
+            pillTime30.IsSelected = true;
+            pillTime30.Location = new Point(272, 1);
+            pillTime30.Name = "pillTime30";
+            pillTime30.OptionText = "30s";
+            pillTime30.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillTime30.PillText = "30s";
+            pillTime30.Size = new Size(95, 36);
+            pillTime30.TabIndex = 2;
+            // 
+            // pillTime60
+            // 
+            pillTime60.CornerRadius = 8;
+            pillTime60.IsSelected = false;
+            pillTime60.Location = new Point(379, 1);
+            pillTime60.Name = "pillTime60";
+            pillTime60.OptionText = "60s";
+            pillTime60.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillTime60.PillText = "60s";
+            pillTime60.Size = new Size(95, 36);
+            pillTime60.TabIndex = 3;
+            // 
+            // pillCountdown1m
+            // 
+            pillCountdown1m.CornerRadius = 8;
+            pillCountdown1m.IsSelected = false;
+            pillCountdown1m.Location = new Point(165, 1);
+            pillCountdown1m.Name = "pillCountdown1m";
+            pillCountdown1m.OptionText = "1 phút";
+            pillCountdown1m.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillCountdown1m.PillText = "1 phút";
+            pillCountdown1m.Size = new Size(80, 36);
+            pillCountdown1m.TabIndex = 4;
+            pillCountdown1m.Visible = false;
+            // 
+            // pillCountdown3m
+            // 
+            pillCountdown3m.CornerRadius = 8;
+            pillCountdown3m.IsSelected = true;
+            pillCountdown3m.Location = new Point(255, 1);
+            pillCountdown3m.Name = "pillCountdown3m";
+            pillCountdown3m.OptionText = "3 phút";
+            pillCountdown3m.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillCountdown3m.PillText = "3 phút";
+            pillCountdown3m.Size = new Size(80, 36);
+            pillCountdown3m.TabIndex = 5;
+            pillCountdown3m.Visible = false;
+            // 
+            // pillCountdown5m
+            // 
+            pillCountdown5m.CornerRadius = 8;
+            pillCountdown5m.IsSelected = false;
+            pillCountdown5m.Location = new Point(345, 1);
+            pillCountdown5m.Name = "pillCountdown5m";
+            pillCountdown5m.OptionText = "5 phút";
+            pillCountdown5m.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillCountdown5m.PillText = "5 phút";
+            pillCountdown5m.Size = new Size(80, 36);
+            pillCountdown5m.TabIndex = 6;
+            pillCountdown5m.Visible = false;
+            // 
+            // pillCountdownCustom
+            // 
+            pillCountdownCustom.CornerRadius = 8;
+            pillCountdownCustom.IsSelected = false;
+            pillCountdownCustom.Location = new Point(435, 1);
+            pillCountdownCustom.Name = "pillCountdownCustom";
+            pillCountdownCustom.OptionText = "Tự chọn";
+            pillCountdownCustom.ParentBgColor = Color.FromArgb(13, 24, 48);
+            pillCountdownCustom.PillText = "Tự chọn";
+            pillCountdownCustom.Size = new Size(90, 36);
+            pillCountdownCustom.TabIndex = 7;
+            pillCountdownCustom.Visible = false;
+            // 
+            // txtCustomMinutes
+            // 
+            txtCustomMinutes.BackColor = Color.FromArgb(16, 28, 54);
+            txtCustomMinutes.BorderStyle = BorderStyle.FixedSingle;
+            txtCustomMinutes.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            txtCustomMinutes.ForeColor = Color.FromArgb(0, 194, 255);
+            txtCustomMinutes.Location = new Point(533, 5);
+            txtCustomMinutes.Name = "txtCustomMinutes";
+            txtCustomMinutes.Size = new Size(40, 29);
+            txtCustomMinutes.TabIndex = 8;
+            txtCustomMinutes.Text = "2";
+            txtCustomMinutes.TextAlign = HorizontalAlignment.Center;
+            txtCustomMinutes.Visible = false;
+            // 
+            // lblCustomMinutesUnit
+            // 
+            lblCustomMinutesUnit.AutoSize = true;
+            lblCustomMinutesUnit.Font = new Font("Segoe UI", 9F);
+            lblCustomMinutesUnit.ForeColor = Color.FromArgb(150, 175, 215);
+            lblCustomMinutesUnit.Location = new Point(579, 10);
+            lblCustomMinutesUnit.Name = "lblCustomMinutesUnit";
+            lblCustomMinutesUnit.Size = new Size(39, 20);
+            lblCustomMinutesUnit.TabIndex = 9;
+            lblCustomMinutesUnit.Text = "phút";
+            lblCustomMinutesUnit.Visible = false;
+            // 
+            // cardTimeFree
+            // 
+            cardTimeFree.CornerRadius = 12;
+            cardTimeFree.IconType = CardIconType.Stopwatch;
+            cardTimeFree.IsSelected = false;
+            cardTimeFree.Location = new Point(346, 248);
+            cardTimeFree.Name = "cardTimeFree";
+            cardTimeFree.ParentBgColor = Color.FromArgb(13, 24, 48);
+            cardTimeFree.Size = new Size(306, 74);
+            cardTimeFree.Subtitle = "1 - 5 phút hoặc tự chọn";
+            cardTimeFree.TabIndex = 7;
+            cardTimeFree.Title = "Đếm ngược";
+            // 
+            // cardTimeTurn
+            // 
+            cardTimeTurn.CornerRadius = 12;
+            cardTimeTurn.IconType = CardIconType.ClockTurn;
+            cardTimeTurn.IsSelected = true;
+            cardTimeTurn.Location = new Point(28, 248);
+            cardTimeTurn.Name = "cardTimeTurn";
+            cardTimeTurn.ParentBgColor = Color.FromArgb(13, 24, 48);
+            cardTimeTurn.Size = new Size(306, 74);
+            cardTimeTurn.Subtitle = "15s, 30s hoặc 60s";
+            cardTimeTurn.TabIndex = 8;
+            cardTimeTurn.Title = "Theo lượt";
+            // 
+            // secHeaderTime
+            // 
+            secHeaderTime.HeaderText = "Quy định thời gian";
+            secHeaderTime.Location = new Point(28, 218);
+            secHeaderTime.Name = "secHeaderTime";
+            secHeaderTime.ParentBgColor = Color.FromArgb(13, 24, 48);
+            secHeaderTime.Size = new Size(624, 26);
+            secHeaderTime.StepNumber = 2;
+            secHeaderTime.TabIndex = 9;
+            // 
+            // cardModeAI
+            // 
+            cardModeAI.CornerRadius = 12;
+            cardModeAI.IconType = CardIconType.RobotAI;
+            cardModeAI.IsSelected = false;
+            cardModeAI.Location = new Point(346, 116);
+            cardModeAI.Name = "cardModeAI";
+            cardModeAI.ParentBgColor = Color.FromArgb(13, 24, 48);
+            cardModeAI.Size = new Size(306, 90);
+            cardModeAI.Subtitle = "Chơi với máy";
+            cardModeAI.TabIndex = 10;
+            cardModeAI.Title = "Vs AI";
+            // 
+            // cardModePvP
+            // 
+            cardModePvP.CornerRadius = 12;
+            cardModePvP.IconType = CardIconType.TwoPlayers;
+            cardModePvP.IsSelected = true;
+            cardModePvP.Location = new Point(28, 116);
+            cardModePvP.Name = "cardModePvP";
+            cardModePvP.ParentBgColor = Color.FromArgb(13, 24, 48);
+            cardModePvP.Size = new Size(306, 90);
+            cardModePvP.Subtitle = "Đấu trực tiếp";
+            cardModePvP.TabIndex = 11;
+            cardModePvP.Title = "2 người";
+            // 
+            // secHeaderMode
+            // 
+            secHeaderMode.HeaderText = "Chọn chế độ chơi";
+            secHeaderMode.Location = new Point(28, 86);
+            secHeaderMode.Name = "secHeaderMode";
+            secHeaderMode.ParentBgColor = Color.FromArgb(13, 24, 48);
+            secHeaderMode.Size = new Size(624, 26);
+            secHeaderMode.StepNumber = 1;
+            secHeaderMode.TabIndex = 12;
+            // 
+            // pnlCreateHeader
+            // 
+            pnlCreateHeader.BackColor = Color.Transparent;
+            pnlCreateHeader.Controls.Add(badgeCreatePlus);
+            pnlCreateHeader.Controls.Add(lblCreateTitle);
+            pnlCreateHeader.Controls.Add(lblCreateSubtitle);
+            pnlCreateHeader.Location = new Point(28, 20);
+            pnlCreateHeader.Name = "pnlCreateHeader";
+            pnlCreateHeader.Size = new Size(624, 58);
+            pnlCreateHeader.TabIndex = 13;
+            // 
+            // badgeCreatePlus
+            // 
+            badgeCreatePlus.Location = new Point(0, 6);
+            badgeCreatePlus.Name = "badgeCreatePlus";
+            badgeCreatePlus.ParentBgColor = Color.FromArgb(13, 24, 48);
+            badgeCreatePlus.Size = new Size(42, 42);
+            badgeCreatePlus.TabIndex = 0;
+            // 
+            // lblCreateTitle
+            // 
+            lblCreateTitle.AutoSize = true;
+            lblCreateTitle.Font = new Font("Segoe UI", 14.5F, FontStyle.Bold);
+            lblCreateTitle.ForeColor = Color.White;
+            lblCreateTitle.Location = new Point(52, 2);
+            lblCreateTitle.Name = "lblCreateTitle";
+            lblCreateTitle.Size = new Size(194, 35);
+            lblCreateTitle.TabIndex = 1;
+            lblCreateTitle.Text = "Tạo phòng mới";
+            // 
+            // lblCreateSubtitle
+            // 
+            lblCreateSubtitle.AutoSize = true;
+            lblCreateSubtitle.Font = new Font("Segoe UI", 9F);
+            lblCreateSubtitle.ForeColor = Color.FromArgb(140, 168, 208);
+            lblCreateSubtitle.Location = new Point(54, 32);
+            lblCreateSubtitle.Name = "lblCreateSubtitle";
+            lblCreateSubtitle.Size = new Size(350, 20);
+            lblCreateSubtitle.TabIndex = 2;
+            lblCreateSubtitle.Text = "Thiết lập chế độ chơi và mời bạn bè cùng tham gia!";
+            // 
+            // pnlJoinRoomView
+            // 
+            pnlJoinRoomView.Controls.Add(lblLobbyLastUpdated);
+            pnlJoinRoomView.Controls.Add(pnlLobbyBody);
+            pnlJoinRoomView.Controls.Add(pnlLobbyFilterBar);
+            pnlJoinRoomView.Controls.Add(pnlLobbyHeaderBar);
+            pnlJoinRoomView.Dock = DockStyle.Fill;
+            pnlJoinRoomView.Location = new Point(0, 0);
+            pnlJoinRoomView.Name = "pnlJoinRoomView";
+            pnlJoinRoomView.Padding = new Padding(18, 12, 18, 10);
+            pnlJoinRoomView.Size = new Size(750, 732);
+            pnlJoinRoomView.TabIndex = 3;
+            // 
+            // lblLobbyLastUpdated
+            // 
+            lblLobbyLastUpdated.Dock = DockStyle.Bottom;
+            lblLobbyLastUpdated.Font = new Font("Segoe UI", 8F);
+            lblLobbyLastUpdated.ForeColor = Color.FromArgb(107, 122, 153);
+            lblLobbyLastUpdated.Location = new Point(18, 700);
+            lblLobbyLastUpdated.Name = "lblLobbyLastUpdated";
+            lblLobbyLastUpdated.Size = new Size(714, 22);
+            lblLobbyLastUpdated.TabIndex = 0;
+            lblLobbyLastUpdated.Text = "Cập nhật vừa xong • 14:32";
+            lblLobbyLastUpdated.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // pnlLobbyBody
+            // 
+            pnlLobbyBody.BackColor = Color.Transparent;
+            pnlLobbyBody.Controls.Add(pnlLobbyRightCol);
+            pnlLobbyBody.Controls.Add(cardOpenRooms);
+            pnlLobbyBody.Dock = DockStyle.Fill;
+            pnlLobbyBody.Location = new Point(18, 172);
+            pnlLobbyBody.Name = "pnlLobbyBody";
+            pnlLobbyBody.Padding = new Padding(0, 6, 0, 0);
+            pnlLobbyBody.Size = new Size(714, 550);
+            pnlLobbyBody.TabIndex = 1;
+            pnlLobbyBody.Resize += pnlLobbyBody_Resize;
+            // 
+            // pnlLobbyRightCol
+            // 
+            pnlLobbyRightCol.BackColor = Color.Transparent;
+            pnlLobbyRightCol.Controls.Add(cardFeaturedRoom);
+            pnlLobbyRightCol.Controls.Add(cardJoinByCode);
+            pnlLobbyRightCol.Location = new Point(0, 0);
+            pnlLobbyRightCol.Name = "pnlLobbyRightCol";
+            pnlLobbyRightCol.Size = new Size(285, 100);
+            pnlLobbyRightCol.TabIndex = 0;
+            // 
+            // cardFeaturedRoom
+            // 
+            cardFeaturedRoom.BackColor = Color.FromArgb(11, 19, 36);
+            cardFeaturedRoom.BorderColor = Color.FromArgb(25, 45, 85);
+            cardFeaturedRoom.BorderWidth = 1.2F;
+            cardFeaturedRoom.Controls.Add(btnFeaturedAction);
+            cardFeaturedRoom.Controls.Add(lblFeaturedStatus);
+            cardFeaturedRoom.Controls.Add(lblFeaturedMode);
+            cardFeaturedRoom.Controls.Add(lblFeaturedHost);
+            cardFeaturedRoom.Controls.Add(lblFeaturedRoomName);
+            cardFeaturedRoom.Controls.Add(miniBoardPreview);
+            cardFeaturedRoom.Controls.Add(lblViewAllRooms);
+            cardFeaturedRoom.Controls.Add(lblFeaturedTitle);
+            cardFeaturedRoom.CornerRadius = 14;
+            cardFeaturedRoom.FillColor = Color.FromArgb(13, 24, 48);
+            cardFeaturedRoom.Location = new Point(0, 0);
+            cardFeaturedRoom.Name = "cardFeaturedRoom";
+            cardFeaturedRoom.Padding = new Padding(12);
+            cardFeaturedRoom.Size = new Size(200, 215);
+            cardFeaturedRoom.TabIndex = 0;
+            // 
+            // btnFeaturedAction
+            // 
+            btnFeaturedAction.BackColor = Color.FromArgb(9, 15, 30);
+            btnFeaturedAction.BorderLineColor = Color.Transparent;
+            btnFeaturedAction.ClickColor = Color.FromArgb(10, 18, 36);
+            btnFeaturedAction.CornerRadius = 10;
+            btnFeaturedAction.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnFeaturedAction.FlatStyle = FlatStyle.Flat;
+            btnFeaturedAction.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnFeaturedAction.ForeColor = Color.White;
+            btnFeaturedAction.HoverColor = Color.FromArgb(24, 42, 80);
+            btnFeaturedAction.IsPrimaryGradient = false;
+            btnFeaturedAction.IsPurpleGradient = false;
+            btnFeaturedAction.Location = new Point(14, 148);
+            btnFeaturedAction.Name = "btnFeaturedAction";
+            btnFeaturedAction.NavIcon = CyberIcon.Plus;
+            btnFeaturedAction.NormalColor = Color.FromArgb(14, 24, 46);
+            btnFeaturedAction.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnFeaturedAction.Size = new Size(257, 36);
+            btnFeaturedAction.TabIndex = 0;
+            btnFeaturedAction.Text = "Tạo phòng mới";
+            btnFeaturedAction.TextLeftPadding = 0;
+            btnFeaturedAction.UseVisualStyleBackColor = false;
+            btnFeaturedAction.Click += btnFeaturedAction_Click;
+            // 
+            // lblFeaturedStatus
+            // 
+            lblFeaturedStatus.AutoSize = true;
+            lblFeaturedStatus.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold);
+            lblFeaturedStatus.ForeColor = Color.FromArgb(140, 165, 200);
+            lblFeaturedStatus.Location = new Point(118, 102);
+            lblFeaturedStatus.Name = "lblFeaturedStatus";
+            lblFeaturedStatus.Size = new Size(105, 19);
+            lblFeaturedStatus.TabIndex = 1;
+            lblFeaturedStatus.Text = "● Phòng trống";
+            // 
+            // lblFeaturedMode
+            // 
+            lblFeaturedMode.AutoSize = true;
+            lblFeaturedMode.Font = new Font("Segoe UI", 8.25F);
+            lblFeaturedMode.ForeColor = Color.FromArgb(142, 160, 192);
+            lblFeaturedMode.Location = new Point(118, 82);
+            lblFeaturedMode.Name = "lblFeaturedMode";
+            lblFeaturedMode.Size = new Size(97, 19);
+            lblFeaturedMode.TabIndex = 2;
+            lblFeaturedMode.Text = "Chế độ Online";
+            // 
+            // lblFeaturedHost
+            // 
+            lblFeaturedHost.AutoSize = true;
+            lblFeaturedHost.Font = new Font("Segoe UI", 8.25F);
+            lblFeaturedHost.ForeColor = Color.FromArgb(142, 160, 192);
+            lblFeaturedHost.Location = new Point(118, 62);
+            lblFeaturedHost.Name = "lblFeaturedHost";
+            lblFeaturedHost.Size = new Size(27, 19);
+            lblFeaturedHost.TabIndex = 3;
+            lblFeaturedHost.Text = "---";
+            // 
+            // lblFeaturedRoomName
+            // 
+            lblFeaturedRoomName.AutoSize = true;
+            lblFeaturedRoomName.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblFeaturedRoomName.ForeColor = Color.White;
+            lblFeaturedRoomName.Location = new Point(118, 40);
+            lblFeaturedRoomName.Name = "lblFeaturedRoomName";
+            lblFeaturedRoomName.Size = new Size(166, 23);
+            lblFeaturedRoomName.TabIndex = 4;
+            lblFeaturedRoomName.Text = "Chưa có phòng đấu";
+            // 
+            // miniBoardPreview
+            // 
+            miniBoardPreview.Location = new Point(14, 40);
+            miniBoardPreview.Name = "miniBoardPreview";
+            miniBoardPreview.Size = new Size(95, 95);
+            miniBoardPreview.TabIndex = 5;
+            // 
+            // lblViewAllRooms
+            // 
+            lblViewAllRooms.AutoSize = true;
+            lblViewAllRooms.Cursor = Cursors.Hand;
+            lblViewAllRooms.Font = new Font("Segoe UI", 8.25F);
+            lblViewAllRooms.ForeColor = Color.FromArgb(0, 194, 255);
+            lblViewAllRooms.Location = new Point(190, 14);
+            lblViewAllRooms.Name = "lblViewAllRooms";
+            lblViewAllRooms.Size = new Size(90, 19);
+            lblViewAllRooms.TabIndex = 6;
+            lblViewAllRooms.Text = "Xem tất cả →";
+            lblViewAllRooms.Click += lblViewAllRooms_Click;
+            // 
+            // lblFeaturedTitle
+            // 
+            lblFeaturedTitle.AutoSize = true;
+            lblFeaturedTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblFeaturedTitle.ForeColor = Color.White;
+            lblFeaturedTitle.Location = new Point(12, 12);
+            lblFeaturedTitle.Name = "lblFeaturedTitle";
+            lblFeaturedTitle.Size = new Size(164, 23);
+            lblFeaturedTitle.TabIndex = 7;
+            lblFeaturedTitle.Text = "★ Gợi ý phòng đấu";
+            // 
+            // cardJoinByCode
+            // 
+            cardJoinByCode.BackColor = Color.FromArgb(11, 19, 36);
+            cardJoinByCode.BorderColor = Color.FromArgb(25, 45, 85);
+            cardJoinByCode.BorderWidth = 1.2F;
+            cardJoinByCode.Controls.Add(lblCodeFootnote);
+            cardJoinByCode.Controls.Add(btnJoinRoom);
+            cardJoinByCode.Controls.Add(pnlCodeWrapper);
+            cardJoinByCode.Controls.Add(lblJoinByCodeTitle);
+            cardJoinByCode.CornerRadius = 14;
+            cardJoinByCode.FillColor = Color.FromArgb(13, 24, 48);
+            cardJoinByCode.Location = new Point(0, 0);
+            cardJoinByCode.Name = "cardJoinByCode";
+            cardJoinByCode.Padding = new Padding(12);
+            cardJoinByCode.Size = new Size(200, 175);
+            cardJoinByCode.TabIndex = 1;
+            // 
+            // lblCodeFootnote
+            // 
+            lblCodeFootnote.Font = new Font("Segoe UI", 8F);
+            lblCodeFootnote.ForeColor = Color.FromArgb(107, 122, 153);
+            lblCodeFootnote.Location = new Point(14, 136);
+            lblCodeFootnote.Name = "lblCodeFootnote";
+            lblCodeFootnote.Size = new Size(257, 20);
+            lblCodeFootnote.TabIndex = 0;
+            lblCodeFootnote.Text = "ⓘ Nhập mã 6 ký tự do bạn bè chia sẻ";
+            lblCodeFootnote.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // btnJoinRoom
+            // 
+            btnJoinRoom.BackColor = Color.FromArgb(9, 15, 30);
+            btnJoinRoom.BorderLineColor = Color.Transparent;
+            btnJoinRoom.ClickColor = Color.FromArgb(0, 80, 200);
+            btnJoinRoom.CornerRadius = 10;
+            btnJoinRoom.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnJoinRoom.FlatStyle = FlatStyle.Flat;
+            btnJoinRoom.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnJoinRoom.ForeColor = Color.White;
+            btnJoinRoom.HoverColor = Color.FromArgb(0, 150, 255);
+            btnJoinRoom.IsPrimaryGradient = true;
+            btnJoinRoom.IsPurpleGradient = false;
+            btnJoinRoom.Location = new Point(14, 88);
+            btnJoinRoom.Name = "btnJoinRoom";
+            btnJoinRoom.NavIcon = CyberIcon.None;
+            btnJoinRoom.NormalColor = Color.FromArgb(13, 110, 253);
+            btnJoinRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnJoinRoom.Size = new Size(257, 38);
+            btnJoinRoom.TabIndex = 1;
+            btnJoinRoom.Text = "Vào phòng";
+            btnJoinRoom.TextLeftPadding = 0;
+            btnJoinRoom.UseVisualStyleBackColor = false;
+            btnJoinRoom.Click += btnJoinRoom_Click;
+            // 
+            // pnlCodeWrapper
+            // 
+            pnlCodeWrapper.BackColor = Color.FromArgb(8, 14, 28);
+            pnlCodeWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlCodeWrapper.BorderWidth = 1.2F;
+            pnlCodeWrapper.Controls.Add(txtRoomId);
+            pnlCodeWrapper.Controls.Add(lblCodeHash);
+            pnlCodeWrapper.CornerRadius = 14;
+            pnlCodeWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlCodeWrapper.Location = new Point(14, 40);
+            pnlCodeWrapper.Name = "pnlCodeWrapper";
+            pnlCodeWrapper.Padding = new Padding(12);
+            pnlCodeWrapper.Size = new Size(257, 38);
+            pnlCodeWrapper.TabIndex = 2;
+            // 
+            // txtRoomId
+            // 
+            txtRoomId.BackColor = Color.FromArgb(8, 14, 28);
+            txtRoomId.BorderStyle = BorderStyle.None;
+            txtRoomId.CharacterCasing = CharacterCasing.Upper;
+            txtRoomId.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            txtRoomId.ForeColor = Color.FromArgb(0, 194, 255);
+            txtRoomId.Location = new Point(26, 9);
+            txtRoomId.Name = "txtRoomId";
+            txtRoomId.PlaceholderText = "Nhập mã phòng (6 ký tự)...";
+            txtRoomId.Size = new Size(220, 23);
+            txtRoomId.TabIndex = 0;
+            // 
+            // lblCodeHash
+            // 
+            lblCodeHash.AutoSize = true;
+            lblCodeHash.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblCodeHash.ForeColor = Color.FromArgb(90, 110, 140);
+            lblCodeHash.Location = new Point(8, 9);
+            lblCodeHash.Name = "lblCodeHash";
+            lblCodeHash.Size = new Size(23, 25);
+            lblCodeHash.TabIndex = 1;
+            lblCodeHash.Text = "#";
+            // 
+            // lblJoinByCodeTitle
+            // 
+            lblJoinByCodeTitle.AutoSize = true;
+            lblJoinByCodeTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblJoinByCodeTitle.ForeColor = Color.White;
+            lblJoinByCodeTitle.Location = new Point(14, 12);
+            lblJoinByCodeTitle.Name = "lblJoinByCodeTitle";
+            lblJoinByCodeTitle.Size = new Size(176, 25);
+            lblJoinByCodeTitle.TabIndex = 3;
+            lblJoinByCodeTitle.Text = "Tham gia bằng mã";
+            // 
+            // cardOpenRooms
+            // 
+            cardOpenRooms.BackColor = Color.FromArgb(13, 24, 48);
+            cardOpenRooms.BorderColor = Color.FromArgb(25, 45, 85);
+            cardOpenRooms.BorderWidth = 1.2F;
+            cardOpenRooms.Controls.Add(pnlOpenRoomsScroll);
+            cardOpenRooms.Controls.Add(pnlOpenRoomsHeader);
+            cardOpenRooms.CornerRadius = 14;
+            cardOpenRooms.FillColor = Color.FromArgb(13, 24, 48);
+            cardOpenRooms.Location = new Point(0, 0);
+            cardOpenRooms.Name = "cardOpenRooms";
+            cardOpenRooms.Padding = new Padding(12);
+            cardOpenRooms.Size = new Size(200, 100);
+            cardOpenRooms.TabIndex = 1;
+            // 
+            // pnlOpenRoomsScroll
+            // 
+            pnlOpenRoomsScroll.AutoScroll = true;
+            pnlOpenRoomsScroll.BackColor = Color.FromArgb(13, 24, 48);
+            pnlOpenRoomsScroll.Controls.Add(lblNoRooms);
+            pnlOpenRoomsScroll.Dock = DockStyle.Fill;
+            pnlOpenRoomsScroll.Location = new Point(12, 50);
+            pnlOpenRoomsScroll.Name = "pnlOpenRoomsScroll";
+            pnlOpenRoomsScroll.Padding = new Padding(8, 6, 8, 8);
+            pnlOpenRoomsScroll.Size = new Size(176, 38);
+            pnlOpenRoomsScroll.TabIndex = 0;
+            // 
             // lblNoRooms
-            this.lblNoRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoRooms.Text = "Hiện chưa có phòng nào đang mở.\nHãy bấm '+ Tạo phòng mới' ở menu bên trái để bắt đầu trận đấu!";
-            this.lblNoRooms.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblNoRooms.ForeColor = System.Drawing.Color.FromArgb(120, 140, 175);
-            this.lblNoRooms.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            this.lblNoRooms.Visible = false;
-
-            // =============================================================
-            // View 5: pnlSettingsView (Đăng nhập / Đăng ký tài khoản)
-            // =============================================================
-            this.pnlSettingsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlSettingsView.Padding = new System.Windows.Forms.Padding(40, 20, 40, 20);
-            this.pnlSettingsView.Controls.Add(this.cardSettingsBox);
-
-            this.cardSettingsBox.Size = new System.Drawing.Size(560, 465);
-            this.cardSettingsBox.Location = new System.Drawing.Point(80, 20);
-            this.cardSettingsBox.Controls.Add(this.btnTabLogin);
-            this.cardSettingsBox.Controls.Add(this.btnTabRegister);
-            this.cardSettingsBox.Controls.Add(this.pnlAuthBodyLogin);
-            this.cardSettingsBox.Controls.Add(this.pnlAuthBodyRegister);
-
-            // Tab Buttons
-            this.btnTabLogin.Location = new System.Drawing.Point(24, 16);
-            this.btnTabLogin.Size = new System.Drawing.Size(140, 36);
-            this.btnTabLogin.Text = "🔑 ĐĂNG NHẬP";
-            this.btnTabLogin.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnTabLogin.IsPrimaryGradient = true;
-            this.btnTabLogin.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnTabLogin.Click += (s, e) => SwitchAuthTab(true);
-
-            this.btnTabRegister.Location = new System.Drawing.Point(170, 16);
-            this.btnTabRegister.Size = new System.Drawing.Size(185, 36);
-            this.btnTabRegister.Text = "📝 ĐĂNG KÝ MỚI";
-            this.btnTabRegister.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnTabRegister.NormalColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.btnTabRegister.HoverColor = System.Drawing.Color.FromArgb(24, 42, 80);
-            this.btnTabRegister.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnTabRegister.Click += (s, e) => SwitchAuthTab(false);
-
-            // -------------------------------------------------------------
-            // pnlAuthBodyLogin (Tab Đăng nhập)
-            // -------------------------------------------------------------
-            this.pnlAuthBodyLogin.Location = new System.Drawing.Point(24, 58);
-            this.pnlAuthBodyLogin.Size = new System.Drawing.Size(512, 395);
-            this.pnlAuthBodyLogin.BackColor = System.Drawing.Color.Transparent;
-            this.pnlAuthBodyLogin.Controls.Add(this.lblSettingsTitle);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblSettingsNotice);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblServerIp);
-            this.pnlAuthBodyLogin.Controls.Add(this.txtIp);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblPort);
-            this.pnlAuthBodyLogin.Controls.Add(this.txtPort);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblPlayerName);
-            this.pnlAuthBodyLogin.Controls.Add(this.txtName);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblPassword);
-            this.pnlAuthBodyLogin.Controls.Add(this.txtPassword);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblStatusBadge);
-            this.pnlAuthBodyLogin.Controls.Add(this.btnConnect);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblSwitchToRegister);
-            this.pnlAuthBodyLogin.Controls.Add(this.lblOfflineTip);
-
-            this.lblSettingsTitle.Text = "ĐĂNG NHẬP HỆ THỐNG (PvP LAN)";
-            this.lblSettingsTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblSettingsTitle.ForeColor = System.Drawing.Color.White;
-            this.lblSettingsTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblSettingsTitle.AutoSize = true;
-
-            this.lblSettingsNotice.Text = "Đăng nhập tài khoản để vào phòng thi đấu 2 người, lưu điểm ELO và xếp hạng.";
-            this.lblSettingsNotice.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblSettingsNotice.ForeColor = System.Drawing.Color.FromArgb(160, 185, 220);
-            this.lblSettingsNotice.Location = new System.Drawing.Point(0, 24);
-            this.lblSettingsNotice.AutoSize = true;
-
-            this.lblServerIp.Text = "1. Địa chỉ Server IP:";
-            this.lblServerIp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblServerIp.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblServerIp.Location = new System.Drawing.Point(0, 52);
-            this.lblServerIp.AutoSize = true;
-
-            this.txtIp.Location = new System.Drawing.Point(0, 72);
-            this.txtIp.Size = new System.Drawing.Size(240, 26);
-            this.txtIp.Text = "127.0.0.1";
-            this.txtIp.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtIp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtIp.ForeColor = System.Drawing.Color.White;
-
-            this.lblPort.Text = "Port:";
-            this.lblPort.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblPort.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblPort.Location = new System.Drawing.Point(252, 52);
-            this.lblPort.AutoSize = true;
-
-            this.txtPort.Location = new System.Drawing.Point(252, 72);
-            this.txtPort.Size = new System.Drawing.Size(75, 26);
-            this.txtPort.Text = "8888";
-            this.txtPort.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPort.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-
-            this.lblPlayerName.Text = "2. Tên đăng nhập (Username):";
-            this.lblPlayerName.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblPlayerName.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblPlayerName.Location = new System.Drawing.Point(0, 106);
-            this.lblPlayerName.AutoSize = true;
-
-            this.txtName.Location = new System.Drawing.Point(0, 126);
-            this.txtName.Size = new System.Drawing.Size(327, 26);
-            this.txtName.Text = "Player1";
-            this.txtName.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtName.ForeColor = System.Drawing.Color.White;
-
-            this.lblPassword.Text = "3. Mật khẩu (Password):";
-            this.lblPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblPassword.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblPassword.Location = new System.Drawing.Point(0, 160);
-            this.lblPassword.AutoSize = true;
-
-            this.txtPassword.Location = new System.Drawing.Point(0, 180);
-            this.txtPassword.Size = new System.Drawing.Size(327, 26);
-            this.txtPassword.PasswordChar = '●';
-            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPassword.ForeColor = System.Drawing.Color.White;
-
-            this.lblStatusBadge.Text = "● Chưa kết nối";
-            this.lblStatusBadge.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblStatusBadge.ForeColor = System.Drawing.Color.FromArgb(255, 75, 75);
-            this.lblStatusBadge.Location = new System.Drawing.Point(0, 214);
-            this.lblStatusBadge.AutoSize = true;
-
-            this.btnConnect.Location = new System.Drawing.Point(0, 240);
-            this.btnConnect.Size = new System.Drawing.Size(327, 40);
-            this.btnConnect.Text = "⚡ KẾT NỐI & ĐĂNG NHẬP";
-            this.btnConnect.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnConnect.IsPrimaryGradient = true;
-            this.btnConnect.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
-
-            this.lblSwitchToRegister.Text = "👉 Chưa có tài khoản? Nhấn vào đây để Đăng ký ngay ➔";
-            this.lblSwitchToRegister.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblSwitchToRegister.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblSwitchToRegister.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSwitchToRegister.Location = new System.Drawing.Point(0, 290);
-            this.lblSwitchToRegister.AutoSize = true;
-            this.lblSwitchToRegister.Click += (s, e) => SwitchAuthTab(false);
-
-            this.lblOfflineTip.Text = "💡 Mẹo: Chơi với Máy (AI) hoàn toàn Offline, không cần mạng hay đăng nhập!";
-            this.lblOfflineTip.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Italic);
-            this.lblOfflineTip.ForeColor = System.Drawing.Color.FromArgb(0, 230, 118);
-            this.lblOfflineTip.Location = new System.Drawing.Point(0, 320);
-            this.lblOfflineTip.Size = new System.Drawing.Size(480, 40);
-
-            // -------------------------------------------------------------
-            // pnlAuthBodyRegister (Tab Đăng ký mới)
-            // -------------------------------------------------------------
-            this.pnlAuthBodyRegister.Location = new System.Drawing.Point(24, 58);
-            this.pnlAuthBodyRegister.Size = new System.Drawing.Size(512, 395);
-            this.pnlAuthBodyRegister.BackColor = System.Drawing.Color.Transparent;
-            this.pnlAuthBodyRegister.Visible = false;
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegTitle);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegNotice);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegServerIp);
-            this.pnlAuthBodyRegister.Controls.Add(this.txtRegIp);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegPort);
-            this.pnlAuthBodyRegister.Controls.Add(this.txtRegPort);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegPlayerName);
-            this.pnlAuthBodyRegister.Controls.Add(this.txtRegName);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegPassword);
-            this.pnlAuthBodyRegister.Controls.Add(this.txtRegPassword);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegConfirmPassword);
-            this.pnlAuthBodyRegister.Controls.Add(this.txtRegConfirmPassword);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblRegStatusBadge);
-            this.pnlAuthBodyRegister.Controls.Add(this.btnRegister);
-            this.pnlAuthBodyRegister.Controls.Add(this.lblSwitchToLogin);
-
-            this.lblRegTitle.Text = "TẠO TÀI KHOẢN MỚI (PvP LAN)";
-            this.lblRegTitle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblRegTitle.ForeColor = System.Drawing.Color.White;
-            this.lblRegTitle.Location = new System.Drawing.Point(0, 0);
-            this.lblRegTitle.AutoSize = true;
-
-            this.lblRegNotice.Text = "Tài khoản sẽ được lưu an toàn tại Database máy chủ Server.";
-            this.lblRegNotice.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblRegNotice.ForeColor = System.Drawing.Color.FromArgb(160, 185, 220);
-            this.lblRegNotice.Location = new System.Drawing.Point(0, 24);
-            this.lblRegNotice.AutoSize = true;
-
-            this.lblRegServerIp.Text = "1. Địa chỉ Server IP:";
-            this.lblRegServerIp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblRegServerIp.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRegServerIp.Location = new System.Drawing.Point(0, 48);
-            this.lblRegServerIp.AutoSize = true;
-
-            this.txtRegIp.Location = new System.Drawing.Point(0, 68);
-            this.txtRegIp.Size = new System.Drawing.Size(240, 26);
-            this.txtRegIp.Text = "127.0.0.1";
-            this.txtRegIp.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRegIp.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegIp.ForeColor = System.Drawing.Color.White;
-
-            this.lblRegPort.Text = "Port:";
-            this.lblRegPort.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblRegPort.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRegPort.Location = new System.Drawing.Point(252, 48);
-            this.lblRegPort.AutoSize = true;
-
-            this.txtRegPort.Location = new System.Drawing.Point(252, 68);
-            this.txtRegPort.Size = new System.Drawing.Size(75, 26);
-            this.txtRegPort.Text = "8888";
-            this.txtRegPort.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRegPort.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegPort.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-
-            this.lblRegPlayerName.Text = "2. Tên tài khoản muốn tạo (Username):";
-            this.lblRegPlayerName.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblRegPlayerName.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRegPlayerName.Location = new System.Drawing.Point(0, 98);
-            this.lblRegPlayerName.AutoSize = true;
-
-            this.txtRegName.Location = new System.Drawing.Point(0, 118);
-            this.txtRegName.Size = new System.Drawing.Size(327, 26);
-            this.txtRegName.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRegName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegName.ForeColor = System.Drawing.Color.White;
-
-            this.lblRegPassword.Text = "3. Mật khẩu (Password - tối thiểu 4 ký tự):";
-            this.lblRegPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblRegPassword.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRegPassword.Location = new System.Drawing.Point(0, 148);
-            this.lblRegPassword.AutoSize = true;
-
-            this.txtRegPassword.Location = new System.Drawing.Point(0, 168);
-            this.txtRegPassword.Size = new System.Drawing.Size(327, 26);
-            this.txtRegPassword.PasswordChar = '●';
-            this.txtRegPassword.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRegPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegPassword.ForeColor = System.Drawing.Color.White;
-
-            this.lblRegConfirmPassword.Text = "4. Nhập lại mật khẩu (Xác nhận):";
-            this.lblRegConfirmPassword.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblRegConfirmPassword.ForeColor = System.Drawing.Color.FromArgb(170, 190, 220);
-            this.lblRegConfirmPassword.Location = new System.Drawing.Point(0, 198);
-            this.lblRegConfirmPassword.AutoSize = true;
-
-            this.txtRegConfirmPassword.Location = new System.Drawing.Point(0, 218);
-            this.txtRegConfirmPassword.Size = new System.Drawing.Size(327, 26);
-            this.txtRegConfirmPassword.PasswordChar = '●';
-            this.txtRegConfirmPassword.BackColor = System.Drawing.Color.FromArgb(14, 25, 48);
-            this.txtRegConfirmPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtRegConfirmPassword.ForeColor = System.Drawing.Color.White;
-
-            this.lblRegStatusBadge.Text = "● Sẵn sàng tạo tài khoản";
-            this.lblRegStatusBadge.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblRegStatusBadge.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblRegStatusBadge.Location = new System.Drawing.Point(0, 250);
-            this.lblRegStatusBadge.AutoSize = true;
-
-            this.btnRegister.Location = new System.Drawing.Point(0, 274);
-            this.btnRegister.Size = new System.Drawing.Size(327, 40);
-            this.btnRegister.Text = "✨ TẠO TÀI KHOẢN & ĐĂNG NHẬP NGAY";
-            this.btnRegister.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.btnRegister.IsPrimaryGradient = true;
-            this.btnRegister.CustomTextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.btnRegister.Click += new System.EventHandler(this.btnRegister_Click);
-
-            this.lblSwitchToLogin.Text = "👉 Đã có tài khoản rồi? Nhấn vào đây để Đăng nhập ➔";
-            this.lblSwitchToLogin.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.lblSwitchToLogin.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblSwitchToLogin.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSwitchToLogin.Location = new System.Drawing.Point(0, 324);
-            this.lblSwitchToLogin.AutoSize = true;
-            this.lblSwitchToLogin.Click += (s, e) => SwitchAuthTab(true);
-
-            // =============================================================
-            // View 6: pnlHistoryView (Hồ sơ cá nhân & Lịch sử đấu)
-            // =============================================================
-            this.pnlHistoryView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlHistoryView.Padding = new System.Windows.Forms.Padding(16, 12, 16, 14);
-            this.pnlHistoryView.Controls.Add(this.cardHistoryBox);
-            this.pnlHistoryView.Controls.Add(this.pnlHistorySpacer);
-            this.pnlHistoryView.Controls.Add(this.cardProfileSummary);
-
-            // cardProfileSummary (Thẻ hồ sơ người chơi chi tiết)
-            this.cardProfileSummary.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cardProfileSummary.Height = 105;
-            this.cardProfileSummary.Padding = new System.Windows.Forms.Padding(16, 10, 16, 10);
-            this.cardProfileSummary.FillColor = System.Drawing.Color.FromArgb(14, 25, 50);
-            this.cardProfileSummary.BorderColor = System.Drawing.Color.FromArgb(24, 44, 84);
-            this.cardProfileSummary.Controls.Add(this.lblProfileAvatar);
-            this.cardProfileSummary.Controls.Add(this.lblProfileDetailName);
-            this.cardProfileSummary.Controls.Add(this.lblProfileDetailRank);
-            this.cardProfileSummary.Controls.Add(this.lblProfileDetailStatus);
-            this.cardProfileSummary.Controls.Add(this.cardStatTotal);
-            this.cardProfileSummary.Controls.Add(this.cardStatWins);
-            this.cardProfileSummary.Controls.Add(this.cardStatLosses);
-            this.cardProfileSummary.Controls.Add(this.cardStatWinRate);
-
-            this.lblProfileAvatar.Location = new System.Drawing.Point(16, 14);
-            this.lblProfileAvatar.Size = new System.Drawing.Size(56, 56);
-            this.lblProfileAvatar.BackColor = System.Drawing.Color.FromArgb(20, 36, 75);
-            this.lblProfileAvatar.ForeColor = System.Drawing.Color.FromArgb(0, 230, 255);
-            this.lblProfileAvatar.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblProfileAvatar.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblProfileAvatar.Text = "👤";
-
-            this.lblProfileDetailName.Location = new System.Drawing.Point(82, 12);
-            this.lblProfileDetailName.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.lblProfileDetailName.ForeColor = System.Drawing.Color.White;
-            this.lblProfileDetailName.Text = "Khách (Offline)";
-            this.lblProfileDetailName.AutoSize = true;
-
-            this.lblProfileDetailRank.Location = new System.Drawing.Point(84, 40);
-            this.lblProfileDetailRank.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
-            this.lblProfileDetailRank.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblProfileDetailRank.Text = "★ 1000 ELO — 🥉 Tập sự";
-            this.lblProfileDetailRank.AutoSize = true;
-
-            this.lblProfileDetailStatus.Location = new System.Drawing.Point(84, 62);
-            this.lblProfileDetailStatus.Font = new System.Drawing.Font("Segoe UI", 8.5F);
-            this.lblProfileDetailStatus.ForeColor = System.Drawing.Color.FromArgb(255, 145, 0);
-            this.lblProfileDetailStatus.Text = "● Ngoại tuyến (Khách)";
-            this.lblProfileDetailStatus.AutoSize = true;
-
-            // Stats cards
-            this.cardStatTotal.Location = new System.Drawing.Point(365, 14);
-            this.cardStatTotal.Size = new System.Drawing.Size(82, 60);
-            this.cardStatTotal.FillColor = System.Drawing.Color.FromArgb(10, 18, 38);
-            this.cardStatTotal.BorderColor = System.Drawing.Color.FromArgb(24, 40, 75);
-            this.cardStatTotal.Controls.Add(this.lblStatTotalVal);
-            this.cardStatTotal.Controls.Add(this.lblStatTotalTitle);
-
-            this.lblStatTotalVal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatTotalVal.Height = 36;
-            this.lblStatTotalVal.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
-            this.lblStatTotalVal.ForeColor = System.Drawing.Color.White;
-            this.lblStatTotalVal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatTotalVal.Text = "0";
-
-            this.lblStatTotalTitle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblStatTotalTitle.Height = 18;
-            this.lblStatTotalTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.lblStatTotalTitle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 210);
-            this.lblStatTotalTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatTotalTitle.Text = "Tổng trận";
-
-            this.cardStatWins.Location = new System.Drawing.Point(455, 14);
-            this.cardStatWins.Size = new System.Drawing.Size(82, 60);
-            this.cardStatWins.FillColor = System.Drawing.Color.FromArgb(10, 18, 38);
-            this.cardStatWins.BorderColor = System.Drawing.Color.FromArgb(24, 40, 75);
-            this.cardStatWins.Controls.Add(this.lblStatWinsVal);
-            this.cardStatWins.Controls.Add(this.lblStatWinsTitle);
-
-            this.lblStatWinsVal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatWinsVal.Height = 36;
-            this.lblStatWinsVal.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
-            this.lblStatWinsVal.ForeColor = System.Drawing.Color.FromArgb(0, 230, 118);
-            this.lblStatWinsVal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatWinsVal.Text = "0";
-
-            this.lblStatWinsTitle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblStatWinsTitle.Height = 18;
-            this.lblStatWinsTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.lblStatWinsTitle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 210);
-            this.lblStatWinsTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatWinsTitle.Text = "Thắng";
-
-            this.cardStatLosses.Location = new System.Drawing.Point(545, 14);
-            this.cardStatLosses.Size = new System.Drawing.Size(82, 60);
-            this.cardStatLosses.FillColor = System.Drawing.Color.FromArgb(10, 18, 38);
-            this.cardStatLosses.BorderColor = System.Drawing.Color.FromArgb(24, 40, 75);
-            this.cardStatLosses.Controls.Add(this.lblStatLossesVal);
-            this.cardStatLosses.Controls.Add(this.lblStatLossesTitle);
-
-            this.lblStatLossesVal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatLossesVal.Height = 36;
-            this.lblStatLossesVal.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
-            this.lblStatLossesVal.ForeColor = System.Drawing.Color.FromArgb(255, 75, 75);
-            this.lblStatLossesVal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatLossesVal.Text = "0";
-
-            this.lblStatLossesTitle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblStatLossesTitle.Height = 18;
-            this.lblStatLossesTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.lblStatLossesTitle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 210);
-            this.lblStatLossesTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatLossesTitle.Text = "Thua";
-
-            this.cardStatWinRate.Location = new System.Drawing.Point(635, 14);
-            this.cardStatWinRate.Size = new System.Drawing.Size(82, 60);
-            this.cardStatWinRate.FillColor = System.Drawing.Color.FromArgb(10, 18, 38);
-            this.cardStatWinRate.BorderColor = System.Drawing.Color.FromArgb(24, 40, 75);
-            this.cardStatWinRate.Controls.Add(this.lblStatWinRateVal);
-            this.cardStatWinRate.Controls.Add(this.lblStatWinRateTitle);
-
-            this.lblStatWinRateVal.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblStatWinRateVal.Height = 36;
-            this.lblStatWinRateVal.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Bold);
-            this.lblStatWinRateVal.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.lblStatWinRateVal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatWinRateVal.Text = "0%";
-
-            this.lblStatWinRateTitle.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblStatWinRateTitle.Height = 18;
-            this.lblStatWinRateTitle.Font = new System.Drawing.Font("Segoe UI", 7.5F);
-            this.lblStatWinRateTitle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 210);
-            this.lblStatWinRateTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatWinRateTitle.Text = "Tỉ lệ";
-
-            // pnlHistorySpacer
-            this.pnlHistorySpacer.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHistorySpacer.Height = 10;
-            this.pnlHistorySpacer.BackColor = System.Drawing.Color.Transparent;
-            this.pnlHistoryView.Controls.Add(this.cardHistoryBox);
-
-            this.cardHistoryBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardHistoryBox.Padding = new System.Windows.Forms.Padding(16, 12, 16, 14);
-            this.cardHistoryBox.Controls.Add(this.lblNoHistory);
-            this.cardHistoryBox.Controls.Add(this.dgvMatchHistory);
-            this.cardHistoryBox.Controls.Add(this.pnlHistoryHeaderBar);
-
-            this.pnlHistoryHeaderBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlHistoryHeaderBar.Height = 40;
-            this.pnlHistoryHeaderBar.BackColor = System.Drawing.Color.Transparent;
-            this.pnlHistoryHeaderBar.Controls.Add(this.btnRefreshHistory);
-            this.pnlHistoryHeaderBar.Controls.Add(this.lblHistoryHeader);
-
-            this.lblHistoryHeader.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblHistoryHeader.Text = "LỊCH SỬ THI ĐẤU";
-            this.lblHistoryHeader.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblHistoryHeader.ForeColor = System.Drawing.Color.White;
-            this.lblHistoryHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblHistoryHeader.AutoSize = true;
-
-            this.btnRefreshHistory.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnRefreshHistory.Width = 95;
-            this.btnRefreshHistory.Text = "🔄 Làm mới";
-            this.btnRefreshHistory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefreshHistory.FlatAppearance.BorderSize = 0;
-            this.btnRefreshHistory.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnRefreshHistory.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.btnRefreshHistory.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRefreshHistory.Click += new System.EventHandler(this.btnRefreshHistory_Click);
-
-            this.dgvMatchHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvMatchHistory.BackgroundColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvMatchHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvMatchHistory.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvMatchHistory.GridColor = System.Drawing.Color.FromArgb(20, 36, 70);
-            this.dgvMatchHistory.DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvMatchHistory.DefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            this.dgvMatchHistory.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(20, 45, 90);
-            this.dgvMatchHistory.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.White;
-            this.dgvMatchHistory.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(14, 28, 56);
-            this.dgvMatchHistory.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 215);
-            this.dgvMatchHistory.EnableHeadersVisualStyles = false;
-            this.dgvMatchHistory.ReadOnly = true;
-            this.dgvMatchHistory.RowHeadersVisible = false;
-            this.dgvMatchHistory.AllowUserToAddRows = false;
-            this.dgvMatchHistory.AllowUserToDeleteRows = false;
-            this.dgvMatchHistory.AllowUserToResizeRows = false;
-            this.dgvMatchHistory.RowTemplate.Height = 36;
-            this.dgvMatchHistory.ColumnHeadersHeight = 32;
-            this.dgvMatchHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-
-            this.lblNoHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoHistory.Text = "Bạn chưa có trận đấu nào được lưu trữ.\nHãy tham gia phòng PvP để lưu lại lịch sử thi đấu!";
-            this.lblNoHistory.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblNoHistory.ForeColor = System.Drawing.Color.FromArgb(120, 140, 175);
-            this.lblNoHistory.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Italic);
-            this.lblNoHistory.Visible = false;
-
-            // =============================================================
-            // View 7: pnlLeaderboardView (Bảng xếp hạng)
-            // =============================================================
-            this.pnlLeaderboardView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlLeaderboardView.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlLeaderboardView.Controls.Add(this.cardLeaderboardBox);
-
-            this.cardLeaderboardBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardLeaderboardBox.Padding = new System.Windows.Forms.Padding(16, 12, 16, 14);
-            this.cardLeaderboardBox.Controls.Add(this.lblNoLeaderboard);
-            this.cardLeaderboardBox.Controls.Add(this.dgvLeaderboard);
-            this.cardLeaderboardBox.Controls.Add(this.pnlLeaderboardHeaderBar);
-
-            this.pnlLeaderboardHeaderBar.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlLeaderboardHeaderBar.Height = 40;
-            this.pnlLeaderboardHeaderBar.BackColor = System.Drawing.Color.Transparent;
-            this.pnlLeaderboardHeaderBar.Controls.Add(this.btnRefreshLeaderboard);
-            this.pnlLeaderboardHeaderBar.Controls.Add(this.lblLeaderboardHeader);
-
-            this.lblLeaderboardHeader.Dock = System.Windows.Forms.DockStyle.Left;
-            this.lblLeaderboardHeader.Text = "BẢNG XẾP HẠNG CAO THỦ (TOP ELO)";
-            this.lblLeaderboardHeader.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblLeaderboardHeader.ForeColor = System.Drawing.Color.FromArgb(255, 215, 0);
-            this.lblLeaderboardHeader.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lblLeaderboardHeader.AutoSize = true;
-
-            this.btnRefreshLeaderboard.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnRefreshLeaderboard.Width = 95;
-            this.btnRefreshLeaderboard.Text = "🔄 Làm mới";
-            this.btnRefreshLeaderboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefreshLeaderboard.FlatAppearance.BorderSize = 0;
-            this.btnRefreshLeaderboard.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Bold);
-            this.btnRefreshLeaderboard.ForeColor = System.Drawing.Color.FromArgb(0, 194, 255);
-            this.btnRefreshLeaderboard.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRefreshLeaderboard.Click += new System.EventHandler(this.btnRefreshLeaderboard_Click);
-
-            this.dgvLeaderboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvLeaderboard.BackgroundColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvLeaderboard.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvLeaderboard.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvLeaderboard.GridColor = System.Drawing.Color.FromArgb(20, 36, 70);
-            this.dgvLeaderboard.DefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(12, 22, 44);
-            this.dgvLeaderboard.DefaultCellStyle.ForeColor = System.Drawing.Color.White;
-            this.dgvLeaderboard.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.FromArgb(20, 45, 90);
-            this.dgvLeaderboard.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.White;
-            this.dgvLeaderboard.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.FromArgb(14, 28, 56);
-            this.dgvLeaderboard.ColumnHeadersDefaultCellStyle.ForeColor = System.Drawing.Color.FromArgb(160, 180, 215);
-            this.dgvLeaderboard.EnableHeadersVisualStyles = false;
-            this.dgvLeaderboard.ReadOnly = true;
-            this.dgvLeaderboard.RowHeadersVisible = false;
-            this.dgvLeaderboard.AllowUserToAddRows = false;
-            this.dgvLeaderboard.AllowUserToDeleteRows = false;
-            this.dgvLeaderboard.AllowUserToResizeRows = false;
-            this.dgvLeaderboard.RowTemplate.Height = 36;
-            this.dgvLeaderboard.ColumnHeadersHeight = 32;
-            this.dgvLeaderboard.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-
-            this.lblNoLeaderboard.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblNoLeaderboard.Text = "Chưa có dữ liệu bảng xếp hạng.";
-            this.lblNoLeaderboard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblNoLeaderboard.ForeColor = System.Drawing.Color.FromArgb(120, 140, 175);
-            this.lblNoLeaderboard.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Italic);
-            this.lblNoLeaderboard.Visible = false;
-
-            // -------------------------------------------------------------
-            // Main Form Settings
-            // -------------------------------------------------------------
-            this.ClientSize = new System.Drawing.Size(1260, 780);
-            this.MinimumSize = new System.Drawing.Size(1080, 680);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.BackColor = System.Drawing.Color.FromArgb(8, 13, 26);
-            this.ForeColor = System.Drawing.Color.White;
-            this.Text = "CaroKan - Chơi cờ qua mạng LAN";
-
-            this.Controls.Add(this.pnlMainContent);
-            this.Controls.Add(this.pnlRightBar);
-            this.Controls.Add(this.pnlSidebar);
-            this.Controls.Add(this.pnlTitleBar);
-
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.ResumeLayout(false);
+            // 
+            lblNoRooms.Dock = DockStyle.Fill;
+            lblNoRooms.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            lblNoRooms.ForeColor = Color.FromArgb(120, 140, 175);
+            lblNoRooms.Location = new Point(8, 6);
+            lblNoRooms.Name = "lblNoRooms";
+            lblNoRooms.Size = new Size(160, 24);
+            lblNoRooms.TabIndex = 0;
+            lblNoRooms.Text = "Hiện chưa có phòng nào đang mở.\nHãy bấm '+ Tạo phòng' ở menu bên trái để bắt đầu trận đấu!";
+            lblNoRooms.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pnlOpenRoomsHeader
+            // 
+            pnlOpenRoomsHeader.BackColor = Color.FromArgb(13, 24, 48);
+            pnlOpenRoomsHeader.Controls.Add(lblOpenRoomsCount);
+            pnlOpenRoomsHeader.Controls.Add(lblOpenRoomsTitle);
+            pnlOpenRoomsHeader.Dock = DockStyle.Top;
+            pnlOpenRoomsHeader.Location = new Point(12, 12);
+            pnlOpenRoomsHeader.Name = "pnlOpenRoomsHeader";
+            pnlOpenRoomsHeader.Padding = new Padding(14, 8, 14, 0);
+            pnlOpenRoomsHeader.Size = new Size(176, 38);
+            pnlOpenRoomsHeader.TabIndex = 1;
+            // 
+            // lblOpenRoomsCount
+            // 
+            lblOpenRoomsCount.Dock = DockStyle.Right;
+            lblOpenRoomsCount.Font = new Font("Segoe UI", 8.5F);
+            lblOpenRoomsCount.ForeColor = Color.FromArgb(107, 122, 153);
+            lblOpenRoomsCount.Location = new Point(62, 8);
+            lblOpenRoomsCount.Name = "lblOpenRoomsCount";
+            lblOpenRoomsCount.Size = new Size(100, 30);
+            lblOpenRoomsCount.TabIndex = 0;
+            lblOpenRoomsCount.Text = "4 phòng";
+            lblOpenRoomsCount.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // lblOpenRoomsTitle
+            // 
+            lblOpenRoomsTitle.AutoSize = true;
+            lblOpenRoomsTitle.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblOpenRoomsTitle.ForeColor = Color.White;
+            lblOpenRoomsTitle.Location = new Point(12, 9);
+            lblOpenRoomsTitle.Name = "lblOpenRoomsTitle";
+            lblOpenRoomsTitle.Size = new Size(156, 25);
+            lblOpenRoomsTitle.TabIndex = 1;
+            lblOpenRoomsTitle.Text = "Phòng đang mở";
+            // 
+            // pnlLobbyFilterBar
+            // 
+            pnlLobbyFilterBar.BackColor = Color.Transparent;
+            pnlLobbyFilterBar.Controls.Add(btnRefreshLobby);
+            pnlLobbyFilterBar.Controls.Add(pnlFilterPills);
+            pnlLobbyFilterBar.Controls.Add(pnlSearchBox);
+            pnlLobbyFilterBar.Dock = DockStyle.Top;
+            pnlLobbyFilterBar.Location = new Point(18, 124);
+            pnlLobbyFilterBar.Name = "pnlLobbyFilterBar";
+            pnlLobbyFilterBar.Size = new Size(714, 48);
+            pnlLobbyFilterBar.TabIndex = 2;
+            // 
+            // btnRefreshLobby
+            // 
+            btnRefreshLobby.BackColor = Color.FromArgb(9, 15, 30);
+            btnRefreshLobby.BorderLineColor = Color.FromArgb(28, 48, 80);
+            btnRefreshLobby.ClickColor = Color.FromArgb(10, 18, 36);
+            btnRefreshLobby.CornerRadius = 8;
+            btnRefreshLobby.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnRefreshLobby.Dock = DockStyle.Right;
+            btnRefreshLobby.FlatStyle = FlatStyle.Flat;
+            btnRefreshLobby.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnRefreshLobby.ForeColor = Color.FromArgb(200, 220, 250);
+            btnRefreshLobby.HoverColor = Color.FromArgb(24, 42, 80);
+            btnRefreshLobby.IsPrimaryGradient = false;
+            btnRefreshLobby.IsPurpleGradient = false;
+            btnRefreshLobby.Location = new Point(606, 0);
+            btnRefreshLobby.Name = "btnRefreshLobby";
+            btnRefreshLobby.NavIcon = CyberIcon.Refresh;
+            btnRefreshLobby.NormalColor = Color.FromArgb(14, 24, 46);
+            btnRefreshLobby.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnRefreshLobby.Size = new Size(108, 48);
+            btnRefreshLobby.TabIndex = 0;
+            btnRefreshLobby.Text = "Làm mới";
+            btnRefreshLobby.TextLeftPadding = 16;
+            btnRefreshLobby.UseVisualStyleBackColor = false;
+            btnRefreshLobby.Click += btnRefreshLobby_Click;
+            // 
+            // pnlFilterPills
+            // 
+            pnlFilterPills.BackColor = Color.Transparent;
+            pnlFilterPills.Controls.Add(pillFilterWaiting);
+            pnlFilterPills.Controls.Add(pillFilter4p);
+            pnlFilterPills.Controls.Add(pillFilter2p);
+            pnlFilterPills.Controls.Add(pillFilterAll);
+            pnlFilterPills.Location = new Point(195, 4);
+            pnlFilterPills.Name = "pnlFilterPills";
+            pnlFilterPills.Size = new Size(405, 40);
+            pnlFilterPills.TabIndex = 1;
+            // 
+            // pillFilterWaiting
+            // 
+            pillFilterWaiting.BackColor = Color.Transparent;
+            pillFilterWaiting.FilterKey = "waiting";
+            pillFilterWaiting.IsSelected = false;
+            pillFilterWaiting.Location = new Point(280, 2);
+            pillFilterWaiting.Name = "pillFilterWaiting";
+            pillFilterWaiting.Size = new Size(116, 36);
+            pillFilterWaiting.TabIndex = 0;
+            pillFilterWaiting.Text = "Đang chờ";
+            pillFilterWaiting.Click += PillFilter_Click;
+            // 
+            // pillFilter4p
+            // 
+            pillFilter4p.BackColor = Color.Transparent;
+            pillFilter4p.FilterKey = "4p";
+            pillFilter4p.IsSelected = false;
+            pillFilter4p.Location = new Point(184, 2);
+            pillFilter4p.Name = "pillFilter4p";
+            pillFilter4p.Size = new Size(92, 36);
+            pillFilter4p.TabIndex = 1;
+            pillFilter4p.Text = "4 người";
+            pillFilter4p.Click += PillFilter_Click;
+            // 
+            // pillFilter2p
+            // 
+            pillFilter2p.BackColor = Color.Transparent;
+            pillFilter2p.FilterKey = "2p";
+            pillFilter2p.IsSelected = false;
+            pillFilter2p.Location = new Point(88, 2);
+            pillFilter2p.Name = "pillFilter2p";
+            pillFilter2p.Size = new Size(92, 36);
+            pillFilter2p.TabIndex = 2;
+            pillFilter2p.Text = "2 người";
+            pillFilter2p.Click += PillFilter_Click;
+            // 
+            // pillFilterAll
+            // 
+            pillFilterAll.BackColor = Color.Transparent;
+            pillFilterAll.FilterKey = "all";
+            pillFilterAll.IsSelected = true;
+            pillFilterAll.Location = new Point(0, 2);
+            pillFilterAll.Name = "pillFilterAll";
+            pillFilterAll.Size = new Size(84, 36);
+            pillFilterAll.TabIndex = 3;
+            pillFilterAll.Text = "Tất cả";
+            pillFilterAll.Click += PillFilter_Click;
+            // 
+            // pnlSearchBox
+            // 
+            pnlSearchBox.BackColor = Color.FromArgb(14, 23, 42);
+            pnlSearchBox.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlSearchBox.BorderWidth = 1.2F;
+            pnlSearchBox.Controls.Add(txtSearchRoom);
+            pnlSearchBox.Controls.Add(lblSearchIcon);
+            pnlSearchBox.CornerRadius = 14;
+            pnlSearchBox.FillColor = Color.FromArgb(13, 24, 48);
+            pnlSearchBox.Location = new Point(0, 4);
+            pnlSearchBox.Name = "pnlSearchBox";
+            pnlSearchBox.Padding = new Padding(12);
+            pnlSearchBox.Size = new Size(185, 40);
+            pnlSearchBox.TabIndex = 2;
+            // 
+            // txtSearchRoom
+            // 
+            txtSearchRoom.BackColor = Color.FromArgb(14, 23, 42);
+            txtSearchRoom.BorderStyle = BorderStyle.None;
+            txtSearchRoom.Font = new Font("Segoe UI", 9.5F);
+            txtSearchRoom.ForeColor = Color.FromArgb(200, 220, 250);
+            txtSearchRoom.Location = new Point(34, 9);
+            txtSearchRoom.Name = "txtSearchRoom";
+            txtSearchRoom.PlaceholderText = "Tìm phòng...";
+            txtSearchRoom.Size = new Size(145, 22);
+            txtSearchRoom.TabIndex = 0;
+            txtSearchRoom.TextChanged += txtSearchRoom_TextChanged;
+            // 
+            // lblSearchIcon
+            // 
+            lblSearchIcon.BackColor = Color.Transparent;
+            lblSearchIcon.Icon = CyberIcon.Search;
+            lblSearchIcon.IconColor = Color.FromArgb(0, 194, 255);
+            lblSearchIcon.Location = new Point(10, 11);
+            lblSearchIcon.Name = "lblSearchIcon";
+            lblSearchIcon.Size = new Size(18, 18);
+            lblSearchIcon.TabIndex = 1;
+            // 
+            // pnlLobbyHeaderBar
+            // 
+            pnlLobbyHeaderBar.BackColor = Color.Transparent;
+            pnlLobbyHeaderBar.Controls.Add(lblLobbySubtitle);
+            pnlLobbyHeaderBar.Controls.Add(lblLobbyTitle);
+            pnlLobbyHeaderBar.Controls.Add(pnlLobbyIconBox);
+            pnlLobbyHeaderBar.Dock = DockStyle.Top;
+            pnlLobbyHeaderBar.Location = new Point(18, 12);
+            pnlLobbyHeaderBar.Name = "pnlLobbyHeaderBar";
+            pnlLobbyHeaderBar.Size = new Size(714, 112);
+            pnlLobbyHeaderBar.TabIndex = 3;
+            // 
+            // lblLobbySubtitle
+            // 
+            lblLobbySubtitle.AutoSize = true;
+            lblLobbySubtitle.BackColor = Color.Transparent;
+            lblLobbySubtitle.Font = new Font("Segoe UI", 9.5F);
+            lblLobbySubtitle.ForeColor = Color.FromArgb(160, 185, 220);
+            lblLobbySubtitle.Location = new Point(86, 50);
+            lblLobbySubtitle.Name = "lblLobbySubtitle";
+            lblLobbySubtitle.Size = new Size(316, 21);
+            lblLobbySubtitle.TabIndex = 1;
+            lblLobbySubtitle.Text = "Khám phá phòng đang mở trong mạng LAN";
+            // 
+            // lblLobbyTitle
+            // 
+            lblLobbyTitle.AutoSize = true;
+            lblLobbyTitle.BackColor = Color.Transparent;
+            lblLobbyTitle.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+            lblLobbyTitle.ForeColor = Color.White;
+            lblLobbyTitle.Location = new Point(84, 12);
+            lblLobbyTitle.Name = "lblLobbyTitle";
+            lblLobbyTitle.Size = new Size(248, 41);
+            lblLobbyTitle.TabIndex = 2;
+            lblLobbyTitle.Text = "Sảnh phòng đấu";
+            // 
+            // pnlLobbyIconBox
+            // 
+            pnlLobbyIconBox.BackColor = Color.Transparent;
+            pnlLobbyIconBox.Location = new Point(18, 15);
+            pnlLobbyIconBox.Name = "pnlLobbyIconBox";
+            pnlLobbyIconBox.Size = new Size(54, 54);
+            pnlLobbyIconBox.TabIndex = 3;
+            // 
+            // pnlHistoryView
+            // 
+            pnlHistoryView.Controls.Add(cardHistoryBox);
+            pnlHistoryView.Controls.Add(pnlHistorySpacer2);
+            pnlHistoryView.Controls.Add(pnlMiddleRow);
+            pnlHistoryView.Controls.Add(pnlHistorySpacer1);
+            pnlHistoryView.Controls.Add(cardProfileHero);
+            pnlHistoryView.Dock = DockStyle.Fill;
+            pnlHistoryView.Location = new Point(0, 0);
+            pnlHistoryView.Name = "pnlHistoryView";
+            pnlHistoryView.Padding = new Padding(16, 12, 16, 14);
+            pnlHistoryView.Size = new Size(750, 732);
+            pnlHistoryView.TabIndex = 4;
+            // 
+            // cardHistoryBox
+            // 
+            cardHistoryBox.BackColor = Color.Transparent;
+            cardHistoryBox.BorderColor = Color.FromArgb(25, 45, 85);
+            cardHistoryBox.BorderWidth = 1.2F;
+            cardHistoryBox.Controls.Add(lblNoHistory);
+            cardHistoryBox.Controls.Add(dgvMatchHistory);
+            cardHistoryBox.Controls.Add(pnlHistoryHeaderBar);
+            cardHistoryBox.CornerRadius = 14;
+            cardHistoryBox.Dock = DockStyle.Fill;
+            cardHistoryBox.FillColor = Color.FromArgb(13, 24, 48);
+            cardHistoryBox.Location = new Point(16, 301);
+            cardHistoryBox.Name = "cardHistoryBox";
+            cardHistoryBox.Padding = new Padding(16, 12, 16, 14);
+            cardHistoryBox.Size = new Size(718, 417);
+            cardHistoryBox.TabIndex = 0;
+            // 
+            // lblNoHistory
+            // 
+            lblNoHistory.Dock = DockStyle.Fill;
+            lblNoHistory.Font = new Font("Segoe UI", 9.5F, FontStyle.Italic);
+            lblNoHistory.ForeColor = Color.FromArgb(120, 140, 175);
+            lblNoHistory.Location = new Point(16, 48);
+            lblNoHistory.Name = "lblNoHistory";
+            lblNoHistory.Size = new Size(686, 355);
+            lblNoHistory.TabIndex = 0;
+            lblNoHistory.Text = "Bạn chưa có trận đấu nào được lưu trữ.\nHãy tham gia phòng PvP để lưu lại lịch sử thi đấu!";
+            lblNoHistory.TextAlign = ContentAlignment.MiddleCenter;
+            lblNoHistory.Visible = false;
+            // 
+            // dgvMatchHistory
+            // 
+            dgvMatchHistory.AllowUserToAddRows = false;
+            dgvMatchHistory.AllowUserToDeleteRows = false;
+            dgvMatchHistory.AllowUserToResizeRows = false;
+            dgvMatchHistory.BackgroundColor = Color.FromArgb(12, 22, 44);
+            dgvMatchHistory.BorderStyle = BorderStyle.None;
+            dgvMatchHistory.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.FromArgb(14, 28, 56);
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = Color.FromArgb(160, 180, 215);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvMatchHistory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dgvMatchHistory.ColumnHeadersHeight = 32;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = Color.FromArgb(12, 22, 44);
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = Color.FromArgb(20, 45, 90);
+            dataGridViewCellStyle2.SelectionForeColor = Color.White;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvMatchHistory.DefaultCellStyle = dataGridViewCellStyle2;
+            dgvMatchHistory.Dock = DockStyle.Fill;
+            dgvMatchHistory.EnableHeadersVisualStyles = false;
+            dgvMatchHistory.GridColor = Color.FromArgb(20, 36, 70);
+            dgvMatchHistory.Location = new Point(16, 48);
+            dgvMatchHistory.Name = "dgvMatchHistory";
+            dgvMatchHistory.ReadOnly = true;
+            dgvMatchHistory.RowHeadersVisible = false;
+            dgvMatchHistory.RowHeadersWidth = 51;
+            dgvMatchHistory.RowTemplate.Height = 36;
+            dgvMatchHistory.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvMatchHistory.Size = new Size(686, 355);
+            dgvMatchHistory.TabIndex = 1;
+            // 
+            // pnlHistoryHeaderBar
+            // 
+            pnlHistoryHeaderBar.BackColor = Color.Transparent;
+            pnlHistoryHeaderBar.Controls.Add(btnRefreshHistory);
+            pnlHistoryHeaderBar.Controls.Add(lblHistoryHeader);
+            pnlHistoryHeaderBar.Dock = DockStyle.Top;
+            pnlHistoryHeaderBar.Location = new Point(16, 12);
+            pnlHistoryHeaderBar.Name = "pnlHistoryHeaderBar";
+            pnlHistoryHeaderBar.Size = new Size(686, 36);
+            pnlHistoryHeaderBar.TabIndex = 2;
+            // 
+            // btnRefreshHistory
+            // 
+            btnRefreshHistory.BackColor = Color.FromArgb(16, 30, 62);
+            btnRefreshHistory.Cursor = Cursors.Hand;
+            btnRefreshHistory.Dock = DockStyle.Right;
+            btnRefreshHistory.FlatAppearance.BorderColor = Color.FromArgb(30, 55, 100);
+            btnRefreshHistory.FlatStyle = FlatStyle.Flat;
+            btnRefreshHistory.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnRefreshHistory.ForeColor = Color.FromArgb(0, 194, 255);
+            btnRefreshHistory.Location = new Point(581, 0);
+            btnRefreshHistory.Name = "btnRefreshHistory";
+            btnRefreshHistory.Size = new Size(105, 36);
+            btnRefreshHistory.TabIndex = 0;
+            btnRefreshHistory.Text = "Xem thêm →";
+            btnRefreshHistory.UseVisualStyleBackColor = false;
+            btnRefreshHistory.Click += btnRefreshHistory_Click;
+            // 
+            // lblHistoryHeader
+            // 
+            lblHistoryHeader.AutoSize = true;
+            lblHistoryHeader.Dock = DockStyle.Left;
+            lblHistoryHeader.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblHistoryHeader.ForeColor = Color.White;
+            lblHistoryHeader.Location = new Point(0, 0);
+            lblHistoryHeader.Name = "lblHistoryHeader";
+            lblHistoryHeader.Size = new Size(186, 25);
+            lblHistoryHeader.TabIndex = 1;
+            lblHistoryHeader.Text = "🕒  Lịch sử trận đấu";
+            lblHistoryHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // pnlHistorySpacer2
+            // 
+            pnlHistorySpacer2.BackColor = Color.Transparent;
+            pnlHistorySpacer2.Dock = DockStyle.Top;
+            pnlHistorySpacer2.Location = new Point(16, 289);
+            pnlHistorySpacer2.Name = "pnlHistorySpacer2";
+            pnlHistorySpacer2.Size = new Size(718, 12);
+            pnlHistorySpacer2.TabIndex = 1;
+            // 
+            // pnlMiddleRow
+            // 
+            pnlMiddleRow.BackColor = Color.Transparent;
+            pnlMiddleRow.Controls.Add(cardAchievements);
+            pnlMiddleRow.Controls.Add(pnlMiddleSpacer);
+            pnlMiddleRow.Controls.Add(cardQuickStats);
+            pnlMiddleRow.Dock = DockStyle.Top;
+            pnlMiddleRow.Location = new Point(16, 159);
+            pnlMiddleRow.Name = "pnlMiddleRow";
+            pnlMiddleRow.Size = new Size(718, 130);
+            pnlMiddleRow.TabIndex = 2;
+            pnlMiddleRow.Resize += pnlMiddleRow_Resize;
+            // 
+            // cardAchievements
+            // 
+            cardAchievements.BackColor = Color.Transparent;
+            cardAchievements.BorderColor = Color.FromArgb(25, 45, 85);
+            cardAchievements.BorderWidth = 1.2F;
+            cardAchievements.Controls.Add(lblAchievementsHeader);
+            cardAchievements.Controls.Add(badgeTanThu);
+            cardAchievements.Controls.Add(badgeChienBinh);
+            cardAchievements.Controls.Add(badgeCaoThu);
+            cardAchievements.Controls.Add(badgeLocked);
+            cardAchievements.CornerRadius = 14;
+            cardAchievements.Dock = DockStyle.Fill;
+            cardAchievements.FillColor = Color.FromArgb(13, 24, 48);
+            cardAchievements.Location = new Point(394, 0);
+            cardAchievements.Name = "cardAchievements";
+            cardAchievements.Padding = new Padding(12);
+            cardAchievements.Size = new Size(324, 130);
+            cardAchievements.TabIndex = 0;
+            // 
+            // lblAchievementsHeader
+            // 
+            lblAchievementsHeader.AutoSize = true;
+            lblAchievementsHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblAchievementsHeader.ForeColor = Color.White;
+            lblAchievementsHeader.Location = new Point(14, 10);
+            lblAchievementsHeader.Name = "lblAchievementsHeader";
+            lblAchievementsHeader.Size = new Size(195, 25);
+            lblAchievementsHeader.TabIndex = 0;
+            lblAchievementsHeader.Text = "⭐  Thành tích nổi bật";
+            // 
+            // badgeTanThu
+            // 
+            badgeTanThu.BadgeImage = null;
+            badgeTanThu.BadgeTitle = "Tân Thủ";
+            badgeTanThu.Location = new Point(16, 36);
+            badgeTanThu.Name = "badgeTanThu";
+            badgeTanThu.ParentBgColor = Color.FromArgb(12, 24, 52);
+            badgeTanThu.Size = new Size(80, 80);
+            badgeTanThu.TabIndex = 1;
+            // 
+            // badgeChienBinh
+            // 
+            badgeChienBinh.BadgeImage = null;
+            badgeChienBinh.BadgeTitle = "Tân Thủ";
+            badgeChienBinh.Location = new Point(106, 36);
+            badgeChienBinh.Name = "badgeChienBinh";
+            badgeChienBinh.ParentBgColor = Color.FromArgb(12, 24, 52);
+            badgeChienBinh.Size = new Size(80, 80);
+            badgeChienBinh.TabIndex = 2;
+            // 
+            // badgeCaoThu
+            // 
+            badgeCaoThu.BadgeImage = null;
+            badgeCaoThu.BadgeTitle = "Tân Thủ";
+            badgeCaoThu.Location = new Point(196, 36);
+            badgeCaoThu.Name = "badgeCaoThu";
+            badgeCaoThu.ParentBgColor = Color.FromArgb(12, 24, 52);
+            badgeCaoThu.Size = new Size(80, 80);
+            badgeCaoThu.TabIndex = 3;
+            // 
+            // badgeLocked
+            // 
+            badgeLocked.BadgeImage = null;
+            badgeLocked.BadgeTitle = "Tân Thủ";
+            badgeLocked.Location = new Point(286, 36);
+            badgeLocked.Name = "badgeLocked";
+            badgeLocked.ParentBgColor = Color.FromArgb(12, 24, 52);
+            badgeLocked.Size = new Size(80, 80);
+            badgeLocked.TabIndex = 4;
+            // 
+            // pnlMiddleSpacer
+            // 
+            pnlMiddleSpacer.BackColor = Color.Transparent;
+            pnlMiddleSpacer.Dock = DockStyle.Left;
+            pnlMiddleSpacer.Location = new Point(380, 0);
+            pnlMiddleSpacer.Name = "pnlMiddleSpacer";
+            pnlMiddleSpacer.Size = new Size(14, 130);
+            pnlMiddleSpacer.TabIndex = 1;
+            // 
+            // cardQuickStats
+            // 
+            cardQuickStats.BackColor = Color.Transparent;
+            cardQuickStats.BorderColor = Color.FromArgb(25, 45, 85);
+            cardQuickStats.BorderWidth = 1.2F;
+            cardQuickStats.Controls.Add(lblQuickStatsHeader);
+            cardQuickStats.Controls.Add(quickStatTotal);
+            cardQuickStats.Controls.Add(quickStatWins);
+            cardQuickStats.Controls.Add(quickStatElo);
+            cardQuickStats.CornerRadius = 14;
+            cardQuickStats.Dock = DockStyle.Left;
+            cardQuickStats.FillColor = Color.FromArgb(13, 24, 48);
+            cardQuickStats.Location = new Point(0, 0);
+            cardQuickStats.Name = "cardQuickStats";
+            cardQuickStats.Padding = new Padding(12);
+            cardQuickStats.Size = new Size(380, 130);
+            cardQuickStats.TabIndex = 2;
+            // 
+            // lblQuickStatsHeader
+            // 
+            lblQuickStatsHeader.AutoSize = true;
+            lblQuickStatsHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblQuickStatsHeader.ForeColor = Color.White;
+            lblQuickStatsHeader.Location = new Point(14, 10);
+            lblQuickStatsHeader.Name = "lblQuickStatsHeader";
+            lblQuickStatsHeader.Size = new Size(187, 25);
+            lblQuickStatsHeader.TabIndex = 0;
+            lblQuickStatsHeader.Text = "📊  Thống kê nhanh";
+            // 
+            // quickStatTotal
+            // 
+            quickStatTotal.IconType = QuickStatItem.QuickStatIcon.Swords;
+            quickStatTotal.LabelText = "Tổng trận";
+            quickStatTotal.Location = new Point(12, 38);
+            quickStatTotal.Name = "quickStatTotal";
+            quickStatTotal.ParentBgColor = Color.FromArgb(12, 24, 52);
+            quickStatTotal.Size = new Size(112, 78);
+            quickStatTotal.TabIndex = 1;
+            quickStatTotal.ValueText = "0";
+            // 
+            // quickStatWins
+            // 
+            quickStatWins.IconType = QuickStatItem.QuickStatIcon.Trophy;
+            quickStatWins.LabelText = "Trận thắng";
+            quickStatWins.Location = new Point(134, 38);
+            quickStatWins.Name = "quickStatWins";
+            quickStatWins.ParentBgColor = Color.FromArgb(12, 24, 52);
+            quickStatWins.Size = new Size(112, 78);
+            quickStatWins.TabIndex = 2;
+            quickStatWins.ValueText = "0";
+            // 
+            // quickStatElo
+            // 
+            quickStatElo.IconType = QuickStatItem.QuickStatIcon.Star;
+            quickStatElo.LabelText = "Điểm ELO";
+            quickStatElo.Location = new Point(256, 38);
+            quickStatElo.Name = "quickStatElo";
+            quickStatElo.ParentBgColor = Color.FromArgb(12, 24, 52);
+            quickStatElo.Size = new Size(112, 78);
+            quickStatElo.TabIndex = 3;
+            quickStatElo.ValueText = "0";
+            // 
+            // pnlHistorySpacer1
+            // 
+            pnlHistorySpacer1.BackColor = Color.Transparent;
+            pnlHistorySpacer1.Dock = DockStyle.Top;
+            pnlHistorySpacer1.Location = new Point(16, 147);
+            pnlHistorySpacer1.Name = "pnlHistorySpacer1";
+            pnlHistorySpacer1.Size = new Size(718, 12);
+            pnlHistorySpacer1.TabIndex = 3;
+            // 
+            // cardProfileHero
+            // 
+            cardProfileHero.BackColor = Color.Transparent;
+            cardProfileHero.BorderColor = Color.FromArgb(25, 45, 85);
+            cardProfileHero.BorderWidth = 1.2F;
+            cardProfileHero.Controls.Add(avatarControl);
+            cardProfileHero.Controls.Add(lblProfileDetailName);
+            cardProfileHero.Controls.Add(lblEditNameIcon);
+            cardProfileHero.Controls.Add(lblProfileDetailElo);
+            cardProfileHero.Controls.Add(lblProfileDetailRank);
+            cardProfileHero.Controls.Add(lblProfileDetailStatus);
+            cardProfileHero.Controls.Add(kpiTotal);
+            cardProfileHero.Controls.Add(kpiWins);
+            cardProfileHero.Controls.Add(kpiLosses);
+            cardProfileHero.Controls.Add(gaugeWinRate);
+            cardProfileHero.CornerRadius = 14;
+            cardProfileHero.Dock = DockStyle.Top;
+            cardProfileHero.FillColor = Color.FromArgb(13, 24, 48);
+            cardProfileHero.Location = new Point(16, 12);
+            cardProfileHero.Name = "cardProfileHero";
+            cardProfileHero.Padding = new Padding(12);
+            cardProfileHero.Size = new Size(718, 135);
+            cardProfileHero.TabIndex = 4;
+            cardProfileHero.Resize += cardProfileHero_Resize;
+            // 
+            // avatarControl
+            // 
+            avatarControl.AvatarImage = null;
+            avatarControl.BorderRingColor = Color.FromArgb(0, 194, 255);
+            avatarControl.IsEditable = false;
+            avatarControl.IsOnline = true;
+            avatarControl.Location = new Point(18, 16);
+            avatarControl.Name = "avatarControl";
+            avatarControl.ParentBgColor = Color.FromArgb(12, 24, 52);
+            avatarControl.ShowStatusDot = false;
+            avatarControl.Size = new Size(94, 94);
+            avatarControl.TabIndex = 0;
+            // 
+            // lblProfileDetailName
+            // 
+            lblProfileDetailName.AutoSize = true;
+            lblProfileDetailName.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            lblProfileDetailName.ForeColor = Color.White;
+            lblProfileDetailName.Location = new Point(124, 16);
+            lblProfileDetailName.Name = "lblProfileDetailName";
+            lblProfileDetailName.Size = new Size(64, 37);
+            lblProfileDetailName.TabIndex = 1;
+            lblProfileDetailName.Text = "huy";
+            // 
+            // lblEditNameIcon
+            // 
+            lblEditNameIcon.BackColor = Color.Transparent;
+            lblEditNameIcon.Cursor = Cursors.Hand;
+            lblEditNameIcon.Icon = CyberIcon.Edit;
+            lblEditNameIcon.IconColor = Color.FromArgb(0, 194, 255);
+            lblEditNameIcon.Location = new Point(175, 20);
+            lblEditNameIcon.Name = "lblEditNameIcon";
+            lblEditNameIcon.Size = new Size(22, 22);
+            lblEditNameIcon.TabIndex = 2;
+            // 
+            // lblProfileDetailElo
+            // 
+            lblProfileDetailElo.AutoSize = true;
+            lblProfileDetailElo.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblProfileDetailElo.ForeColor = Color.FromArgb(0, 194, 255);
+            lblProfileDetailElo.Location = new Point(126, 48);
+            lblProfileDetailElo.Name = "lblProfileDetailElo";
+            lblProfileDetailElo.Size = new Size(111, 25);
+            lblProfileDetailElo.TabIndex = 3;
+            lblProfileDetailElo.Text = "★ 1053 ELO";
+            // 
+            // lblProfileDetailRank
+            // 
+            lblProfileDetailRank.AutoSize = true;
+            lblProfileDetailRank.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblProfileDetailRank.ForeColor = Color.FromArgb(255, 205, 50);
+            lblProfileDetailRank.Location = new Point(126, 71);
+            lblProfileDetailRank.Name = "lblProfileDetailRank";
+            lblProfileDetailRank.Size = new Size(95, 23);
+            lblProfileDetailRank.TabIndex = 4;
+            lblProfileDetailRank.Text = "👑 Tập Sự";
+            // 
+            // lblProfileDetailStatus
+            // 
+            lblProfileDetailStatus.AutoSize = true;
+            lblProfileDetailStatus.Font = new Font("Segoe UI", 8.5F);
+            lblProfileDetailStatus.ForeColor = Color.FromArgb(0, 230, 118);
+            lblProfileDetailStatus.Location = new Point(126, 96);
+            lblProfileDetailStatus.Name = "lblProfileDetailStatus";
+            lblProfileDetailStatus.Size = new Size(333, 20);
+            lblProfileDetailStatus.TabIndex = 5;
+            lblProfileDetailStatus.Text = "\U0001f7e2 Trực tuyến • Máy chủ LAN (192.168.1.22:8888)";
+            // 
+            // kpiTotal
+            // 
+            kpiTotal.IconType = KpiIconType.Trophy;
+            kpiTotal.LabelText = "Tổng trận";
+            kpiTotal.Location = new Point(400, 22);
+            kpiTotal.Name = "kpiTotal";
+            kpiTotal.ParentBgColor = Color.FromArgb(12, 24, 52);
+            kpiTotal.Size = new Size(68, 86);
+            kpiTotal.TabIndex = 6;
+            kpiTotal.ValueText = "0";
+            // 
+            // kpiWins
+            // 
+            kpiWins.IconType = KpiIconType.Checkmark;
+            kpiWins.LabelText = "Thắng";
+            kpiWins.Location = new Point(478, 22);
+            kpiWins.Name = "kpiWins";
+            kpiWins.ParentBgColor = Color.FromArgb(12, 24, 52);
+            kpiWins.Size = new Size(68, 86);
+            kpiWins.TabIndex = 7;
+            kpiWins.ValueText = "0";
+            // 
+            // kpiLosses
+            // 
+            kpiLosses.IconType = KpiIconType.Cross;
+            kpiLosses.LabelText = "Thua";
+            kpiLosses.Location = new Point(556, 22);
+            kpiLosses.Name = "kpiLosses";
+            kpiLosses.ParentBgColor = Color.FromArgb(12, 24, 52);
+            kpiLosses.Size = new Size(68, 86);
+            kpiLosses.TabIndex = 8;
+            kpiLosses.ValueText = "0";
+            // 
+            // gaugeWinRate
+            // 
+            gaugeWinRate.GaugeColor = Color.FromArgb(0, 210, 255);
+            gaugeWinRate.Location = new Point(640, 16);
+            gaugeWinRate.Name = "gaugeWinRate";
+            gaugeWinRate.ParentBgColor = Color.FromArgb(12, 24, 52);
+            gaugeWinRate.Size = new Size(86, 96);
+            gaugeWinRate.TabIndex = 9;
+            gaugeWinRate.Title = "Tỉ lệ thắng";
+            gaugeWinRate.WinRate = 0;
+            // 
+            // pnlLeaderboardView
+            // 
+            pnlLeaderboardView.Controls.Add(cardLeaderboardBox);
+            pnlLeaderboardView.Dock = DockStyle.Fill;
+            pnlLeaderboardView.Location = new Point(0, 0);
+            pnlLeaderboardView.Name = "pnlLeaderboardView";
+            pnlLeaderboardView.Padding = new Padding(20);
+            pnlLeaderboardView.Size = new Size(750, 732);
+            pnlLeaderboardView.TabIndex = 5;
+            // 
+            // cardLeaderboardBox
+            // 
+            cardLeaderboardBox.BackColor = Color.Transparent;
+            cardLeaderboardBox.BorderColor = Color.FromArgb(25, 45, 85);
+            cardLeaderboardBox.BorderWidth = 1.2F;
+            cardLeaderboardBox.Controls.Add(lblNoLeaderboard);
+            cardLeaderboardBox.Controls.Add(dgvLeaderboard);
+            cardLeaderboardBox.Controls.Add(pnlLeaderboardHeaderBar);
+            cardLeaderboardBox.CornerRadius = 14;
+            cardLeaderboardBox.Dock = DockStyle.Fill;
+            cardLeaderboardBox.FillColor = Color.FromArgb(13, 24, 48);
+            cardLeaderboardBox.Location = new Point(20, 20);
+            cardLeaderboardBox.Name = "cardLeaderboardBox";
+            cardLeaderboardBox.Padding = new Padding(16, 12, 16, 14);
+            cardLeaderboardBox.Size = new Size(710, 692);
+            cardLeaderboardBox.TabIndex = 0;
+            // 
+            // lblNoLeaderboard
+            // 
+            lblNoLeaderboard.Dock = DockStyle.Fill;
+            lblNoLeaderboard.Font = new Font("Segoe UI", 9.5F, FontStyle.Italic);
+            lblNoLeaderboard.ForeColor = Color.FromArgb(120, 140, 175);
+            lblNoLeaderboard.Location = new Point(16, 52);
+            lblNoLeaderboard.Name = "lblNoLeaderboard";
+            lblNoLeaderboard.Size = new Size(678, 626);
+            lblNoLeaderboard.TabIndex = 0;
+            lblNoLeaderboard.Text = "Chưa có dữ liệu bảng xếp hạng.";
+            lblNoLeaderboard.TextAlign = ContentAlignment.MiddleCenter;
+            lblNoLeaderboard.Visible = false;
+            // 
+            // dgvLeaderboard
+            // 
+            dgvLeaderboard.AllowUserToAddRows = false;
+            dgvLeaderboard.AllowUserToDeleteRows = false;
+            dgvLeaderboard.AllowUserToResizeRows = false;
+            dgvLeaderboard.BackgroundColor = Color.FromArgb(12, 22, 44);
+            dgvLeaderboard.BorderStyle = BorderStyle.None;
+            dgvLeaderboard.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = Color.FromArgb(14, 28, 56);
+            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle3.ForeColor = Color.FromArgb(160, 180, 215);
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dgvLeaderboard.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dgvLeaderboard.ColumnHeadersHeight = 32;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = Color.FromArgb(12, 22, 44);
+            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle4.ForeColor = Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(20, 45, 90);
+            dataGridViewCellStyle4.SelectionForeColor = Color.White;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
+            dgvLeaderboard.DefaultCellStyle = dataGridViewCellStyle4;
+            dgvLeaderboard.Dock = DockStyle.Fill;
+            dgvLeaderboard.EnableHeadersVisualStyles = false;
+            dgvLeaderboard.GridColor = Color.FromArgb(20, 36, 70);
+            dgvLeaderboard.Location = new Point(16, 52);
+            dgvLeaderboard.Name = "dgvLeaderboard";
+            dgvLeaderboard.ReadOnly = true;
+            dgvLeaderboard.RowHeadersVisible = false;
+            dgvLeaderboard.RowHeadersWidth = 51;
+            dgvLeaderboard.RowTemplate.Height = 36;
+            dgvLeaderboard.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvLeaderboard.Size = new Size(678, 626);
+            dgvLeaderboard.TabIndex = 1;
+            // 
+            // pnlLeaderboardHeaderBar
+            // 
+            pnlLeaderboardHeaderBar.BackColor = Color.Transparent;
+            pnlLeaderboardHeaderBar.Controls.Add(btnRefreshLeaderboard);
+            pnlLeaderboardHeaderBar.Controls.Add(lblLeaderboardHeader);
+            pnlLeaderboardHeaderBar.Dock = DockStyle.Top;
+            pnlLeaderboardHeaderBar.Location = new Point(16, 12);
+            pnlLeaderboardHeaderBar.Name = "pnlLeaderboardHeaderBar";
+            pnlLeaderboardHeaderBar.Size = new Size(678, 40);
+            pnlLeaderboardHeaderBar.TabIndex = 2;
+            // 
+            // btnRefreshLeaderboard
+            // 
+            btnRefreshLeaderboard.Cursor = Cursors.Hand;
+            btnRefreshLeaderboard.Dock = DockStyle.Right;
+            btnRefreshLeaderboard.FlatAppearance.BorderSize = 0;
+            btnRefreshLeaderboard.FlatStyle = FlatStyle.Flat;
+            btnRefreshLeaderboard.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnRefreshLeaderboard.ForeColor = Color.FromArgb(0, 194, 255);
+            btnRefreshLeaderboard.Location = new Point(583, 0);
+            btnRefreshLeaderboard.Name = "btnRefreshLeaderboard";
+            btnRefreshLeaderboard.Size = new Size(95, 40);
+            btnRefreshLeaderboard.TabIndex = 0;
+            btnRefreshLeaderboard.Text = "🔄 Làm mới";
+            btnRefreshLeaderboard.Click += btnRefreshLeaderboard_Click;
+            // 
+            // lblLeaderboardHeader
+            // 
+            lblLeaderboardHeader.AutoSize = true;
+            lblLeaderboardHeader.Dock = DockStyle.Left;
+            lblLeaderboardHeader.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            lblLeaderboardHeader.ForeColor = Color.FromArgb(255, 215, 0);
+            lblLeaderboardHeader.Location = new Point(0, 0);
+            lblLeaderboardHeader.Name = "lblLeaderboardHeader";
+            lblLeaderboardHeader.Size = new Size(350, 25);
+            lblLeaderboardHeader.TabIndex = 1;
+            lblLeaderboardHeader.Text = "BẢNG XẾP HẠNG CAO THỦ (TOP ELO)";
+            lblLeaderboardHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // pnlSettingsView
+            // 
+            pnlSettingsView.BackColor = Color.FromArgb(8, 13, 26);
+            pnlSettingsView.Controls.Add(cardSettingsBox);
+            pnlSettingsView.Dock = DockStyle.Fill;
+            pnlSettingsView.Location = new Point(0, 0);
+            pnlSettingsView.Name = "pnlSettingsView";
+            pnlSettingsView.Size = new Size(750, 732);
+            pnlSettingsView.TabIndex = 6;
+            pnlSettingsView.Resize += pnlSettingsView_Resize;
+            // 
+            // cardSettingsBox
+            // 
+            cardSettingsBox.BackColor = Color.FromArgb(11, 20, 36);
+            cardSettingsBox.Controls.Add(btnTabLogin);
+            cardSettingsBox.Controls.Add(btnTabRegister);
+            cardSettingsBox.Controls.Add(pnlAuthBodyLogin);
+            cardSettingsBox.Controls.Add(pnlAuthBodyRegister);
+            cardSettingsBox.Location = new Point(212, 110);
+            cardSettingsBox.Name = "cardSettingsBox";
+            cardSettingsBox.Size = new Size(420, 412);
+            cardSettingsBox.TabIndex = 0;
+            // 
+            // btnTabLogin
+            // 
+            btnTabLogin.BackColor = Color.FromArgb(9, 15, 30);
+            btnTabLogin.BorderLineColor = Color.FromArgb(0, 194, 255);
+            btnTabLogin.ClickColor = Color.FromArgb(10, 18, 36);
+            btnTabLogin.CornerRadius = 8;
+            btnTabLogin.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnTabLogin.FlatStyle = FlatStyle.Flat;
+            btnTabLogin.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnTabLogin.ForeColor = Color.FromArgb(0, 230, 255);
+            btnTabLogin.HoverColor = Color.FromArgb(24, 42, 80);
+            btnTabLogin.IsPrimaryGradient = false;
+            btnTabLogin.IsPurpleGradient = false;
+            btnTabLogin.Location = new Point(25, 20);
+            btnTabLogin.Name = "btnTabLogin";
+            btnTabLogin.NavIcon = CyberIcon.None;
+            btnTabLogin.NormalColor = Color.FromArgb(14, 42, 68);
+            btnTabLogin.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnTabLogin.Size = new Size(180, 34);
+            btnTabLogin.TabIndex = 0;
+            btnTabLogin.Text = "🔍  ĐĂNG NHẬP";
+            btnTabLogin.TextLeftPadding = 16;
+            btnTabLogin.UseVisualStyleBackColor = false;
+            btnTabLogin.Click += btnTabLogin_Click;
+            // 
+            // btnTabRegister
+            // 
+            btnTabRegister.BackColor = Color.FromArgb(9, 15, 30);
+            btnTabRegister.BorderLineColor = Color.FromArgb(180, 80, 30);
+            btnTabRegister.ClickColor = Color.FromArgb(10, 18, 36);
+            btnTabRegister.CornerRadius = 8;
+            btnTabRegister.CustomTextAlign = ContentAlignment.MiddleLeft;
+            btnTabRegister.FlatStyle = FlatStyle.Flat;
+            btnTabRegister.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            btnTabRegister.ForeColor = Color.FromArgb(220, 150, 110);
+            btnTabRegister.HoverColor = Color.FromArgb(24, 42, 80);
+            btnTabRegister.IsPrimaryGradient = false;
+            btnTabRegister.IsPurpleGradient = false;
+            btnTabRegister.Location = new Point(215, 20);
+            btnTabRegister.Name = "btnTabRegister";
+            btnTabRegister.NavIcon = CyberIcon.None;
+            btnTabRegister.NormalColor = Color.FromArgb(32, 20, 16);
+            btnTabRegister.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnTabRegister.Size = new Size(180, 34);
+            btnTabRegister.TabIndex = 1;
+            btnTabRegister.Text = "✏  ĐĂNG KÝ MỚI";
+            btnTabRegister.TextLeftPadding = 16;
+            btnTabRegister.UseVisualStyleBackColor = false;
+            btnTabRegister.Click += btnTabRegister_Click;
+            // 
+            // pnlAuthBodyLogin
+            // 
+            pnlAuthBodyLogin.BackColor = Color.Transparent;
+            pnlAuthBodyLogin.Controls.Add(lblSettingsTitle);
+            pnlAuthBodyLogin.Controls.Add(lblSettingsNotice);
+            pnlAuthBodyLogin.Controls.Add(lblServerIp);
+            pnlAuthBodyLogin.Controls.Add(lblPort);
+            pnlAuthBodyLogin.Controls.Add(pnlIpWrapper);
+            pnlAuthBodyLogin.Controls.Add(pnlPortWrapper);
+            pnlAuthBodyLogin.Controls.Add(pnlUserWrapper);
+            pnlAuthBodyLogin.Controls.Add(pnlPassWrapper);
+            pnlAuthBodyLogin.Controls.Add(lblStatusBadge);
+            pnlAuthBodyLogin.Controls.Add(btnConnect);
+            pnlAuthBodyLogin.Controls.Add(lblSwitchToRegister);
+            pnlAuthBodyLogin.Controls.Add(lblOfflineTip);
+            pnlAuthBodyLogin.Location = new Point(25, 62);
+            pnlAuthBodyLogin.Name = "pnlAuthBodyLogin";
+            pnlAuthBodyLogin.Size = new Size(370, 330);
+            pnlAuthBodyLogin.TabIndex = 2;
+            // 
+            // lblSettingsTitle
+            // 
+            lblSettingsTitle.AutoSize = true;
+            lblSettingsTitle.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblSettingsTitle.ForeColor = Color.White;
+            lblSettingsTitle.Location = new Point(0, 0);
+            lblSettingsTitle.Name = "lblSettingsTitle";
+            lblSettingsTitle.Size = new Size(314, 25);
+            lblSettingsTitle.TabIndex = 0;
+            lblSettingsTitle.Text = "ĐĂNG NHẬP HỆ THỐNG (PvP LAN)";
+            // 
+            // lblSettingsNotice
+            // 
+            lblSettingsNotice.Font = new Font("Segoe UI", 7.5F);
+            lblSettingsNotice.ForeColor = Color.FromArgb(140, 165, 200);
+            lblSettingsNotice.Location = new Point(0, 24);
+            lblSettingsNotice.Name = "lblSettingsNotice";
+            lblSettingsNotice.Size = new Size(370, 24);
+            lblSettingsNotice.TabIndex = 1;
+            lblSettingsNotice.Text = "Đăng nhập tài khoản để vào phòng thi đấu 2 người, lưu điểm ELO và xếp hạng";
+            // 
+            // lblServerIp
+            // 
+            lblServerIp.AutoSize = true;
+            lblServerIp.Font = new Font("Segoe UI", 7.5F);
+            lblServerIp.ForeColor = Color.FromArgb(140, 165, 195);
+            lblServerIp.Location = new Point(0, 50);
+            lblServerIp.Name = "lblServerIp";
+            lblServerIp.Size = new Size(119, 17);
+            lblServerIp.TabIndex = 2;
+            lblServerIp.Text = "1. Địa chỉ Server IP:";
+            // 
+            // lblPort
+            // 
+            lblPort.AutoSize = true;
+            lblPort.Font = new Font("Segoe UI", 7.5F);
+            lblPort.ForeColor = Color.FromArgb(140, 165, 195);
+            lblPort.Location = new Point(245, 50);
+            lblPort.Name = "lblPort";
+            lblPort.Size = new Size(35, 17);
+            lblPort.TabIndex = 3;
+            lblPort.Text = "Port:";
+            // 
+            // pnlIpWrapper
+            // 
+            pnlIpWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlIpWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlIpWrapper.BorderWidth = 1.2F;
+            pnlIpWrapper.Controls.Add(lblIpPrefix);
+            pnlIpWrapper.Controls.Add(txtIp);
+            pnlIpWrapper.CornerRadius = 14;
+            pnlIpWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlIpWrapper.Location = new Point(0, 68);
+            pnlIpWrapper.Name = "pnlIpWrapper";
+            pnlIpWrapper.Padding = new Padding(12);
+            pnlIpWrapper.Size = new Size(235, 34);
+            pnlIpWrapper.TabIndex = 4;
+            // 
+            // lblIpPrefix
+            // 
+            lblIpPrefix.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblIpPrefix.ForeColor = Color.FromArgb(0, 194, 255);
+            lblIpPrefix.Location = new Point(8, 8);
+            lblIpPrefix.Name = "lblIpPrefix";
+            lblIpPrefix.Size = new Size(22, 18);
+            lblIpPrefix.TabIndex = 0;
+            lblIpPrefix.Text = "IP";
+            lblIpPrefix.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // txtIp
+            // 
+            txtIp.BackColor = Color.FromArgb(10, 18, 34);
+            txtIp.BorderStyle = BorderStyle.None;
+            txtIp.Font = new Font("Segoe UI", 9F);
+            txtIp.ForeColor = Color.White;
+            txtIp.Location = new Point(34, 8);
+            txtIp.Name = "txtIp";
+            txtIp.Size = new Size(192, 20);
+            txtIp.TabIndex = 1;
+            txtIp.Text = "127.0.0.1";
+            // 
+            // pnlPortWrapper
+            // 
+            pnlPortWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlPortWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlPortWrapper.BorderWidth = 1.2F;
+            pnlPortWrapper.Controls.Add(txtPort);
+            pnlPortWrapper.CornerRadius = 14;
+            pnlPortWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlPortWrapper.Location = new Point(245, 68);
+            pnlPortWrapper.Name = "pnlPortWrapper";
+            pnlPortWrapper.Padding = new Padding(12);
+            pnlPortWrapper.Size = new Size(125, 34);
+            pnlPortWrapper.TabIndex = 5;
+            // 
+            // txtPort
+            // 
+            txtPort.BackColor = Color.FromArgb(10, 18, 34);
+            txtPort.BorderStyle = BorderStyle.None;
+            txtPort.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            txtPort.ForeColor = Color.FromArgb(0, 194, 255);
+            txtPort.Location = new Point(12, 8);
+            txtPort.Name = "txtPort";
+            txtPort.Size = new Size(100, 20);
+            txtPort.TabIndex = 0;
+            txtPort.Text = "8888";
+            // 
+            // pnlUserWrapper
+            // 
+            pnlUserWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlUserWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlUserWrapper.BorderWidth = 1.2F;
+            pnlUserWrapper.Controls.Add(lblUserPrefix);
+            pnlUserWrapper.Controls.Add(txtName);
+            pnlUserWrapper.CornerRadius = 14;
+            pnlUserWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlUserWrapper.Location = new Point(0, 110);
+            pnlUserWrapper.Name = "pnlUserWrapper";
+            pnlUserWrapper.Padding = new Padding(12);
+            pnlUserWrapper.Size = new Size(370, 34);
+            pnlUserWrapper.TabIndex = 6;
+            // 
+            // lblUserPrefix
+            // 
+            lblUserPrefix.BackColor = Color.Transparent;
+            lblUserPrefix.Icon = CyberIcon.User;
+            lblUserPrefix.IconColor = Color.FromArgb(0, 194, 255);
+            lblUserPrefix.Location = new Point(10, 8);
+            lblUserPrefix.Name = "lblUserPrefix";
+            lblUserPrefix.Size = new Size(18, 18);
+            lblUserPrefix.TabIndex = 0;
+            // 
+            // txtName
+            // 
+            txtName.BackColor = Color.FromArgb(10, 18, 34);
+            txtName.BorderStyle = BorderStyle.None;
+            txtName.Font = new Font("Segoe UI", 9F);
+            txtName.ForeColor = Color.White;
+            txtName.Location = new Point(36, 8);
+            txtName.Name = "txtName";
+            txtName.PlaceholderText = "Tên đăng nhập (Player1)...";
+            txtName.Size = new Size(325, 20);
+            txtName.TabIndex = 1;
+            txtName.Text = "Player1";
+            // 
+            // pnlPassWrapper
+            // 
+            pnlPassWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlPassWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlPassWrapper.BorderWidth = 1.2F;
+            pnlPassWrapper.Controls.Add(lblPassPrefix);
+            pnlPassWrapper.Controls.Add(txtPassword);
+            pnlPassWrapper.Controls.Add(lblTogglePassword);
+            pnlPassWrapper.CornerRadius = 14;
+            pnlPassWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlPassWrapper.Location = new Point(0, 152);
+            pnlPassWrapper.Name = "pnlPassWrapper";
+            pnlPassWrapper.Padding = new Padding(12);
+            pnlPassWrapper.Size = new Size(370, 34);
+            pnlPassWrapper.TabIndex = 7;
+            // 
+            // lblPassPrefix
+            // 
+            lblPassPrefix.BackColor = Color.Transparent;
+            lblPassPrefix.Icon = CyberIcon.Lock;
+            lblPassPrefix.IconColor = Color.FromArgb(0, 194, 255);
+            lblPassPrefix.Location = new Point(10, 8);
+            lblPassPrefix.Name = "lblPassPrefix";
+            lblPassPrefix.Size = new Size(18, 18);
+            lblPassPrefix.TabIndex = 0;
+            // 
+            // txtPassword
+            // 
+            txtPassword.BackColor = Color.FromArgb(10, 18, 34);
+            txtPassword.BorderStyle = BorderStyle.None;
+            txtPassword.Font = new Font("Segoe UI", 9F);
+            txtPassword.ForeColor = Color.White;
+            txtPassword.Location = new Point(36, 8);
+            txtPassword.Name = "txtPassword";
+            txtPassword.PasswordChar = '●';
+            txtPassword.PlaceholderText = "Mật khẩu...";
+            txtPassword.Size = new Size(295, 20);
+            txtPassword.TabIndex = 1;
+            // 
+            // lblTogglePassword
+            // 
+            lblTogglePassword.BackColor = Color.Transparent;
+            lblTogglePassword.Cursor = Cursors.Hand;
+            lblTogglePassword.Icon = CyberIcon.Eye;
+            lblTogglePassword.IconColor = Color.FromArgb(140, 170, 215);
+            lblTogglePassword.Location = new Point(340, 8);
+            lblTogglePassword.Name = "lblTogglePassword";
+            lblTogglePassword.Size = new Size(22, 18);
+            lblTogglePassword.TabIndex = 2;
+            lblTogglePassword.Click += lblTogglePassword_Click;
+            // 
+            // lblStatusBadge
+            // 
+            lblStatusBadge.AutoSize = true;
+            lblStatusBadge.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblStatusBadge.ForeColor = Color.FromArgb(255, 75, 75);
+            lblStatusBadge.Location = new Point(0, 192);
+            lblStatusBadge.Name = "lblStatusBadge";
+            lblStatusBadge.Size = new Size(105, 19);
+            lblStatusBadge.TabIndex = 8;
+            lblStatusBadge.Text = "● Chưa kết nối";
+            // 
+            // btnConnect
+            // 
+            btnConnect.BackColor = Color.FromArgb(9, 15, 30);
+            btnConnect.BorderLineColor = Color.FromArgb(192, 38, 211);
+            btnConnect.ClickColor = Color.FromArgb(10, 18, 36);
+            btnConnect.CornerRadius = 10;
+            btnConnect.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnConnect.FlatStyle = FlatStyle.Flat;
+            btnConnect.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnConnect.ForeColor = Color.White;
+            btnConnect.HoverColor = Color.FromArgb(24, 42, 80);
+            btnConnect.IsPrimaryGradient = false;
+            btnConnect.IsPurpleGradient = true;
+            btnConnect.Location = new Point(0, 214);
+            btnConnect.Name = "btnConnect";
+            btnConnect.NavIcon = CyberIcon.Lightning;
+            btnConnect.NormalColor = Color.FromArgb(14, 24, 46);
+            btnConnect.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnConnect.Size = new Size(370, 40);
+            btnConnect.TabIndex = 9;
+            btnConnect.Text = "KẾT NỐI & ĐĂNG NHẬP";
+            btnConnect.TextLeftPadding = 16;
+            btnConnect.UseVisualStyleBackColor = false;
+            btnConnect.Click += btnConnect_Click;
+            // 
+            // lblSwitchToRegister
+            // 
+            lblSwitchToRegister.Cursor = Cursors.Hand;
+            lblSwitchToRegister.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblSwitchToRegister.ForeColor = Color.FromArgb(0, 194, 255);
+            lblSwitchToRegister.Location = new Point(0, 260);
+            lblSwitchToRegister.Name = "lblSwitchToRegister";
+            lblSwitchToRegister.Size = new Size(370, 20);
+            lblSwitchToRegister.TabIndex = 10;
+            lblSwitchToRegister.Text = "Chưa có tài khoản? Nhấn vào đây để Đăng ký ngay →";
+            lblSwitchToRegister.TextAlign = ContentAlignment.MiddleCenter;
+            lblSwitchToRegister.Click += lblSwitchToRegister_Click;
+            // 
+            // lblOfflineTip
+            // 
+            lblOfflineTip.Font = new Font("Segoe UI", 7.25F, FontStyle.Italic);
+            lblOfflineTip.ForeColor = Color.FromArgb(0, 230, 118);
+            lblOfflineTip.Location = new Point(0, 284);
+            lblOfflineTip.Name = "lblOfflineTip";
+            lblOfflineTip.Size = new Size(370, 20);
+            lblOfflineTip.TabIndex = 11;
+            lblOfflineTip.Text = "💡 Mẹo: Chơi với Máy (AI) hoàn toàn Offline, không cần mạng hay đăng nhập!";
+            lblOfflineTip.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // pnlAuthBodyRegister
+            // 
+            pnlAuthBodyRegister.BackColor = Color.Transparent;
+            pnlAuthBodyRegister.Controls.Add(lblRegTitle);
+            pnlAuthBodyRegister.Controls.Add(lblRegNotice);
+            pnlAuthBodyRegister.Controls.Add(lblRegServerIp);
+            pnlAuthBodyRegister.Controls.Add(lblRegPort);
+            pnlAuthBodyRegister.Controls.Add(pnlRegIpWrapper);
+            pnlAuthBodyRegister.Controls.Add(pnlRegPortWrapper);
+            pnlAuthBodyRegister.Controls.Add(pnlRegUserWrapper);
+            pnlAuthBodyRegister.Controls.Add(pnlRegPassWrapper);
+            pnlAuthBodyRegister.Controls.Add(pnlRegConfirmPassWrapper);
+            pnlAuthBodyRegister.Controls.Add(lblRegStatusBadge);
+            pnlAuthBodyRegister.Controls.Add(btnRegister);
+            pnlAuthBodyRegister.Controls.Add(lblSwitchToLogin);
+            pnlAuthBodyRegister.Controls.Add(lblRegOfflineTip);
+            pnlAuthBodyRegister.Location = new Point(25, 62);
+            pnlAuthBodyRegister.Name = "pnlAuthBodyRegister";
+            pnlAuthBodyRegister.Size = new Size(370, 335);
+            pnlAuthBodyRegister.TabIndex = 3;
+            pnlAuthBodyRegister.Visible = false;
+            // 
+            // lblRegTitle
+            // 
+            lblRegTitle.AutoSize = true;
+            lblRegTitle.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblRegTitle.ForeColor = Color.White;
+            lblRegTitle.Location = new Point(0, 0);
+            lblRegTitle.Name = "lblRegTitle";
+            lblRegTitle.Size = new Size(290, 25);
+            lblRegTitle.TabIndex = 0;
+            lblRegTitle.Text = "TẠO TÀI KHOẢN MỚI (PvP LAN)";
+            // 
+            // lblRegNotice
+            // 
+            lblRegNotice.Font = new Font("Segoe UI", 7.5F);
+            lblRegNotice.ForeColor = Color.FromArgb(140, 165, 200);
+            lblRegNotice.Location = new Point(0, 22);
+            lblRegNotice.Name = "lblRegNotice";
+            lblRegNotice.Size = new Size(370, 22);
+            lblRegNotice.TabIndex = 1;
+            lblRegNotice.Text = "Tài khoản sẽ được lưu an toàn tại Database máy chủ Server.";
+            // 
+            // lblRegServerIp
+            // 
+            lblRegServerIp.AutoSize = true;
+            lblRegServerIp.Font = new Font("Segoe UI", 7.5F);
+            lblRegServerIp.ForeColor = Color.FromArgb(140, 165, 195);
+            lblRegServerIp.Location = new Point(0, 46);
+            lblRegServerIp.Name = "lblRegServerIp";
+            lblRegServerIp.Size = new Size(119, 17);
+            lblRegServerIp.TabIndex = 2;
+            lblRegServerIp.Text = "1. Địa chỉ Server IP:";
+            // 
+            // lblRegPort
+            // 
+            lblRegPort.AutoSize = true;
+            lblRegPort.Font = new Font("Segoe UI", 7.5F);
+            lblRegPort.ForeColor = Color.FromArgb(140, 165, 195);
+            lblRegPort.Location = new Point(245, 46);
+            lblRegPort.Name = "lblRegPort";
+            lblRegPort.Size = new Size(35, 17);
+            lblRegPort.TabIndex = 3;
+            lblRegPort.Text = "Port:";
+            // 
+            // pnlRegIpWrapper
+            // 
+            pnlRegIpWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlRegIpWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlRegIpWrapper.BorderWidth = 1.2F;
+            pnlRegIpWrapper.Controls.Add(lblRegIpPrefix);
+            pnlRegIpWrapper.Controls.Add(txtRegIp);
+            pnlRegIpWrapper.CornerRadius = 14;
+            pnlRegIpWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlRegIpWrapper.Location = new Point(0, 64);
+            pnlRegIpWrapper.Name = "pnlRegIpWrapper";
+            pnlRegIpWrapper.Padding = new Padding(12);
+            pnlRegIpWrapper.Size = new Size(235, 32);
+            pnlRegIpWrapper.TabIndex = 4;
+            // 
+            // lblRegIpPrefix
+            // 
+            lblRegIpPrefix.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            lblRegIpPrefix.ForeColor = Color.FromArgb(0, 194, 255);
+            lblRegIpPrefix.Location = new Point(8, 7);
+            lblRegIpPrefix.Name = "lblRegIpPrefix";
+            lblRegIpPrefix.Size = new Size(22, 18);
+            lblRegIpPrefix.TabIndex = 0;
+            lblRegIpPrefix.Text = "IP";
+            lblRegIpPrefix.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // txtRegIp
+            // 
+            txtRegIp.BackColor = Color.FromArgb(10, 18, 34);
+            txtRegIp.BorderStyle = BorderStyle.None;
+            txtRegIp.Font = new Font("Segoe UI", 9F);
+            txtRegIp.ForeColor = Color.White;
+            txtRegIp.Location = new Point(34, 7);
+            txtRegIp.Name = "txtRegIp";
+            txtRegIp.Size = new Size(192, 20);
+            txtRegIp.TabIndex = 1;
+            txtRegIp.Text = "127.0.0.1";
+            // 
+            // pnlRegPortWrapper
+            // 
+            pnlRegPortWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlRegPortWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlRegPortWrapper.BorderWidth = 1.2F;
+            pnlRegPortWrapper.Controls.Add(txtRegPort);
+            pnlRegPortWrapper.CornerRadius = 14;
+            pnlRegPortWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlRegPortWrapper.Location = new Point(245, 64);
+            pnlRegPortWrapper.Name = "pnlRegPortWrapper";
+            pnlRegPortWrapper.Padding = new Padding(12);
+            pnlRegPortWrapper.Size = new Size(125, 32);
+            pnlRegPortWrapper.TabIndex = 5;
+            // 
+            // txtRegPort
+            // 
+            txtRegPort.BackColor = Color.FromArgb(10, 18, 34);
+            txtRegPort.BorderStyle = BorderStyle.None;
+            txtRegPort.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            txtRegPort.ForeColor = Color.FromArgb(0, 194, 255);
+            txtRegPort.Location = new Point(12, 7);
+            txtRegPort.Name = "txtRegPort";
+            txtRegPort.Size = new Size(100, 20);
+            txtRegPort.TabIndex = 0;
+            txtRegPort.Text = "8888";
+            // 
+            // pnlRegUserWrapper
+            // 
+            pnlRegUserWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlRegUserWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlRegUserWrapper.BorderWidth = 1.2F;
+            pnlRegUserWrapper.Controls.Add(lblRegUserPrefix);
+            pnlRegUserWrapper.Controls.Add(txtRegName);
+            pnlRegUserWrapper.CornerRadius = 14;
+            pnlRegUserWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlRegUserWrapper.Location = new Point(0, 102);
+            pnlRegUserWrapper.Name = "pnlRegUserWrapper";
+            pnlRegUserWrapper.Padding = new Padding(12);
+            pnlRegUserWrapper.Size = new Size(370, 32);
+            pnlRegUserWrapper.TabIndex = 6;
+            // 
+            // lblRegUserPrefix
+            // 
+            lblRegUserPrefix.BackColor = Color.Transparent;
+            lblRegUserPrefix.Icon = CyberIcon.User;
+            lblRegUserPrefix.IconColor = Color.FromArgb(0, 194, 255);
+            lblRegUserPrefix.Location = new Point(10, 7);
+            lblRegUserPrefix.Name = "lblRegUserPrefix";
+            lblRegUserPrefix.Size = new Size(18, 18);
+            lblRegUserPrefix.TabIndex = 0;
+            // 
+            // txtRegName
+            // 
+            txtRegName.BackColor = Color.FromArgb(10, 18, 34);
+            txtRegName.BorderStyle = BorderStyle.None;
+            txtRegName.Font = new Font("Segoe UI", 9F);
+            txtRegName.ForeColor = Color.White;
+            txtRegName.Location = new Point(36, 7);
+            txtRegName.Name = "txtRegName";
+            txtRegName.PlaceholderText = "Tên tài khoản muốn tạo (Username)...";
+            txtRegName.Size = new Size(325, 20);
+            txtRegName.TabIndex = 1;
+            // 
+            // pnlRegPassWrapper
+            // 
+            pnlRegPassWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlRegPassWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlRegPassWrapper.BorderWidth = 1.2F;
+            pnlRegPassWrapper.Controls.Add(lblRegPassPrefix);
+            pnlRegPassWrapper.Controls.Add(txtRegPassword);
+            pnlRegPassWrapper.Controls.Add(lblToggleRegPass);
+            pnlRegPassWrapper.CornerRadius = 14;
+            pnlRegPassWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlRegPassWrapper.Location = new Point(0, 140);
+            pnlRegPassWrapper.Name = "pnlRegPassWrapper";
+            pnlRegPassWrapper.Padding = new Padding(12);
+            pnlRegPassWrapper.Size = new Size(370, 32);
+            pnlRegPassWrapper.TabIndex = 7;
+            // 
+            // lblRegPassPrefix
+            // 
+            lblRegPassPrefix.BackColor = Color.Transparent;
+            lblRegPassPrefix.Icon = CyberIcon.Lock;
+            lblRegPassPrefix.IconColor = Color.FromArgb(0, 194, 255);
+            lblRegPassPrefix.Location = new Point(10, 7);
+            lblRegPassPrefix.Name = "lblRegPassPrefix";
+            lblRegPassPrefix.Size = new Size(18, 18);
+            lblRegPassPrefix.TabIndex = 0;
+            // 
+            // txtRegPassword
+            // 
+            txtRegPassword.BackColor = Color.FromArgb(10, 18, 34);
+            txtRegPassword.BorderStyle = BorderStyle.None;
+            txtRegPassword.Font = new Font("Segoe UI", 9F);
+            txtRegPassword.ForeColor = Color.White;
+            txtRegPassword.Location = new Point(36, 7);
+            txtRegPassword.Name = "txtRegPassword";
+            txtRegPassword.PasswordChar = '●';
+            txtRegPassword.PlaceholderText = "Mật khẩu (tối thiểu 4 ký tự)...";
+            txtRegPassword.Size = new Size(295, 20);
+            txtRegPassword.TabIndex = 1;
+            // 
+            // lblToggleRegPass
+            // 
+            lblToggleRegPass.BackColor = Color.Transparent;
+            lblToggleRegPass.Cursor = Cursors.Hand;
+            lblToggleRegPass.Icon = CyberIcon.Eye;
+            lblToggleRegPass.IconColor = Color.FromArgb(140, 170, 215);
+            lblToggleRegPass.Location = new Point(340, 7);
+            lblToggleRegPass.Name = "lblToggleRegPass";
+            lblToggleRegPass.Size = new Size(20, 18);
+            lblToggleRegPass.TabIndex = 2;
+            lblToggleRegPass.Click += lblToggleRegPass_Click;
+            // 
+            // pnlRegConfirmPassWrapper
+            // 
+            pnlRegConfirmPassWrapper.BackColor = Color.FromArgb(10, 18, 34);
+            pnlRegConfirmPassWrapper.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlRegConfirmPassWrapper.BorderWidth = 1.2F;
+            pnlRegConfirmPassWrapper.Controls.Add(lblRegConfirmPassPrefix);
+            pnlRegConfirmPassWrapper.Controls.Add(txtRegConfirmPassword);
+            pnlRegConfirmPassWrapper.Controls.Add(lblToggleRegConfirm);
+            pnlRegConfirmPassWrapper.CornerRadius = 14;
+            pnlRegConfirmPassWrapper.FillColor = Color.FromArgb(13, 24, 48);
+            pnlRegConfirmPassWrapper.Location = new Point(0, 178);
+            pnlRegConfirmPassWrapper.Name = "pnlRegConfirmPassWrapper";
+            pnlRegConfirmPassWrapper.Padding = new Padding(12);
+            pnlRegConfirmPassWrapper.Size = new Size(370, 32);
+            pnlRegConfirmPassWrapper.TabIndex = 8;
+            // 
+            // lblRegConfirmPassPrefix
+            // 
+            lblRegConfirmPassPrefix.BackColor = Color.Transparent;
+            lblRegConfirmPassPrefix.Icon = CyberIcon.Lock;
+            lblRegConfirmPassPrefix.IconColor = Color.FromArgb(0, 194, 255);
+            lblRegConfirmPassPrefix.Location = new Point(10, 7);
+            lblRegConfirmPassPrefix.Name = "lblRegConfirmPassPrefix";
+            lblRegConfirmPassPrefix.Size = new Size(18, 18);
+            lblRegConfirmPassPrefix.TabIndex = 0;
+            // 
+            // txtRegConfirmPassword
+            // 
+            txtRegConfirmPassword.BackColor = Color.FromArgb(10, 18, 34);
+            txtRegConfirmPassword.BorderStyle = BorderStyle.None;
+            txtRegConfirmPassword.Font = new Font("Segoe UI", 9F);
+            txtRegConfirmPassword.ForeColor = Color.White;
+            txtRegConfirmPassword.Location = new Point(36, 7);
+            txtRegConfirmPassword.Name = "txtRegConfirmPassword";
+            txtRegConfirmPassword.PasswordChar = '●';
+            txtRegConfirmPassword.PlaceholderText = "Xác nhận lại mật khẩu...";
+            txtRegConfirmPassword.Size = new Size(295, 20);
+            txtRegConfirmPassword.TabIndex = 1;
+            // 
+            // lblToggleRegConfirm
+            // 
+            lblToggleRegConfirm.BackColor = Color.Transparent;
+            lblToggleRegConfirm.Cursor = Cursors.Hand;
+            lblToggleRegConfirm.Icon = CyberIcon.Eye;
+            lblToggleRegConfirm.IconColor = Color.FromArgb(140, 170, 215);
+            lblToggleRegConfirm.Location = new Point(340, 7);
+            lblToggleRegConfirm.Name = "lblToggleRegConfirm";
+            lblToggleRegConfirm.Size = new Size(20, 18);
+            lblToggleRegConfirm.TabIndex = 2;
+            lblToggleRegConfirm.Click += lblToggleRegConfirm_Click;
+            // 
+            // lblRegStatusBadge
+            // 
+            lblRegStatusBadge.AutoSize = true;
+            lblRegStatusBadge.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblRegStatusBadge.ForeColor = Color.FromArgb(0, 194, 255);
+            lblRegStatusBadge.Location = new Point(0, 214);
+            lblRegStatusBadge.Name = "lblRegStatusBadge";
+            lblRegStatusBadge.Size = new Size(172, 19);
+            lblRegStatusBadge.TabIndex = 9;
+            lblRegStatusBadge.Text = "● Sẵn sàng tạo tài khoản";
+            // 
+            // btnRegister
+            // 
+            btnRegister.BackColor = Color.FromArgb(9, 15, 30);
+            btnRegister.BorderLineColor = Color.Transparent;
+            btnRegister.ClickColor = Color.FromArgb(10, 18, 36);
+            btnRegister.CornerRadius = 10;
+            btnRegister.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnRegister.FlatStyle = FlatStyle.Flat;
+            btnRegister.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            btnRegister.ForeColor = Color.White;
+            btnRegister.HoverColor = Color.FromArgb(24, 42, 80);
+            btnRegister.IsPrimaryGradient = true;
+            btnRegister.IsPurpleGradient = false;
+            btnRegister.Location = new Point(0, 234);
+            btnRegister.Name = "btnRegister";
+            btnRegister.NavIcon = CyberIcon.Star;
+            btnRegister.NormalColor = Color.FromArgb(14, 24, 46);
+            btnRegister.ParentBgColor = Color.FromArgb(9, 15, 30);
+            btnRegister.Size = new Size(370, 38);
+            btnRegister.TabIndex = 10;
+            btnRegister.Text = "TẠO TÀI KHOẢN & ĐĂNG NHẬP";
+            btnRegister.TextLeftPadding = 16;
+            btnRegister.UseVisualStyleBackColor = false;
+            btnRegister.Click += btnRegister_Click;
+            // 
+            // lblSwitchToLogin
+            // 
+            lblSwitchToLogin.Cursor = Cursors.Hand;
+            lblSwitchToLogin.Font = new Font("Segoe UI", 8F, FontStyle.Bold);
+            lblSwitchToLogin.ForeColor = Color.FromArgb(0, 194, 255);
+            lblSwitchToLogin.Location = new Point(0, 278);
+            lblSwitchToLogin.Name = "lblSwitchToLogin";
+            lblSwitchToLogin.Size = new Size(370, 18);
+            lblSwitchToLogin.TabIndex = 11;
+            lblSwitchToLogin.Text = "Đã có tài khoản rồi? Nhấn vào đây để Đăng nhập →";
+            lblSwitchToLogin.TextAlign = ContentAlignment.MiddleCenter;
+            lblSwitchToLogin.Click += lblSwitchToLogin_Click;
+            // 
+            // lblRegOfflineTip
+            // 
+            lblRegOfflineTip.Font = new Font("Segoe UI", 7.25F, FontStyle.Italic);
+            lblRegOfflineTip.ForeColor = Color.FromArgb(0, 230, 118);
+            lblRegOfflineTip.Location = new Point(0, 300);
+            lblRegOfflineTip.Name = "lblRegOfflineTip";
+            lblRegOfflineTip.Size = new Size(370, 18);
+            lblRegOfflineTip.TabIndex = 12;
+            lblRegOfflineTip.Text = "💡 Mẹo: Chơi với Máy (AI) hoàn toàn Offline, không cần mạng hay đăng nhập!";
+            lblRegOfflineTip.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // lblTimer
+            // 
+            lblTimer.Location = new Point(0, 0);
+            lblTimer.Name = "lblTimer";
+            lblTimer.Size = new Size(100, 23);
+            lblTimer.TabIndex = 0;
+            // 
+            // lblPlayerName
+            // 
+            lblPlayerName.Location = new Point(0, 0);
+            lblPlayerName.Name = "lblPlayerName";
+            lblPlayerName.Size = new Size(100, 23);
+            lblPlayerName.TabIndex = 0;
+            // 
+            // lblPassword
+            // 
+            lblPassword.Location = new Point(0, 0);
+            lblPassword.Name = "lblPassword";
+            lblPassword.Size = new Size(100, 23);
+            lblPassword.TabIndex = 0;
+            // 
+            // lblRegPlayerName
+            // 
+            lblRegPlayerName.Location = new Point(0, 0);
+            lblRegPlayerName.Name = "lblRegPlayerName";
+            lblRegPlayerName.Size = new Size(100, 23);
+            lblRegPlayerName.TabIndex = 0;
+            // 
+            // lblRegPassword
+            // 
+            lblRegPassword.Location = new Point(0, 0);
+            lblRegPassword.Name = "lblRegPassword";
+            lblRegPassword.Size = new Size(100, 23);
+            lblRegPassword.TabIndex = 0;
+            // 
+            // lblRegConfirmPassword
+            // 
+            lblRegConfirmPassword.Location = new Point(0, 0);
+            lblRegConfirmPassword.Name = "lblRegConfirmPassword";
+            lblRegConfirmPassword.Size = new Size(100, 23);
+            lblRegConfirmPassword.TabIndex = 0;
+            // 
+            // Form1
+            // 
+            BackColor = Color.FromArgb(8, 13, 26);
+            ClientSize = new Size(1260, 780);
+            Controls.Add(pnlMainContent);
+            Controls.Add(pnlRightBar);
+            Controls.Add(pnlSidebar);
+            Controls.Add(pnlTitleBar);
+            ForeColor = Color.White;
+            FormBorderStyle = FormBorderStyle.None;
+            MinimumSize = new Size(1080, 680);
+            Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "CaroKan - Chơi cờ qua mạng LAN";
+            FormClosing += Form1_FormClosing;
+            pnlTitleBar.ResumeLayout(false);
+            pnlTitleBar.PerformLayout();
+            pnlWindowButtons.ResumeLayout(false);
+            pnlSidebar.ResumeLayout(false);
+            pnlNavList.ResumeLayout(false);
+            pnlSidebarBottom.ResumeLayout(false);
+            pnlProfileCard.ResumeLayout(false);
+            pnlProfileCard.PerformLayout();
+            pnlRightBar.ResumeLayout(false);
+            cardChat.ResumeLayout(false);
+            pnlChatBottom.ResumeLayout(false);
+            pnlChatBottom.PerformLayout();
+            pnlMainContent.ResumeLayout(false);
+            pnlHomeView.ResumeLayout(false);
+            pnlMiddleGrid.ResumeLayout(false);
+            pnlPlayersContainer.ResumeLayout(false);
+            cardConnectedPlayers.ResumeLayout(false);
+            pnlServerInfoContainer.ResumeLayout(false);
+            cardServerInfo.ResumeLayout(false);
+            cardServerInfo.PerformLayout();
+            heroBanner.ResumeLayout(false);
+            heroBanner.PerformLayout();
+            pnlGameView.ResumeLayout(false);
+            pnlGameHeader.ResumeLayout(false);
+            pnlGameActions.ResumeLayout(false);
+            pnlGameInfo.ResumeLayout(false);
+            pnlGameInfo.PerformLayout();
+            pnlCreateRoomView.ResumeLayout(false);
+            cardCreateBox.ResumeLayout(false);
+            pnlAiDifficultyOptions.ResumeLayout(false);
+            pnlAiDifficultyOptions.PerformLayout();
+            pnlTimeLimitOptions.ResumeLayout(false);
+            pnlTimeLimitOptions.PerformLayout();
+            pnlCreateHeader.ResumeLayout(false);
+            pnlCreateHeader.PerformLayout();
+            pnlJoinRoomView.ResumeLayout(false);
+            pnlLobbyBody.ResumeLayout(false);
+            pnlLobbyRightCol.ResumeLayout(false);
+            cardFeaturedRoom.ResumeLayout(false);
+            cardFeaturedRoom.PerformLayout();
+            cardJoinByCode.ResumeLayout(false);
+            cardJoinByCode.PerformLayout();
+            pnlCodeWrapper.ResumeLayout(false);
+            pnlCodeWrapper.PerformLayout();
+            cardOpenRooms.ResumeLayout(false);
+            pnlOpenRoomsScroll.ResumeLayout(false);
+            pnlOpenRoomsHeader.ResumeLayout(false);
+            pnlOpenRoomsHeader.PerformLayout();
+            pnlLobbyFilterBar.ResumeLayout(false);
+            pnlFilterPills.ResumeLayout(false);
+            pnlSearchBox.ResumeLayout(false);
+            pnlSearchBox.PerformLayout();
+            pnlLobbyHeaderBar.ResumeLayout(false);
+            pnlLobbyHeaderBar.PerformLayout();
+            pnlHistoryView.ResumeLayout(false);
+            cardHistoryBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvMatchHistory).EndInit();
+            pnlHistoryHeaderBar.ResumeLayout(false);
+            pnlHistoryHeaderBar.PerformLayout();
+            pnlMiddleRow.ResumeLayout(false);
+            cardAchievements.ResumeLayout(false);
+            cardAchievements.PerformLayout();
+            cardQuickStats.ResumeLayout(false);
+            cardQuickStats.PerformLayout();
+            cardProfileHero.ResumeLayout(false);
+            cardProfileHero.PerformLayout();
+            pnlLeaderboardView.ResumeLayout(false);
+            cardLeaderboardBox.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvLeaderboard).EndInit();
+            pnlLeaderboardHeaderBar.ResumeLayout(false);
+            pnlLeaderboardHeaderBar.PerformLayout();
+            pnlSettingsView.ResumeLayout(false);
+            cardSettingsBox.ResumeLayout(false);
+            pnlAuthBodyLogin.ResumeLayout(false);
+            pnlAuthBodyLogin.PerformLayout();
+            pnlIpWrapper.ResumeLayout(false);
+            pnlIpWrapper.PerformLayout();
+            pnlPortWrapper.ResumeLayout(false);
+            pnlPortWrapper.PerformLayout();
+            pnlUserWrapper.ResumeLayout(false);
+            pnlUserWrapper.PerformLayout();
+            pnlPassWrapper.ResumeLayout(false);
+            pnlPassWrapper.PerformLayout();
+            pnlAuthBodyRegister.ResumeLayout(false);
+            pnlAuthBodyRegister.PerformLayout();
+            pnlRegIpWrapper.ResumeLayout(false);
+            pnlRegIpWrapper.PerformLayout();
+            pnlRegPortWrapper.ResumeLayout(false);
+            pnlRegPortWrapper.PerformLayout();
+            pnlRegUserWrapper.ResumeLayout(false);
+            pnlRegUserWrapper.PerformLayout();
+            pnlRegPassWrapper.ResumeLayout(false);
+            pnlRegPassWrapper.PerformLayout();
+            pnlRegConfirmPassWrapper.ResumeLayout(false);
+            pnlRegConfirmPassWrapper.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion
@@ -1639,11 +3692,6 @@ namespace CaroClient
         private System.Windows.Forms.Label lblHeroSubtitle;
 
         private System.Windows.Forms.Panel pnlMiddleGrid;
-        private CaroClient.RoundedCard cardFeaturedRooms;
-        private System.Windows.Forms.Panel pnlRoomsHeaderBar;
-        private System.Windows.Forms.Label lblRoomsHeader;
-        private System.Windows.Forms.Button btnRefreshRooms;
-        private System.Windows.Forms.DataGridView dgvFeaturedRooms;
         private System.Windows.Forms.Label lblNoRooms;
 
         private CaroClient.CyberButton btnHomeCreateRoom;
@@ -1671,6 +3719,7 @@ namespace CaroClient
         private System.Windows.Forms.Panel pnlGameInfo;
         private System.Windows.Forms.Label lblRoomIdInfo;
         private System.Windows.Forms.Label lblTimer;
+        private CaroClient.CyberTimerWidget timerWidget;
         private System.Windows.Forms.Label lblPlayersInfo;
         private System.Windows.Forms.Label lblTurnInfo;
         private CaroClient.BoardControl boardControl1;
@@ -1693,6 +3742,13 @@ namespace CaroClient
         private CaroClient.OptionPill pillTime15;
         private CaroClient.OptionPill pillTime30;
         private CaroClient.OptionPill pillTime60;
+        private CaroClient.OptionPill pillCountdown1m;
+        private CaroClient.OptionPill pillCountdown3m;
+        private CaroClient.OptionPill pillCountdown5m;
+        private CaroClient.OptionPill pillCountdownCustom;
+        private System.Windows.Forms.TextBox txtCustomMinutes;
+        private System.Windows.Forms.Label lblCustomMinutesUnit;
+        private CaroClient.GameOverModal gameOverModal;
         private System.Windows.Forms.Panel pnlAiDifficultyOptions;
         private System.Windows.Forms.Label lblAiDifficultyLabel;
         private CaroClient.OptionPill pillAiEasy;
@@ -1704,20 +3760,55 @@ namespace CaroClient
         private CaroClient.CyberButton btnCreateRoom;
         private CaroClient.CyberButton btnCancelCreate;
 
-        // View 4: Join Room
+        // View 4: Join Room (Sảnh phòng đấu)
         private System.Windows.Forms.Panel pnlJoinRoomView;
-        private CaroClient.RoundedCard cardJoinTopBar;
-        private System.Windows.Forms.Panel pnlJoinActions;
-        private System.Windows.Forms.Label lblJoinTitle;
-        private System.Windows.Forms.Label lblJoinSubtitle;
-        private System.Windows.Forms.Label lblRoomIdPrompt;
+        private CaroClient.LobbyBannerPanel pnlLobbyHeaderBar;
+        private CaroClient.LobbyHeaderIconBox pnlLobbyIconBox;
+        private System.Windows.Forms.Label lblLobbyTitle;
+        private System.Windows.Forms.Label lblLobbySubtitle;
+
+        private System.Windows.Forms.Panel pnlLobbyFilterBar;
+        private CaroClient.RoundedCard pnlSearchBox;
+        private CaroClient.VectorIconLabel lblSearchIcon;
+        private System.Windows.Forms.TextBox txtSearchRoom;
+        private System.Windows.Forms.Panel pnlFilterPills;
+        private CaroClient.LobbyFilterPill pillFilterAll;
+        private CaroClient.LobbyFilterPill pillFilter2p;
+        private CaroClient.LobbyFilterPill pillFilter4p;
+        private CaroClient.LobbyFilterPill pillFilterWaiting;
+        private CaroClient.CyberButton btnRefreshLobby;
+
+        private System.Windows.Forms.Panel pnlLobbyBody;
+        private CaroClient.RoundedCard cardOpenRooms;
+        private System.Windows.Forms.Panel pnlOpenRoomsHeader;
+        private System.Windows.Forms.Label lblOpenRoomsTitle;
+        private System.Windows.Forms.Label lblOpenRoomsCount;
+        private System.Windows.Forms.Panel pnlOpenRoomsScroll;
+
+        private System.Windows.Forms.Panel pnlLobbyRightCol;
+        private CaroClient.RoundedCard cardJoinByCode;
+        private System.Windows.Forms.Label lblJoinByCodeTitle;
+        private CaroClient.RoundedCard pnlCodeWrapper;
+        private System.Windows.Forms.Label lblCodeHash;
         private System.Windows.Forms.TextBox txtRoomId;
         private CaroClient.CyberButton btnJoinRoom;
-        private CaroClient.CyberButton btnCancelJoin;
+        private System.Windows.Forms.Label lblCodeFootnote;
+
+        private CaroClient.RoundedCard cardFeaturedRoom;
+        private System.Windows.Forms.Label lblFeaturedTitle;
+        private System.Windows.Forms.Label lblViewAllRooms;
+        private CaroClient.MiniBoardPreviewControl miniBoardPreview;
+        private System.Windows.Forms.Label lblFeaturedRoomName;
+        private System.Windows.Forms.Label lblFeaturedHost;
+        private System.Windows.Forms.Label lblFeaturedMode;
+        private System.Windows.Forms.Label lblFeaturedStatus;
+        private CaroClient.CyberButton btnFeaturedAction;
+
+        private System.Windows.Forms.Label lblLobbyLastUpdated;
 
         // View 5: Settings / Login
-        private System.Windows.Forms.Panel pnlSettingsView;
-        private CaroClient.RoundedCard cardSettingsBox;
+        private CaroClient.SettingsBackgroundPanel pnlSettingsView;
+        private CaroClient.CyberLoginCard cardSettingsBox;
         private CaroClient.CyberButton btnTabLogin;
         private CaroClient.CyberButton btnTabRegister;
         private System.Windows.Forms.Panel pnlAuthBodyLogin;
@@ -1725,13 +3816,21 @@ namespace CaroClient
         private System.Windows.Forms.Label lblSettingsTitle;
         private System.Windows.Forms.Label lblSettingsNotice;
         private System.Windows.Forms.Label lblServerIp;
+        private CaroClient.RoundedCard pnlIpWrapper;
+        private System.Windows.Forms.Label lblIpPrefix;
         private System.Windows.Forms.TextBox txtIp;
         private System.Windows.Forms.Label lblPort;
+        private CaroClient.RoundedCard pnlPortWrapper;
         private System.Windows.Forms.TextBox txtPort;
         private System.Windows.Forms.Label lblPlayerName;
+        private CaroClient.RoundedCard pnlUserWrapper;
+        private CaroClient.VectorIconLabel lblUserPrefix;
         private System.Windows.Forms.TextBox txtName;
         private System.Windows.Forms.Label lblPassword;
+        private CaroClient.RoundedCard pnlPassWrapper;
+        private CaroClient.VectorIconLabel lblPassPrefix;
         private System.Windows.Forms.TextBox txtPassword;
+        private CaroClient.VectorIconLabel lblTogglePassword;
         private System.Windows.Forms.Label lblStatusBadge;
         private CaroClient.CyberButton btnConnect;
         private System.Windows.Forms.Label lblSwitchToRegister;
@@ -1741,42 +3840,62 @@ namespace CaroClient
         private System.Windows.Forms.Label lblRegTitle;
         private System.Windows.Forms.Label lblRegNotice;
         private System.Windows.Forms.Label lblRegServerIp;
+        private CaroClient.RoundedCard pnlRegIpWrapper;
+        private System.Windows.Forms.Label lblRegIpPrefix;
         private System.Windows.Forms.TextBox txtRegIp;
         private System.Windows.Forms.Label lblRegPort;
+        private CaroClient.RoundedCard pnlRegPortWrapper;
         private System.Windows.Forms.TextBox txtRegPort;
         private System.Windows.Forms.Label lblRegPlayerName;
+        private CaroClient.RoundedCard pnlRegUserWrapper;
+        private CaroClient.VectorIconLabel lblRegUserPrefix;
         private System.Windows.Forms.TextBox txtRegName;
         private System.Windows.Forms.Label lblRegPassword;
+        private CaroClient.RoundedCard pnlRegPassWrapper;
+        private CaroClient.VectorIconLabel lblRegPassPrefix;
         private System.Windows.Forms.TextBox txtRegPassword;
+        private CaroClient.VectorIconLabel lblToggleRegPass;
         private System.Windows.Forms.Label lblRegConfirmPassword;
+        private CaroClient.RoundedCard pnlRegConfirmPassWrapper;
+        private CaroClient.VectorIconLabel lblRegConfirmPassPrefix;
         private System.Windows.Forms.TextBox txtRegConfirmPassword;
+        private CaroClient.VectorIconLabel lblToggleRegConfirm;
         private System.Windows.Forms.Label lblRegStatusBadge;
         private CaroClient.CyberButton btnRegister;
         private System.Windows.Forms.Label lblSwitchToLogin;
+        private System.Windows.Forms.Label lblRegOfflineTip;
 
         // Timer
         private System.Windows.Forms.Timer turnTimer;
 
         // View 6: Profile & Match History
         private System.Windows.Forms.Panel pnlHistoryView;
-        private CaroClient.RoundedCard cardProfileSummary;
-        private System.Windows.Forms.Label lblProfileAvatar;
+        private CaroClient.RoundedCard cardProfileHero;
+        private CaroClient.CircularAvatarControl avatarControl;
         private System.Windows.Forms.Label lblProfileDetailName;
+        private CaroClient.VectorIconLabel lblEditNameIcon;
+        private System.Windows.Forms.Label lblProfileDetailElo;
         private System.Windows.Forms.Label lblProfileDetailRank;
         private System.Windows.Forms.Label lblProfileDetailStatus;
-        private CaroClient.RoundedCard cardStatTotal;
-        private System.Windows.Forms.Label lblStatTotalVal;
-        private System.Windows.Forms.Label lblStatTotalTitle;
-        private CaroClient.RoundedCard cardStatWins;
-        private System.Windows.Forms.Label lblStatWinsVal;
-        private System.Windows.Forms.Label lblStatWinsTitle;
-        private CaroClient.RoundedCard cardStatLosses;
-        private System.Windows.Forms.Label lblStatLossesVal;
-        private System.Windows.Forms.Label lblStatLossesTitle;
-        private CaroClient.RoundedCard cardStatWinRate;
-        private System.Windows.Forms.Label lblStatWinRateVal;
-        private System.Windows.Forms.Label lblStatWinRateTitle;
-        private System.Windows.Forms.Panel pnlHistorySpacer;
+        private CaroClient.KpiStatBox kpiTotal;
+        private CaroClient.KpiStatBox kpiWins;
+        private CaroClient.KpiStatBox kpiLosses;
+        private CaroClient.WinRateDonutGauge gaugeWinRate;
+        private System.Windows.Forms.Panel pnlHistorySpacer1;
+        private System.Windows.Forms.Panel pnlMiddleRow;
+        private CaroClient.RoundedCard cardQuickStats;
+        private System.Windows.Forms.Label lblQuickStatsHeader;
+        private CaroClient.QuickStatItem quickStatTotal;
+        private CaroClient.QuickStatItem quickStatWins;
+        private CaroClient.QuickStatItem quickStatElo;
+        private System.Windows.Forms.Panel pnlMiddleSpacer;
+        private CaroClient.RoundedCard cardAchievements;
+        private System.Windows.Forms.Label lblAchievementsHeader;
+        private CaroClient.AchievementBadgeControl badgeTanThu;
+        private CaroClient.AchievementBadgeControl badgeChienBinh;
+        private CaroClient.AchievementBadgeControl badgeCaoThu;
+        private CaroClient.AchievementBadgeControl badgeLocked;
+        private System.Windows.Forms.Panel pnlHistorySpacer2;
         private CaroClient.RoundedCard cardHistoryBox;
         private System.Windows.Forms.Panel pnlHistoryHeaderBar;
         private System.Windows.Forms.Label lblHistoryHeader;
