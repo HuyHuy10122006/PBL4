@@ -43,6 +43,21 @@ namespace CaroProtocol
             WinnerSymbol = winnerSymbol;
         }
 
+        public GameEngine Clone()
+        {
+            var copy = new GameEngine(BoardSize, BlockBothEndsRule)
+            {
+                CurrentTurnSymbol = this.CurrentTurnSymbol,
+                Status = this.Status,
+                WinnerSymbol = this.WinnerSymbol,
+                WinLine = new List<Point>(this.WinLine),
+                LastMove = this.LastMove,
+                TotalMovesCount = this.TotalMovesCount
+            };
+            Array.Copy(this.Board, copy.Board, this.Board.Length);
+            return copy;
+        }
+
         public bool MakeMove(int row, int col, char playerSymbol, out string errorMessage)
         {
             errorMessage = string.Empty;

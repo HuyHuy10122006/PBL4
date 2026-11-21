@@ -67,6 +67,8 @@ namespace CaroClient
             {
                 if (parent is RoundedCard rc) return rc.FillColor;
                 if (parent is CyberLoginCard) return Color.FromArgb(11, 20, 36);
+                if (parent is CreateRoomBackgroundPanel) return Color.FromArgb(8, 13, 26);
+                if (parent is GameArenaBackgroundPanel) return Color.FromArgb(8, 13, 26);
                 if (parent.BackColor != Color.Transparent && parent.BackColor.A == 255) return parent.BackColor;
                 parent = parent.Parent;
             }
@@ -83,6 +85,8 @@ namespace CaroClient
         public float BorderWidth { get; set; } = 1.2f;
 
         public Color FillColor { get; set; } = UITheme.BgCard;
+
+        public bool IsTechCircuitFrame { get; set; } = false;
 
         public RoundedCard()
         {
@@ -102,16 +106,112 @@ namespace CaroClient
 
             using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rect, CornerRadius))
             {
-                using (SolidBrush brush = new SolidBrush(FillColor))
+                if (IsTechCircuitFrame)
                 {
-                    g.FillPath(brush, path);
-                }
-
-                if (BorderWidth > 0 && BorderColor != Color.Transparent)
-                {
-                    using (Pen pen = new Pen(BorderColor, BorderWidth))
+                    // High-tech sci-fi holographic panel styling - 100% Opaque solid background
+                    using (LinearGradientBrush bgBrush = new LinearGradientBrush(
+                        rect,
+                        Color.FromArgb(255, 7, 28, 48),
+                        Color.FromArgb(255, 4, 16, 28),
+                        LinearGradientMode.Vertical))
                     {
-                        g.DrawPath(pen, path);
+                        g.FillPath(bgBrush, path);
+                    }
+
+                    // Inner top subtle cyan glow
+                    using (LinearGradientBrush topGlow = new LinearGradientBrush(
+                        new Rectangle(0, 0, Width, 38),
+                        Color.FromArgb(55, 0, 220, 255),
+                        Color.FromArgb(0, 0, 220, 255),
+                        LinearGradientMode.Vertical))
+                    {
+                        g.SetClip(path);
+                        g.FillRectangle(topGlow, 0, 0, Width, 38);
+                        g.ResetClip();
+                    }
+
+                    // Main glowing cyan rounded border
+                    using (Pen glowPen = new Pen(Color.FromArgb(90, 0, 210, 255), 3.2f))
+                    {
+                        g.DrawPath(glowPen, path);
+                    }
+                    using (Pen neonPen = new Pen(Color.FromArgb(0, 225, 255), 1.8f))
+                    {
+                        g.DrawPath(neonPen, path);
+                    }
+
+                    // Sci-Fi Tech Circuit Decors
+                    using (Pen circuitPen = new Pen(Color.FromArgb(190, 0, 225, 255), 1.3f))
+                    using (SolidBrush nodeBrush = new SolidBrush(Color.FromArgb(0, 225, 255)))
+                    {
+                        int cornerInset = 24;
+                        int markLen = 30;
+
+                        // Top-Left Tech Corner
+                        g.DrawLine(circuitPen, cornerInset, 8, cornerInset + markLen, 8);
+                        g.DrawLine(circuitPen, cornerInset + markLen, 8, cornerInset + markLen + 6, 14);
+                        g.DrawLine(circuitPen, cornerInset + markLen + 6, 14, cornerInset + markLen + 20, 14);
+                        g.FillEllipse(nodeBrush, cornerInset + markLen + 20, 12, 4, 4);
+
+                        g.DrawLine(circuitPen, 8, cornerInset, 8, cornerInset + markLen);
+                        g.DrawLine(circuitPen, 8, cornerInset + markLen, 14, cornerInset + markLen + 6);
+                        g.DrawLine(circuitPen, 14, cornerInset + markLen + 6, 14, cornerInset + markLen + 20);
+                        g.FillEllipse(nodeBrush, 12, cornerInset + markLen + 20, 4, 4);
+
+                        // Top-Right Tech Corner
+                        int rX = Width - 1 - cornerInset;
+                        g.DrawLine(circuitPen, rX, 8, rX - markLen, 8);
+                        g.DrawLine(circuitPen, rX - markLen, 8, rX - markLen - 6, 14);
+                        g.DrawLine(circuitPen, rX - markLen - 6, 14, rX - markLen - 20, 14);
+                        g.FillEllipse(nodeBrush, rX - markLen - 24, 12, 4, 4);
+
+                        g.DrawLine(circuitPen, Width - 9, cornerInset, Width - 9, cornerInset + markLen);
+                        g.DrawLine(circuitPen, Width - 9, cornerInset + markLen, Width - 15, cornerInset + markLen + 6);
+                        g.DrawLine(circuitPen, Width - 15, cornerInset + markLen + 6, Width - 15, cornerInset + markLen + 20);
+                        g.FillEllipse(nodeBrush, Width - 17, cornerInset + markLen + 20, 4, 4);
+
+                        // Bottom-Left Tech Corner
+                        int bY = Height - 1 - cornerInset;
+                        g.DrawLine(circuitPen, 8, bY, 8, bY - markLen);
+                        g.DrawLine(circuitPen, 8, bY - markLen, 14, bY - markLen - 6);
+                        g.DrawLine(circuitPen, 14, bY - markLen - 6, 14, bY - markLen - 16);
+                        g.FillEllipse(nodeBrush, 12, bY - markLen - 20, 4, 4);
+
+                        g.DrawLine(circuitPen, cornerInset, Height - 9, cornerInset + markLen, Height - 9);
+                        g.DrawLine(circuitPen, cornerInset + markLen, Height - 9, cornerInset + markLen + 6, Height - 15);
+                        g.DrawLine(circuitPen, cornerInset + markLen + 6, Height - 15, cornerInset + markLen + 16, Height - 15);
+                        g.FillEllipse(nodeBrush, cornerInset + markLen + 16, Height - 17, 4, 4);
+
+                        // Bottom-Right Tech Corner
+                        g.DrawLine(circuitPen, Width - 9, bY, Width - 9, bY - markLen);
+                        g.DrawLine(circuitPen, Width - 9, bY - markLen, Width - 15, bY - markLen - 6);
+                        g.DrawLine(circuitPen, Width - 15, bY - markLen - 6, Width - 15, bY - markLen - 16);
+                        g.FillEllipse(nodeBrush, Width - 17, bY - markLen - 20, 4, 4);
+
+                        g.DrawLine(circuitPen, rX, Height - 9, rX - markLen, Height - 9);
+                        g.DrawLine(circuitPen, rX - markLen, Height - 9, rX - markLen - 6, Height - 15);
+                        g.DrawLine(circuitPen, rX - markLen - 6, Height - 15, rX - markLen - 16, Height - 15);
+                        g.FillEllipse(nodeBrush, rX - markLen - 20, Height - 17, 4, 4);
+
+                        // Top & Bottom Center tech notches
+                        int midX = Width / 2;
+                        g.DrawLine(circuitPen, midX - 30, 8, midX + 30, 8);
+                        g.DrawLine(circuitPen, midX - 20, Height - 9, midX + 20, Height - 9);
+                    }
+                }
+                else
+                {
+                    using (SolidBrush brush = new SolidBrush(FillColor))
+                    {
+                        g.FillPath(brush, path);
+                    }
+
+                    if (BorderWidth > 0 && BorderColor != Color.Transparent)
+                    {
+                        using (Pen pen = new Pen(BorderColor, BorderWidth))
+                        {
+                            g.DrawPath(pen, path);
+                        }
                     }
                 }
             }
@@ -140,14 +240,29 @@ namespace CaroClient
         Star,
         Search,
         LayerStack,
-        Power
+        Power,
+        Play
     }
 
     public class CyberButton : Button
     {
         public int CornerRadius { get; set; } = 10;
 
-        public Color ParentBgColor { get; set; } = Color.FromArgb(9, 15, 30);
+        private Color _parentBgColor = Color.FromArgb(9, 15, 30);
+        public Color ParentBgColor
+        {
+            get => _parentBgColor;
+            set
+            {
+                _parentBgColor = value;
+                if (value == Color.Transparent)
+                {
+                    SetStyle(ControlStyles.Opaque, false);
+                    SetStyle(ControlStyles.SupportsTransparentBackColor, true);
+                    BackColor = Color.Transparent;
+                }
+            }
+        }
 
         public Color NormalColor { get; set; } = Color.FromArgb(14, 24, 46);
 
@@ -160,6 +275,10 @@ namespace CaroClient
         public bool IsPrimaryGradient { get; set; } = false;
 
         public bool IsPurpleGradient { get; set; } = false;
+
+        public bool IsGoldGradient { get; set; } = false;
+
+        public bool IsCyanEmeraldGradient { get; set; } = false;
 
         public ContentAlignment CustomTextAlign { get; set; } = ContentAlignment.MiddleLeft;
 
@@ -179,6 +298,24 @@ namespace CaroClient
             Font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
             Cursor = Cursors.Hand;
             BackColor = Color.FromArgb(9, 15, 30);
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            UpdateRegion();
+        }
+
+        public void UpdateRegion()
+        {
+            if (Width > 0 && Height > 0)
+            {
+                Rectangle rect = new Rectangle(0, 0, Width, Height);
+                using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rect, CornerRadius))
+                {
+                    this.Region = new Region(path);
+                }
+            }
         }
 
         protected override void OnMouseEnter(EventArgs e)
@@ -215,11 +352,14 @@ namespace CaroClient
             Graphics g = pevent.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            // Xóa sạch nền bằng màu của container cha để chống lưu vết text cũ
-            Color effParentBg = UITheme.ResolveParentBgColor(this, ParentBgColor);
-            using (SolidBrush parentBrush = new SolidBrush(effParentBg))
+            // Xóa sạch nền bằng màu của container cha nếu không trong suốt
+            if (ParentBgColor != Color.Transparent)
             {
-                g.FillRectangle(parentBrush, ClientRectangle);
+                Color effParentBg = UITheme.ResolveParentBgColor(this, ParentBgColor);
+                using (SolidBrush parentBrush = new SolidBrush(effParentBg))
+                {
+                    g.FillRectangle(parentBrush, ClientRectangle);
+                }
             }
 
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
@@ -247,6 +387,24 @@ namespace CaroClient
                 {
                     Color startCol = _isPressed ? Color.FromArgb(0, 100, 220) : (_isHovered ? Color.FromArgb(0, 160, 255) : Color.FromArgb(0, 132, 255));
                     Color endCol = _isPressed ? Color.FromArgb(160, 20, 180) : (_isHovered ? Color.FromArgb(220, 50, 240) : Color.FromArgb(192, 38, 211));
+                    using (LinearGradientBrush lgb = new LinearGradientBrush(rect, startCol, endCol, LinearGradientMode.Horizontal))
+                    {
+                        g.FillPath(lgb, path);
+                    }
+                }
+                else if (IsGoldGradient)
+                {
+                    Color startCol = _isPressed ? Color.FromArgb(230, 130, 0) : (_isHovered ? Color.FromArgb(255, 175, 20) : Color.FromArgb(255, 150, 0));
+                    Color endCol = _isPressed ? Color.FromArgb(235, 185, 0) : (_isHovered ? Color.FromArgb(255, 235, 60) : Color.FromArgb(255, 210, 10));
+                    using (LinearGradientBrush lgb = new LinearGradientBrush(rect, startCol, endCol, LinearGradientMode.Horizontal))
+                    {
+                        g.FillPath(lgb, path);
+                    }
+                }
+                else if (IsCyanEmeraldGradient)
+                {
+                    Color startCol = _isPressed ? Color.FromArgb(0, 130, 220) : (_isHovered ? Color.FromArgb(20, 180, 255) : Color.FromArgb(0, 160, 255));
+                    Color endCol = _isPressed ? Color.FromArgb(0, 190, 150) : (_isHovered ? Color.FromArgb(30, 245, 195) : Color.FromArgb(0, 230, 180));
                     using (LinearGradientBrush lgb = new LinearGradientBrush(rect, startCol, endCol, LinearGradientMode.Horizontal))
                     {
                         g.FillPath(lgb, path);
@@ -281,6 +439,20 @@ namespace CaroClient
                     using (Pen pen = new Pen(BorderLineColor, 1.2f))
                     {
                         g.DrawPath(pen, path);
+                    }
+                }
+                else if (IsGoldGradient)
+                {
+                    using (Pen goldPen = new Pen(Color.FromArgb(255, 225, 80), 1.2f))
+                    {
+                        g.DrawPath(goldPen, path);
+                    }
+                }
+                else if (IsCyanEmeraldGradient)
+                {
+                    using (Pen cyanPen = new Pen(Color.FromArgb(120, 245, 255), 1.2f))
+                    {
+                        g.DrawPath(cyanPen, path);
                     }
                 }
             }
@@ -516,6 +688,16 @@ namespace CaroClient
                         g.DrawArc(pen, x + 2, y + 3, size - 4, size - 4, 135, 270);
                         g.DrawLine(pen, x + size / 2, y + 1, x + size / 2, y + size / 2 - 1);
                         break;
+
+                    case CyberIcon.Play:
+                        // Biểu tượng nút phát / tam giác
+                        PointF[] playPts = new PointF[] {
+                            new PointF(x + 4, y + 2),
+                            new PointF(x + size - 2, y + size / 2f),
+                            new PointF(x + 4, y + size - 2)
+                        };
+                        g.FillPolygon(brush, playPts);
+                        break;
                 }
             }
         }
@@ -524,25 +706,102 @@ namespace CaroClient
     public class HeroBannerPanel : Panel
     {
         private Image? _bannerImage;
+        public event EventHandler? PlayNowClicked;
+        public event EventHandler? CreateRoomClicked;
+
+        private CyberButton _btnPlayNow;
+        private CyberButton _btnCreateRoom;
 
         public HeroBannerPanel()
         {
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             BackColor = Color.Transparent;
+            Cursor = Cursors.Default;
 
-            // Attempt to load generated banner asset
+            LoadBanner();
+
+            _btnPlayNow = new CyberButton
+            {
+                Text = "Chơi ngay",
+                Font = new Font("Segoe UI", 10.5f, FontStyle.Bold),
+                IsGoldGradient = true,
+                ParentBgColor = Color.Transparent,
+                CornerRadius = 12,
+                Cursor = Cursors.Hand,
+                CustomTextAlign = ContentAlignment.MiddleCenter,
+                TextLeftPadding = 0
+            };
+            _btnPlayNow.Click += (s, e) => PlayNowClicked?.Invoke(this, EventArgs.Empty);
+
+            _btnCreateRoom = new CyberButton
+            {
+                Text = "Tạo phòng nhanh",
+                Font = new Font("Segoe UI", 9.5f, FontStyle.Bold),
+                NormalColor = Color.FromArgb(16, 28, 54),
+                BorderLineColor = Color.FromArgb(48, 85, 150),
+                HoverColor = Color.FromArgb(26, 46, 88),
+                ForeColor = Color.FromArgb(220, 235, 255),
+                ParentBgColor = Color.Transparent,
+                CornerRadius = 12,
+                Cursor = Cursors.Hand,
+                CustomTextAlign = ContentAlignment.MiddleCenter,
+                TextLeftPadding = 0
+            };
+            _btnCreateRoom.Click += (s, e) => CreateRoomClicked?.Invoke(this, EventArgs.Empty);
+
+            Controls.Add(_btnPlayNow);
+            Controls.Add(_btnCreateRoom);
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
             try
             {
-                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "caro_hero_banner.jpg");
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = @"d:\PBL4\CaroClient\Assets\" + fileName;
                 if (File.Exists(assetPath))
                 {
                     byte[] bytes = File.ReadAllBytes(assetPath);
                     using var ms = new MemoryStream(bytes);
                     using var temp = Image.FromStream(ms);
-                    _bannerImage = new Bitmap(temp);
+                    return new Bitmap(temp);
                 }
             }
             catch { }
+            return null;
+        }
+
+        private void LoadBanner()
+        {
+            _bannerImage = SafeLoadImage("home_hero_banner.jpg") ?? SafeLoadImage("caro_hero_banner.jpg");
+        }
+
+        protected override void OnResize(EventArgs eventargs)
+        {
+            base.OnResize(eventargs);
+            if (Width <= 0 || Height <= 0) return;
+
+            int btnH = Math.Min(42, Math.Max(36, (int)(Height * 0.18f)));
+            int btnY = Math.Min(Height - btnH - 22, Math.Max(20, (int)(Height * 0.65f)));
+
+            int btnPlayW = Math.Min(145, Math.Max(110, (int)(Width * 0.17f)));
+            int btnCreateW = Math.Min(175, Math.Max(130, (int)(Width * 0.22f)));
+
+            int btnPlayX = Math.Max(28, (int)(Width * 0.052f));
+            int btnCreateX = btnPlayX + btnPlayW + 12;
+
+            if (_btnPlayNow != null)
+            {
+                _btnPlayNow.SetBounds(btnPlayX, btnY, btnPlayW, btnH);
+                _btnPlayNow.UpdateRegion();
+            }
+            if (_btnCreateRoom != null)
+            {
+                _btnCreateRoom.SetBounds(btnCreateX, btnY, btnCreateW, btnH);
+                _btnCreateRoom.UpdateRegion();
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -550,42 +809,489 @@ namespace CaroClient
             base.OnPaint(e);
             Graphics g = e.Graphics;
             g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            Color effParentBg = UITheme.ResolveParentBgColor(this, Parent != null ? Parent.BackColor : UITheme.BgDark);
+            using (SolidBrush parentBrush = new SolidBrush(effParentBg))
+            {
+                g.FillRectangle(parentBrush, ClientRectangle);
+            }
 
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
             if (rect.Width <= 0 || rect.Height <= 0) return;
 
-            using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rect, 16))
+            using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rect, 14))
             {
-                // Gradient Background
-                using (LinearGradientBrush bgBrush = new LinearGradientBrush(rect, Color.FromArgb(14, 28, 58), Color.FromArgb(8, 15, 32), LinearGradientMode.Horizontal))
-                {
-                    g.FillPath(bgBrush, path);
-                }
-
-                // Draw banner image on the right if available
                 if (_bannerImage != null)
                 {
-                    int imgWidth = (int)(Height * 1.55f);
-                    int imgX = Width - imgWidth;
-                    Rectangle imgRect = new Rectangle(imgX, 0, imgWidth, Height);
-
                     g.SetClip(path);
-                    g.DrawImage(_bannerImage, imgRect);
-
-                    // Fade gradient over the image transition
-                    Rectangle fadeRect = new Rectangle(imgX - 40, 0, 100, Height);
-                    using (LinearGradientBrush fade = new LinearGradientBrush(fadeRect, Color.FromArgb(255, 12, 24, 50), Color.FromArgb(0, 12, 24, 50), LinearGradientMode.Horizontal))
+                    g.DrawImage(_bannerImage, new Rectangle(0, 0, Width, Height));
+                    g.ResetClip();
+                }
+                else
+                {
+                    using (LinearGradientBrush bgBrush = new LinearGradientBrush(rect, Color.FromArgb(14, 28, 58), Color.FromArgb(8, 15, 32), LinearGradientMode.Horizontal))
                     {
-                        g.FillRectangle(fade, fadeRect);
+                        g.FillPath(bgBrush, path);
                     }
+                }
+            }
+        }
+    }
+
+    public class HomeEventCard : Panel
+    {
+        private Image? _eventImage;
+
+        public HomeEventCard()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            BackColor = Color.Transparent;
+            Cursor = Cursors.Hand;
+            LoadImage();
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
+            try
+            {
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = @"d:\PBL4\CaroClient\Assets\" + fileName;
+                if (File.Exists(assetPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(assetPath);
+                    using var ms = new MemoryStream(bytes);
+                    using var temp = Image.FromStream(ms);
+                    return new Bitmap(temp);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void LoadImage()
+        {
+            _eventImage = SafeLoadImage("home_event_card_clean.jpg") ?? SafeLoadImage("home_event_banner.jpg") ?? SafeLoadImage("caro_hero_banner.jpg");
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (rect.Width <= 0 || rect.Height <= 0) return;
+
+            using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rect, 14))
+            {
+                using (SolidBrush bg = new SolidBrush(Color.FromArgb(13, 24, 48)))
+                {
+                    g.FillPath(bg, path);
+                }
+
+                if (_eventImage != null)
+                {
+                    g.SetClip(path);
+                    g.DrawImage(_eventImage, new Rectangle(0, 0, Width, Height));
                     g.ResetClip();
                 }
 
-                // Border
-                using (Pen pen = new Pen(Color.FromArgb(28, 52, 98), 1.5f))
+                using (Pen pen = new Pen(Color.FromArgb(0, 160, 230), 1.2f))
                 {
                     g.DrawPath(pen, path);
                 }
+            }
+        }
+    }
+
+    public class HomePodiumPanel : Panel
+    {
+        private Image? _avatar1;
+        private Image? _avatar2;
+        private Image? _avatar3;
+
+        public Func<string, Image?>? AvatarProvider { get; set; }
+
+        public string Rank1Name { get; set; } = "---";
+        public string Rank1Elo { get; set; } = "Chưa có rank";
+
+        public string Rank2Name { get; set; } = "---";
+        public string Rank2Elo { get; set; } = "Chưa có rank";
+
+        public string Rank3Name { get; set; } = "---";
+        public string Rank3Elo { get; set; } = "Chưa có rank";
+
+        public class RunnerUpEntry
+        {
+            public int Rank { get; set; }
+            public string Name { get; set; } = "---";
+            public string Score { get; set; } = "---";
+        }
+
+        public List<RunnerUpEntry> RunnerUps { get; set; } = new();
+
+        public HomePodiumPanel()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            BackColor = Color.Transparent;
+            Cursor = Cursors.Hand;
+            LoadAvatars();
+            InitDefaultRunnerUps();
+        }
+
+        private void InitDefaultRunnerUps()
+        {
+            RunnerUps = new List<RunnerUpEntry>
+            {
+                new RunnerUpEntry { Rank = 4, Name = "---", Score = "---" },
+                new RunnerUpEntry { Rank = 5, Name = "---", Score = "---" },
+                new RunnerUpEntry { Rank = 6, Name = "---", Score = "---" }
+            };
+        }
+
+        public void SetLeaderboardData(List<CaroProtocol.LeaderboardItemData>? list)
+        {
+            if (list != null && list.Count > 0)
+            {
+                Rank1Name = list.Count > 0 ? list[0].Username : "---";
+                Rank1Elo = list.Count > 0 ? $"{list[0].Elo} ELO" : "Chưa có rank";
+
+                Rank2Name = list.Count > 1 ? list[1].Username : "---";
+                Rank2Elo = list.Count > 1 ? $"{list[1].Elo} ELO" : "Chưa có rank";
+
+                Rank3Name = list.Count > 2 ? list[2].Username : "---";
+                Rank3Elo = list.Count > 2 ? $"{list[2].Elo} ELO" : "Chưa có rank";
+
+                RunnerUps.Clear();
+                for (int i = 3; i < Math.Min(list.Count, 7); i++)
+                {
+                    RunnerUps.Add(new RunnerUpEntry
+                    {
+                        Rank = i + 1,
+                        Name = list[i].Username,
+                        Score = list[i].Elo.ToString()
+                    });
+                }
+                while (RunnerUps.Count < 3)
+                {
+                    RunnerUps.Add(new RunnerUpEntry
+                    {
+                        Rank = RunnerUps.Count + 4,
+                        Name = "---",
+                        Score = "---"
+                    });
+                }
+            }
+            else
+            {
+                Rank1Name = "---";
+                Rank1Elo = "Chưa có rank";
+                Rank2Name = "---";
+                Rank2Elo = "Chưa có rank";
+                Rank3Name = "---";
+                Rank3Elo = "Chưa có rank";
+                InitDefaultRunnerUps();
+            }
+            Invalidate();
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
+            try
+            {
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = @"d:\PBL4\CaroClient\Assets\" + fileName;
+                if (File.Exists(assetPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(assetPath);
+                    using var ms = new MemoryStream(bytes);
+                    using var temp = Image.FromStream(ms);
+                    return new Bitmap(temp);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void LoadAvatars()
+        {
+            _avatar1 = SafeLoadImage("avatar_proplayer.png") ?? SafeLoadImage("avatar_huy.png");
+            _avatar2 = SafeLoadImage("avatar_ducanh.png");
+            _avatar3 = SafeLoadImage("avatar_baonam.png");
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
+            if (rect.Width <= 20 || rect.Height <= 20) return;
+
+            // Outer Card Background
+            using (GraphicsPath outerPath = UITheme.CreateRoundedRectanglePath(rect, 14))
+            {
+                using (SolidBrush bg = new SolidBrush(Color.FromArgb(13, 24, 48)))
+                {
+                    g.FillPath(bg, outerPath);
+                }
+                using (Pen pen = new Pen(Color.FromArgb(25, 45, 85), 1.2f))
+                {
+                    g.DrawPath(pen, outerPath);
+                }
+            }
+
+            int innerPad = 8;
+            int availW = Width - innerPad * 2;
+            int podiumH = Math.Min(220, (int)(Height * 0.52f));
+            int colPad = 6;
+            int colW = (availW - colPad * 2) / 3;
+
+            Image? av1 = AvatarProvider != null && Rank1Name != "---" ? AvatarProvider(Rank1Name) : (Rank1Name != "---" ? _avatar1 : null);
+            Image? av2 = AvatarProvider != null && Rank2Name != "---" ? AvatarProvider(Rank2Name) : (Rank2Name != "---" ? _avatar2 : null);
+            Image? av3 = AvatarProvider != null && Rank3Name != "---" ? AvatarProvider(Rank3Name) : (Rank3Name != "---" ? _avatar3 : null);
+
+            // Draw Top 3 Podium Columns inside podiumH
+            DrawPodiumColumn(g, new Rectangle(innerPad, innerPad + 12, colW, podiumH - 12), 2, Rank2Name, Rank2Elo, av2, Color.FromArgb(190, 205, 230));
+            DrawPodiumColumn(g, new Rectangle(innerPad + colW + colPad, innerPad, colW, podiumH), 1, Rank1Name, Rank1Elo, av1, Color.FromArgb(255, 215, 0));
+            DrawPodiumColumn(g, new Rectangle(innerPad + (colW + colPad) * 2, innerPad + 12, colW, podiumH - 12), 3, Rank3Name, Rank3Elo, av3, Color.FromArgb(205, 127, 50));
+
+            // Runner-up List (Rank 4, 5, 6, ...)
+            int listStartY = innerPad + podiumH + 8;
+            int listH = Height - listStartY - innerPad;
+            int rowCount = RunnerUps.Count > 0 ? RunnerUps.Count : 3;
+            int rowH = Math.Max(26, listH / Math.Max(1, rowCount));
+
+            for (int i = 0; i < RunnerUps.Count && i < 4; i++)
+            {
+                var entry = RunnerUps[i];
+                int rowY = listStartY + i * rowH;
+                Rectangle rowRect = new Rectangle(innerPad + 2, rowY, availW - 4, rowH - 4);
+
+                // Row Card
+                using (GraphicsPath rowPath = UITheme.CreateRoundedRectanglePath(rowRect, 8))
+                using (SolidBrush rBg = new SolidBrush(Color.FromArgb(18, 32, 60)))
+                using (Pen rPen = new Pen(Color.FromArgb(32, 54, 98), 1f))
+                {
+                    g.FillPath(rBg, rowPath);
+                    g.DrawPath(rPen, rowPath);
+                }
+
+                // Rank Number (e.g. "4.")
+                int rankW = 24;
+                Rectangle rankRect = new Rectangle(rowRect.X + 6, rowRect.Y, rankW, rowRect.Height);
+                using (Font fRank = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+                using (SolidBrush bRank = new SolidBrush(Color.FromArgb(170, 195, 235)))
+                using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center })
+                {
+                    g.DrawString($"{entry.Rank}.", fRank, bRank, rankRect, sf);
+                }
+
+                // Avatar circle
+                int avSize = Math.Min(22, rowRect.Height - 6);
+                int avX = rowRect.X + rankW + 8;
+                int avY = rowRect.Y + (rowRect.Height - avSize) / 2;
+                Rectangle avRect = new Rectangle(avX, avY, avSize, avSize);
+
+                Image? rowAv = AvatarProvider != null && entry.Name != "---" ? AvatarProvider(entry.Name) : null;
+                if (rowAv != null)
+                {
+                    using (GraphicsPath circle = new GraphicsPath())
+                    {
+                        circle.AddEllipse(avRect);
+                        g.SetClip(circle);
+                        g.DrawImage(rowAv, avRect);
+                        g.ResetClip();
+                    }
+                }
+                else
+                {
+                    using (SolidBrush avBg = new SolidBrush(Color.FromArgb(28, 48, 86)))
+                    {
+                        g.FillEllipse(avBg, avRect);
+                    }
+                    using (Font defFont = new Font("Segoe UI", 7.5f, FontStyle.Bold))
+                    using (SolidBrush defBrush = new SolidBrush(Color.FromArgb(140, 170, 215)))
+                    using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        string initial = !string.IsNullOrWhiteSpace(entry.Name) && entry.Name != "---" ? entry.Name.Substring(0, 1).ToUpper() : "?";
+                        g.DrawString(initial, defFont, defBrush, avRect, sf);
+                    }
+                }
+                using (Pen avP = new Pen(Color.FromArgb(50, 85, 140), 1f))
+                {
+                    g.DrawEllipse(avP, avRect);
+                }
+
+                // Score on the right
+                int scoreW = 45;
+                Rectangle scoreRect = new Rectangle(rowRect.Right - scoreW - 8, rowRect.Y, scoreW, rowRect.Height);
+                using (Font fScore = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+                using (SolidBrush bScore = new SolidBrush(Color.FromArgb(255, 205, 60)))
+                using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Far, LineAlignment = StringAlignment.Center })
+                {
+                    g.DrawString(entry.Score, fScore, bScore, scoreRect, sf);
+                }
+
+                // Player Name
+                int nameX = avRect.Right + 8;
+                int nameW = scoreRect.Left - nameX - 4;
+                if (nameW > 10)
+                {
+                    Rectangle nameRect = new Rectangle(nameX, rowRect.Y, nameW, rowRect.Height);
+                    using (Font fName = new Font("Segoe UI", 8.5f, FontStyle.Bold))
+                    using (SolidBrush bName = new SolidBrush(Color.White))
+                    using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter })
+                    {
+                        g.DrawString(entry.Name, fName, bName, nameRect, sf);
+                    }
+                }
+            }
+        }
+
+        private void DrawPodiumColumn(Graphics g, Rectangle rect, int rank, string name, string elo, Image? avatar, Color accentColor)
+        {
+            using (GraphicsPath cardPath = UITheme.CreateRoundedRectanglePath(rect, 10))
+            {
+                using (SolidBrush bg = new SolidBrush(Color.FromArgb(16, 28, 54)))
+                {
+                    g.FillPath(bg, cardPath);
+                }
+
+                using (Pen pen = new Pen(rank == 1 ? Color.FromArgb(220, accentColor) : Color.FromArgb(45, accentColor), rank == 1 ? 1.5f : 1f))
+                {
+                    g.DrawPath(pen, cardPath);
+                }
+
+                if (rank == 1)
+                {
+                    Rectangle topGlow = new Rectangle(rect.X + 1, rect.Y + 1, rect.Width - 2, 24);
+                    using (LinearGradientBrush lgb = new LinearGradientBrush(topGlow, Color.FromArgb(50, 255, 215, 0), Color.FromArgb(0, 255, 215, 0), LinearGradientMode.Vertical))
+                    {
+                        g.FillRectangle(lgb, topGlow);
+                    }
+                }
+            }
+
+            int avatarSize = rank == 1 ? Math.Min(48, rect.Width - 10) : Math.Min(40, rect.Width - 12);
+            int avatarX = rect.X + (rect.Width - avatarSize) / 2;
+            int avatarY = rect.Y + (rank == 1 ? 14 : 12);
+            Rectangle avatarRect = new Rectangle(avatarX, avatarY, avatarSize, avatarSize);
+
+            using (Pen ringPen = new Pen(accentColor, rank == 1 ? 2.2f : 1.6f))
+            {
+                g.DrawEllipse(ringPen, avatarRect);
+            }
+
+            if (avatar != null)
+            {
+                using (GraphicsPath circlePath = new GraphicsPath())
+                {
+                    circlePath.AddEllipse(avatarRect);
+                    g.SetClip(circlePath);
+                    g.DrawImage(avatar, avatarRect);
+                    g.ResetClip();
+                }
+            }
+            else
+            {
+                using (SolidBrush avBg = new SolidBrush(Color.FromArgb(20, 36, 68)))
+                {
+                    g.FillEllipse(avBg, avatarRect);
+                }
+                using (Font defFont = new Font("Segoe UI", rank == 1 ? 13f : 11f, FontStyle.Bold))
+                using (SolidBrush defBrush = new SolidBrush(Color.FromArgb(120, 145, 185)))
+                using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                {
+                    string initial = !string.IsNullOrWhiteSpace(name) && name != "---" ? name.Substring(0, 1).ToUpper() : "?";
+                    g.DrawString(initial, defFont, defBrush, avatarRect, sf);
+                }
+            }
+
+            // Badge number
+            int badgeSize = rank == 1 ? 18 : 16;
+            int badgeX = avatarX + (avatarSize - badgeSize) / 2;
+            int badgeY = avatarY + avatarSize - 6;
+            Rectangle badgeRect = new Rectangle(badgeX, badgeY, badgeSize, badgeSize);
+
+            using (SolidBrush bBg = new SolidBrush(accentColor))
+            {
+                g.FillEllipse(bBg, badgeRect);
+            }
+            using (Font fBadge = new Font("Segoe UI", rank == 1 ? 8f : 7.5f, FontStyle.Bold))
+            using (SolidBrush fColor = new SolidBrush(rank == 1 ? Color.Black : Color.White))
+            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+            {
+                g.DrawString(rank.ToString(), fBadge, fColor, badgeRect, sf);
+            }
+
+            // Name
+            int textY = badgeY + badgeSize + 2;
+            using (Font fName = new Font("Segoe UI", rank == 1 ? 8.5f : 8f, FontStyle.Bold))
+            using (SolidBrush bName = new SolidBrush(Color.White))
+            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near, Trimming = StringTrimming.EllipsisCharacter })
+            {
+                Rectangle nameRect = new Rectangle(rect.X + 2, textY, rect.Width - 4, 16);
+                g.DrawString(name, fName, bName, nameRect, sf);
+            }
+
+            // Subtitle / Elo
+            using (Font fElo = new Font("Segoe UI", 7.2f))
+            using (SolidBrush bElo = new SolidBrush(Color.FromArgb(130, 155, 195)))
+            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Near, Trimming = StringTrimming.EllipsisCharacter })
+            {
+                Rectangle eloRect = new Rectangle(rect.X + 2, textY + 16, rect.Width - 4, 14);
+                g.DrawString(elo, fElo, bElo, eloRect, sf);
+            }
+        }
+    }
+
+    public class HomeQuickActionCard : RoundedCard
+    {
+        public HomeQuickActionCard()
+        {
+            CornerRadius = 14;
+            BorderColor = Color.FromArgb(25, 45, 85);
+            FillColor = Color.FromArgb(13, 24, 48);
+            Cursor = Cursors.Hand;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            int iconSize = 24;
+            int iconX = (Width - iconSize) / 2;
+            int iconY = (Height - iconSize - 20) / 2;
+
+            using (Pen pen = new Pen(Color.FromArgb(130, 160, 205), 1.8f))
+            {
+                g.DrawEllipse(pen, iconX + 2, iconY, 11, 11);
+                g.DrawArc(pen, iconX - 2, iconY + 13, 19, 11, 180, 180);
+
+                int plusX = iconX + 20;
+                int plusY = iconY + 5;
+                g.DrawLine(pen, plusX, plusY - 4, plusX, plusY + 4);
+                g.DrawLine(pen, plusX - 4, plusY, plusX + 4, plusY);
+            }
+
+            using (Font font = new Font("Segoe UI", 9f))
+            using (SolidBrush textBrush = new SolidBrush(Color.FromArgb(140, 165, 205)))
+            using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center })
+            {
+                g.DrawString("Tìm kiếm bạn bè", font, textBrush, new RectangleF(0, iconY + iconSize + 4, Width, 20), sf);
             }
         }
     }
@@ -669,23 +1375,23 @@ namespace CaroClient
                 // Background
                 if (_isSelected)
                 {
-                    using (LinearGradientBrush lgb = new LinearGradientBrush(rect, Color.FromArgb(14, 38, 76), Color.FromArgb(10, 26, 56), LinearGradientMode.Vertical))
+                    using (LinearGradientBrush lgb = new LinearGradientBrush(rect, Color.FromArgb(10, 44, 82), Color.FromArgb(8, 28, 58), LinearGradientMode.Vertical))
                     {
                         g.FillPath(lgb, path);
                     }
-                    using (Pen pen = new Pen(UITheme.AccentCyan, 2f))
+                    using (Pen pen = new Pen(Color.FromArgb(0, 215, 255), 2f))
                     {
                         g.DrawPath(pen, path);
                     }
                 }
                 else
                 {
-                    Color bg = _isHovered ? Color.FromArgb(18, 32, 60) : Color.FromArgb(12, 22, 42);
+                    Color bg = _isHovered ? Color.FromArgb(16, 32, 56) : Color.FromArgb(10, 22, 40);
                     using (SolidBrush brush = new SolidBrush(bg))
                     {
                         g.FillPath(brush, path);
                     }
-                    Color borderColor = _isHovered ? Color.FromArgb(40, 70, 120) : Color.FromArgb(24, 42, 80);
+                    Color borderColor = _isHovered ? Color.FromArgb(45, 75, 120) : Color.FromArgb(28, 50, 80);
                     using (Pen pen = new Pen(borderColor, 1.2f))
                     {
                         g.DrawPath(pen, path);
@@ -696,20 +1402,20 @@ namespace CaroClient
             // Top-right checkmark badge if selected
             if (_isSelected)
             {
-                int badgeSize = 18;
-                int badgeX = Width - badgeSize - 8;
-                int badgeY = 8;
+                int badgeSize = 20;
+                int badgeX = Width - badgeSize - 10;
+                int badgeY = 10;
                 Rectangle badgeRect = new Rectangle(badgeX, badgeY, badgeSize, badgeSize);
-                using (SolidBrush badgeBrush = new SolidBrush(UITheme.AccentCyan))
+                using (SolidBrush badgeBrush = new SolidBrush(Color.FromArgb(0, 215, 255)))
                 {
                     g.FillEllipse(badgeBrush, badgeRect);
                 }
-                using (Pen checkPen = new Pen(Color.White, 2f))
+                using (Pen checkPen = new Pen(Color.White, 2.2f))
                 {
                     checkPen.StartCap = LineCap.Round;
                     checkPen.EndCap = LineCap.Round;
-                    g.DrawLine(checkPen, badgeX + 4, badgeY + 9, badgeX + 7, badgeY + 13);
-                    g.DrawLine(checkPen, badgeX + 7, badgeY + 13, badgeX + 14, badgeY + 5);
+                    g.DrawLine(checkPen, badgeX + 5, badgeY + 10, badgeX + 8, badgeY + 14);
+                    g.DrawLine(checkPen, badgeX + 8, badgeY + 14, badgeX + 15, badgeY + 6);
                 }
             }
 
@@ -901,23 +1607,23 @@ namespace CaroClient
             {
                 if (_isSelected)
                 {
-                    using (SolidBrush brush = new SolidBrush(Color.FromArgb(12, 44, 92)))
+                    using (SolidBrush brush = new SolidBrush(Color.FromArgb(10, 44, 82)))
                     {
                         g.FillPath(brush, path);
                     }
-                    using (Pen pen = new Pen(UITheme.AccentCyan, 1.8f))
+                    using (Pen pen = new Pen(Color.FromArgb(0, 215, 255), 2f))
                     {
                         g.DrawPath(pen, path);
                     }
                 }
                 else
                 {
-                    Color bg = _isHovered ? Color.FromArgb(18, 34, 64) : Color.FromArgb(11, 20, 38);
+                    Color bg = _isHovered ? Color.FromArgb(16, 32, 56) : Color.FromArgb(10, 22, 40);
                     using (SolidBrush brush = new SolidBrush(bg))
                     {
                         g.FillPath(brush, path);
                     }
-                    Color borderColor = _isHovered ? Color.FromArgb(36, 62, 108) : Color.FromArgb(24, 44, 80);
+                    Color borderColor = _isHovered ? Color.FromArgb(45, 75, 120) : Color.FromArgb(28, 50, 80);
                     using (Pen pen = new Pen(borderColor, 1.2f))
                     {
                         g.DrawPath(pen, path);
@@ -926,7 +1632,7 @@ namespace CaroClient
             }
 
             using (Font font = new Font("Segoe UI", 9f, _isSelected ? FontStyle.Bold : FontStyle.Regular))
-            using (SolidBrush textBrush = new SolidBrush(_isSelected ? Color.White : (_isHovered ? Color.FromArgb(220, 235, 255) : Color.FromArgb(150, 175, 215))))
+            using (SolidBrush textBrush = new SolidBrush(_isSelected ? Color.White : (_isHovered ? Color.FromArgb(220, 240, 255) : Color.FromArgb(170, 195, 225))))
             {
                 SizeF size = g.MeasureString(PillText, font);
                 float textX = (Width - size.Width) / 2f;
@@ -967,7 +1673,7 @@ namespace CaroClient
             int circleY = (Height - circleDiameter) / 2;
             Rectangle circleRect = new Rectangle(circleX, circleY, circleDiameter, circleDiameter);
 
-            using (SolidBrush circleBrush = new SolidBrush(UITheme.AccentBlue))
+            using (SolidBrush circleBrush = new SolidBrush(Color.FromArgb(0, 190, 245)))
             {
                 g.FillEllipse(circleBrush, circleRect);
             }
@@ -1015,9 +1721,13 @@ namespace CaroClient
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1);
             if (rect.Width <= 0 || rect.Height <= 0) return;
 
-            using (LinearGradientBrush lgb = new LinearGradientBrush(rect, Color.FromArgb(13, 110, 253), Color.FromArgb(0, 194, 255), LinearGradientMode.ForwardDiagonal))
+            using (LinearGradientBrush lgb = new LinearGradientBrush(rect, Color.FromArgb(0, 180, 245), Color.FromArgb(0, 225, 255), LinearGradientMode.ForwardDiagonal))
             {
                 g.FillEllipse(lgb, rect);
+            }
+            using (Pen glowPen = new Pen(Color.FromArgb(90, 0, 215, 255), 2.5f))
+            {
+                g.DrawEllipse(glowPen, rect);
             }
 
             // Draw white plus sign
@@ -1886,6 +2596,16 @@ namespace CaroClient
                         // Biểu tượng Đăng xuất (Nút nguồn)
                         g.DrawArc(pen, x + 2, y + 3, size - 4, size - 4, 135, 270);
                         g.DrawLine(pen, x + size / 2, y + 1, x + size / 2, y + size / 2 - 1);
+                        break;
+
+                    case CyberIcon.Play:
+                        // Biểu tượng nút phát / tam giác
+                        PointF[] playPts = new PointF[] {
+                            new PointF(x + 4, y + 2),
+                            new PointF(x + size - 2, y + size / 2f),
+                            new PointF(x + 4, y + size - 2)
+                        };
+                        g.FillPolygon(brush, playPts);
                         break;
                 }
             }
@@ -2860,6 +3580,714 @@ namespace CaroClient
             }
 
             base.OnPaint(e);
+        }
+    }
+
+    public class CreateRoomBackgroundPanel : Panel
+    {
+        private Image? _bgImage;
+
+        public CreateRoomBackgroundPanel()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            BackColor = Color.FromArgb(8, 13, 26);
+            AutoScroll = false;
+
+            LoadBackground();
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
+            try
+            {
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(@"d:\PBL4\CaroClient\Assets", fileName);
+                if (File.Exists(assetPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(assetPath);
+                    using var ms = new MemoryStream(bytes);
+                    using var temp = Image.FromStream(ms);
+                    return new Bitmap(temp);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void LoadBackground()
+        {
+            _bgImage = SafeLoadImage("caro_clean_bg.jpg") ?? SafeLoadImage("caro_hero_banner.jpg");
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            if (_bgImage != null)
+            {
+                float imgAspect = (float)_bgImage.Width / _bgImage.Height;
+                float panelAspect = (float)Width / Math.Max(1, Height);
+
+                Rectangle destRect;
+                if (panelAspect > imgAspect)
+                {
+                    int h = (int)(Width / imgAspect);
+                    destRect = new Rectangle(0, (Height - h) / 2, Width, h);
+                }
+                else
+                {
+                    int w = (int)(Height * imgAspect);
+                    destRect = new Rectangle((Width - w) / 2, 0, w, Height);
+                }
+
+                g.DrawImage(_bgImage, destRect);
+
+                // Subtle dark vignette gradient for focus and readability
+                using (SolidBrush darkOverlay = new SolidBrush(Color.FromArgb(70, 6, 10, 22)))
+                {
+                    g.FillRectangle(darkOverlay, ClientRectangle);
+                }
+            }
+            else
+            {
+                using (SolidBrush b = new SolidBrush(Color.FromArgb(8, 13, 26)))
+                {
+                    g.FillRectangle(b, ClientRectangle);
+                }
+            }
+        }
+    }
+
+    public class GameArenaBackgroundPanel : Panel
+    {
+        private Image? _bgImage;
+
+        public GameArenaBackgroundPanel()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            BackColor = Color.FromArgb(8, 13, 26);
+            AutoScroll = false;
+            LoadBackground();
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
+            try
+            {
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = @"d:\PBL4\CaroClient\Assets\" + fileName;
+                if (File.Exists(assetPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(assetPath);
+                    using var ms = new MemoryStream(bytes);
+                    using var temp = Image.FromStream(ms);
+                    return new Bitmap(temp);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void LoadBackground()
+        {
+            _bgImage = SafeLoadImage("game_board_bg.jpg") ?? SafeLoadImage("caro_clean_bg.jpg");
+        }
+
+        public Image? BackgroundImageCached => _bgImage;
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            if (_bgImage != null)
+            {
+                float imgAspect = (float)_bgImage.Width / _bgImage.Height;
+                float panelAspect = (float)Width / Math.Max(1, Height);
+
+                Rectangle destRect;
+                if (panelAspect > imgAspect)
+                {
+                    int h = (int)(Width / imgAspect);
+                    destRect = new Rectangle(0, (Height - h) / 2, Width, h);
+                }
+                else
+                {
+                    int w = (int)(Height * imgAspect);
+                    destRect = new Rectangle((Width - w) / 2, 0, w, Height);
+                }
+
+                g.DrawImage(_bgImage, destRect);
+
+                // Subtle dark vignette gradient for focus and readability
+                using (SolidBrush darkOverlay = new SolidBrush(Color.FromArgb(40, 6, 10, 22)))
+                {
+                    g.FillRectangle(darkOverlay, ClientRectangle);
+                }
+            }
+            else
+            {
+                using (SolidBrush b = new SolidBrush(Color.FromArgb(8, 13, 26)))
+                {
+                    g.FillRectangle(b, ClientRectangle);
+                }
+            }
+        }
+    }
+
+    public class LeaderboardPodiumControl : Panel
+    {
+        private Image? _podiumBg;
+        public Func<string, Image?>? AvatarProvider { get; set; }
+
+        public bool HasData { get; private set; } = false;
+
+        public string Rank1Name { get; private set; } = "";
+        public string Rank1Elo { get; private set; } = "";
+        public string Rank2Name { get; private set; } = "";
+        public string Rank2Elo { get; private set; } = "";
+        public string Rank3Name { get; private set; } = "";
+        public string Rank3Elo { get; private set; } = "";
+
+        public LeaderboardPodiumControl()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            BackColor = Color.Transparent;
+            Height = 260;
+            LoadBackground();
+        }
+
+        private Image? SafeLoadImage(string fileName)
+        {
+            try
+            {
+                string assetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = Path.Combine(Directory.GetCurrentDirectory(), "CaroClient", "Assets", fileName);
+                if (!File.Exists(assetPath)) assetPath = @"d:\PBL4\CaroClient\Assets\" + fileName;
+                if (File.Exists(assetPath))
+                {
+                    byte[] bytes = File.ReadAllBytes(assetPath);
+                    using var ms = new MemoryStream(bytes);
+                    using var temp = Image.FromStream(ms);
+                    return new Bitmap(temp);
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private void LoadBackground()
+        {
+            _podiumBg = SafeLoadImage("leaderboard_podium_bg.png");
+        }
+
+        public void SetData(List<CaroProtocol.LeaderboardItemData>? list)
+        {
+            if (list != null && list.Count > 0)
+            {
+                HasData = true;
+                Rank1Name = list.Count > 0 ? list[0].Username : "";
+                Rank1Elo = list.Count > 0 ? $"{list[0].Elo}" : "";
+
+                Rank2Name = list.Count > 1 ? list[1].Username : "";
+                Rank2Elo = list.Count > 1 ? $"{list[1].Elo}" : "";
+
+                Rank3Name = list.Count > 2 ? list[2].Username : "";
+                Rank3Elo = list.Count > 2 ? $"{list[2].Elo}" : "";
+            }
+            else
+            {
+                ClearData();
+            }
+            Invalidate();
+        }
+
+        public void ClearData()
+        {
+            HasData = false;
+            Rank1Name = "";
+            Rank1Elo = "";
+            Rank2Name = "";
+            Rank2Elo = "";
+            Rank3Name = "";
+            Rank3Elo = "";
+            Invalidate();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            int w = Width;
+            int h = Height;
+            if (w <= 20 || h <= 20) return;
+
+            Rectangle destRect = ClientRectangle;
+            if (_podiumBg != null)
+            {
+                float imgAspect = (float)_podiumBg.Width / _podiumBg.Height;
+                float panelAspect = (float)w / h;
+                if (panelAspect > imgAspect)
+                {
+                    int renderH = (int)(w / imgAspect);
+                    destRect = new Rectangle(0, (h - renderH) / 2, w, renderH);
+                }
+                else
+                {
+                    int renderW = (int)(h * imgAspect);
+                    destRect = new Rectangle((w - renderW) / 2, 0, renderW, h);
+                }
+                g.DrawImage(_podiumBg, destRect);
+            }
+            else
+            {
+                using (LinearGradientBrush bg = new LinearGradientBrush(ClientRectangle, Color.FromArgb(14, 28, 54), Color.FromArgb(8, 14, 30), LinearGradientMode.Vertical))
+                {
+                    g.FillRectangle(bg, ClientRectangle);
+                }
+            }
+
+            // Khi chưa đăng nhập hoặc chưa có dữ liệu: bục hoàn toàn sạch, không vẽ gì lên bục
+            if (!HasData)
+            {
+                return;
+            }
+
+            // Khi có dữ liệu: vẽ chuẩn xác avatar, tên và elo của 3 kỳ thủ lên bục vinh danh
+            int sz1 = Math.Max(72, (int)(destRect.Height * 0.285f));
+            int sz2 = Math.Max(64, (int)(destRect.Height * 0.250f));
+            int sz3 = Math.Max(64, (int)(destRect.Height * 0.250f));
+
+            if (!string.IsNullOrWhiteSpace(Rank2Name))
+            {
+                int cx2 = destRect.X + (int)(destRect.Width * 0.265f);
+                int cy2 = destRect.Y + (int)(destRect.Height * 0.425f);
+                int ty2 = destRect.Y + (int)(destRect.Height * 0.682f);
+                DrawPodiumSlot(g, 2, Rank2Name, Rank2Elo, cx2, cy2, sz2, ty2);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Rank1Name))
+            {
+                int cx1 = destRect.X + (int)(destRect.Width * 0.502f);
+                int cy1 = destRect.Y + (int)(destRect.Height * 0.415f);
+                int ty1 = destRect.Y + (int)(destRect.Height * 0.695f);
+                DrawPodiumSlot(g, 1, Rank1Name, Rank1Elo, cx1, cy1, sz1, ty1);
+            }
+
+            if (!string.IsNullOrWhiteSpace(Rank3Name))
+            {
+                int cx3 = destRect.X + (int)(destRect.Width * 0.748f);
+                int cy3 = destRect.Y + (int)(destRect.Height * 0.440f);
+                int ty3 = destRect.Y + (int)(destRect.Height * 0.685f);
+                DrawPodiumSlot(g, 3, Rank3Name, Rank3Elo, cx3, cy3, sz3, ty3);
+            }
+        }
+
+        private void DrawPodiumSlot(Graphics g, int rank, string name, string elo, int centerX, int avatarCenterY, int avatarSize, int textY)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return;
+
+            int avX = centerX - avatarSize / 2;
+            int avY = avatarCenterY - avatarSize / 2;
+            Rectangle avRect = new Rectangle(avX, avY, avatarSize, avatarSize);
+
+            Image? avImg = AvatarProvider?.Invoke(name);
+            using (GraphicsPath avPath = UITheme.CreateRoundedRectanglePath(avRect, 10))
+            {
+                if (avImg != null)
+                {
+                    g.SetClip(avPath);
+                    g.DrawImage(avImg, avRect);
+                    g.ResetClip();
+                }
+                else
+                {
+                    Color bgGrad1 = rank switch
+                    {
+                        1 => Color.FromArgb(48, 38, 14),
+                        2 => Color.FromArgb(20, 38, 62),
+                        _ => Color.FromArgb(48, 26, 18)
+                    };
+                    Color bgGrad2 = Color.FromArgb(10, 18, 32);
+                    using (LinearGradientBrush bgBrush = new LinearGradientBrush(avRect, bgGrad1, bgGrad2, LinearGradientMode.Vertical))
+                    {
+                        g.FillPath(bgBrush, avPath);
+                    }
+
+                    using (Font qFont = new Font("Segoe UI", avatarSize * 0.36f, FontStyle.Bold))
+                    using (SolidBrush qBrush = new SolidBrush(Color.FromArgb(240, 248, 255)))
+                    {
+                        string initial = name.Length > 0 ? name.Substring(0, 1).ToUpper() : "?";
+                        SizeF isz = g.MeasureString(initial, qFont);
+                        g.DrawString(initial, qFont, qBrush, centerX - isz.Width / 2f, avatarCenterY - isz.Height / 2f);
+                    }
+                }
+
+                Color glowCol = rank switch
+                {
+                    1 => Color.FromArgb(0, 220, 255),
+                    2 => Color.FromArgb(180, 225, 255),
+                    _ => Color.FromArgb(235, 140, 75)
+                };
+
+                using (Pen glowPen = new Pen(Color.FromArgb(70, glowCol.R, glowCol.G, glowCol.B), 3.5f))
+                {
+                    g.DrawPath(glowPen, avPath);
+                }
+                using (Pen framePen = new Pen(glowCol, 1.8f))
+                {
+                    g.DrawPath(framePen, avPath);
+                }
+            }
+
+            // Top-right trophy badge for Rank 2 & Rank 3
+            if (rank == 2 || rank == 3)
+            {
+                int badgeSize = Math.Max(20, (int)(avatarSize * 0.34f));
+                int badgeX = avX + avatarSize - badgeSize / 2 - 2;
+                int badgeY = avY - badgeSize / 2 + 2;
+                Rectangle badgeRect = new Rectangle(badgeX, badgeY, badgeSize, badgeSize);
+                using (GraphicsPath badgePath = new GraphicsPath())
+                {
+                    badgePath.AddEllipse(badgeRect);
+                    Color badgeBg = rank == 2 ? Color.FromArgb(220, 24, 40, 60) : Color.FromArgb(220, 52, 28, 16);
+                    using (SolidBrush bb = new SolidBrush(badgeBg))
+                    {
+                        g.FillPath(bb, badgePath);
+                    }
+                    Color badgeBorder = rank == 2 ? Color.FromArgb(180, 220, 255) : Color.FromArgb(235, 140, 75);
+                    using (Pen bp = new Pen(badgeBorder, 1.2f))
+                    {
+                        g.DrawPath(bp, badgePath);
+                    }
+                    string icon = rank == 2 ? "🥈" : "🥉";
+                    using (Font bf = new Font("Segoe UI Emoji", badgeSize * 0.52f, FontStyle.Regular))
+                    using (SolidBrush bif = new SolidBrush(Color.White))
+                    {
+                        SizeF isz = g.MeasureString(icon, bf);
+                        g.DrawString(icon, bf, bif, badgeX + (badgeSize - isz.Width) / 2f, badgeY + (badgeSize - isz.Height) / 2f);
+                    }
+                }
+            }
+
+            // Text on front cylinder (Player Name & ELO Rating)
+            using (Font nameFont = new Font("Segoe UI", rank == 1 ? 11f : 10f, FontStyle.Bold))
+            using (SolidBrush nameBrush = new SolidBrush(Color.White))
+            using (SolidBrush shadowBrush = new SolidBrush(Color.FromArgb(230, 0, 0, 0)))
+            {
+                SizeF nameSize = g.MeasureString(name, nameFont);
+                float nx = centerX - nameSize.Width / 2f;
+                // Multi-pass dark shadow for crisp readability on cylinder
+                g.DrawString(name, nameFont, shadowBrush, nx + 1, textY + 1);
+                g.DrawString(name, nameFont, shadowBrush, nx - 1, textY + 1);
+                g.DrawString(name, nameFont, shadowBrush, nx, textY + 2);
+                g.DrawString(name, nameFont, nameBrush, nx, textY);
+            }
+
+            string eloText = elo.Contains("ELO") ? $"★ {elo}" : $"★ {elo} ELO";
+            Color eloColor = rank switch
+            {
+                1 => Color.FromArgb(255, 225, 60),
+                2 => Color.FromArgb(170, 235, 255),
+                _ => Color.FromArgb(255, 185, 130)
+            };
+
+            int eloOffsetY = rank == 1 ? 16 : 14;
+            using (Font eloFont = new Font("Segoe UI", rank == 1 ? 10.5f : 9.5f, FontStyle.Bold))
+            using (SolidBrush eloBrush = new SolidBrush(eloColor))
+            using (SolidBrush shadowBrush = new SolidBrush(Color.FromArgb(230, 0, 0, 0)))
+            {
+                SizeF eloSize = g.MeasureString(eloText, eloFont);
+                float ex = centerX - eloSize.Width / 2f;
+                g.DrawString(eloText, eloFont, shadowBrush, ex + 1, textY + eloOffsetY + 1);
+                g.DrawString(eloText, eloFont, shadowBrush, ex - 1, textY + eloOffsetY + 1);
+                g.DrawString(eloText, eloFont, shadowBrush, ex, textY + eloOffsetY + 2);
+                g.DrawString(eloText, eloFont, eloBrush, ex, textY + eloOffsetY);
+            }
+        }
+    }
+
+    public class LeaderboardListControl : Panel
+    {
+        private List<CaroProtocol.LeaderboardItemData> _items = new();
+        private string _currentUsername = "";
+        public Func<string, Image?>? AvatarProvider { get; set; }
+
+        private int _scrollY = 0;
+        private int _maxScrollY = 0;
+        private int _hoveredIndex = -1;
+
+        public LeaderboardListControl()
+        {
+            SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            BackColor = Color.Transparent;
+            Cursor = Cursors.Default;
+        }
+
+        public void SetData(List<CaroProtocol.LeaderboardItemData>? list, string currentUsername)
+        {
+            _currentUsername = currentUsername;
+            _items.Clear();
+            if (list != null)
+            {
+                _items.AddRange(list);
+            }
+            UpdateScrollBounds();
+            Invalidate();
+        }
+
+        public void ClearData()
+        {
+            _items.Clear();
+            _currentUsername = "";
+            UpdateScrollBounds();
+            Invalidate();
+        }
+
+        protected override void OnResize(EventArgs eventargs)
+        {
+            base.OnResize(eventargs);
+            UpdateScrollBounds();
+            Invalidate();
+        }
+
+        private void UpdateScrollBounds()
+        {
+            int rowH = 50;
+            int gap = 8;
+            int totalH = _items.Count * (rowH + gap) + 12;
+            _maxScrollY = Math.Max(0, totalH - Height);
+            _scrollY = Math.Min(_scrollY, _maxScrollY);
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            _scrollY = Math.Max(0, Math.Min(_maxScrollY, _scrollY - e.Delta / 2));
+            Invalidate();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            int rowH = 50;
+            int gap = 8;
+            int relY = e.Y + _scrollY - 6;
+            int newIdx = (relY >= 0 && relY % (rowH + gap) <= rowH) ? relY / (rowH + gap) : -1;
+            if (newIdx >= _items.Count) newIdx = -1;
+            if (newIdx != _hoveredIndex)
+            {
+                _hoveredIndex = newIdx;
+                Invalidate();
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            _hoveredIndex = -1;
+            Invalidate();
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            Graphics g = e.Graphics;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
+
+            int w = Width;
+            int h = Height;
+            if (w <= 20 || h <= 20) return;
+
+            if (_items.Count == 0)
+            {
+                using (Font noFont = new Font("Segoe UI", 10.5f, FontStyle.Regular))
+                using (SolidBrush noBrush = new SolidBrush(Color.FromArgb(140, 170, 210)))
+                {
+                    string msg = string.IsNullOrEmpty(_currentUsername)
+                        ? "Vui lòng đăng nhập và kết nối máy chủ để xem Bảng xếp hạng."
+                        : "Chưa có thêm dữ liệu người chơi trong danh sách thứ hạng.";
+                    SizeF sz = g.MeasureString(msg, noFont);
+                    g.DrawString(msg, noFont, noBrush, (w - sz.Width) / 2f, (h - sz.Height) / 2f);
+                }
+                return;
+            }
+
+            int rowH = 50;
+            int gap = 8;
+            int startY = 6 - _scrollY;
+
+            for (int i = 0; i < _items.Count; i++)
+            {
+                int curY = startY + i * (rowH + gap);
+                if (curY + rowH < 0 || curY > h) continue;
+
+                var item = _items[i];
+                bool isMe = !string.IsNullOrEmpty(_currentUsername) && item.Username.Equals(_currentUsername, StringComparison.OrdinalIgnoreCase);
+                bool isHover = (i == _hoveredIndex);
+
+                Rectangle rowRect = new Rectangle(10, curY, w - 20, rowH);
+                using (GraphicsPath path = UITheme.CreateRoundedRectanglePath(rowRect, 10))
+                {
+                    // Background
+                    Color rowBg = isMe ? Color.FromArgb(20, 42, 78) : (isHover ? Color.FromArgb(16, 32, 58) : Color.FromArgb(10, 20, 38));
+                    using (SolidBrush b = new SolidBrush(rowBg))
+                    {
+                        g.FillPath(b, path);
+                    }
+
+                    // Border
+                    Color bCol = isMe ? Color.FromArgb(0, 220, 255) : (isHover ? Color.FromArgb(50, 90, 145) : Color.FromArgb(28, 48, 80));
+                    using (Pen p = new Pen(bCol, isMe ? 1.8f : 1.2f))
+                    {
+                        g.DrawPath(p, path);
+                    }
+                }
+
+                // 1. Rank: #1, #2, #3, #4, #5...
+                string rankStr = $"#{item.Rank}";
+                Color rankColor = item.Rank switch
+                {
+                    1 => Color.FromArgb(255, 215, 0),
+                    2 => Color.FromArgb(200, 225, 255),
+                    3 => Color.FromArgb(240, 160, 95),
+                    _ => (isMe ? Color.FromArgb(0, 220, 255) : Color.FromArgb(160, 185, 220))
+                };
+                using (Font rankFont = new Font("Segoe UI", 10f, FontStyle.Bold))
+                using (SolidBrush rankBrush = new SolidBrush(rankColor))
+                {
+                    g.DrawString(rankStr, rankFont, rankBrush, 24, curY + 15);
+                }
+
+                // 2. Avatar
+                int avSize = 34;
+                int avX = 72;
+                int avY = curY + (rowH - avSize) / 2;
+                Rectangle avBox = new Rectangle(avX, avY, avSize, avSize);
+                Image? avImg = AvatarProvider?.Invoke(item.Username);
+                using (GraphicsPath avPath = UITheme.CreateRoundedRectanglePath(avBox, 8))
+                {
+                    if (avImg != null)
+                    {
+                        g.SetClip(avPath);
+                        g.DrawImage(avImg, avBox);
+                        g.ResetClip();
+                    }
+                    else
+                    {
+                        using (SolidBrush ab = new SolidBrush(Color.FromArgb(18, 34, 62)))
+                        {
+                            g.FillPath(ab, avPath);
+                        }
+                        using (Font af = new Font("Segoe UI", 10f, FontStyle.Bold))
+                        using (SolidBrush atb = new SolidBrush(Color.FromArgb(140, 175, 215)))
+                        {
+                            string initial = string.IsNullOrEmpty(item.Username) ? "?" : item.Username.Substring(0, 1).ToUpper();
+                            g.DrawString(initial, af, atb, avX + 10, avY + 8);
+                        }
+                    }
+                    using (Pen ap = new Pen(isMe ? Color.FromArgb(0, 220, 255) : Color.FromArgb(40, 75, 120), 1.2f))
+                    {
+                        g.DrawPath(ap, avPath);
+                    }
+                }
+
+                // 3. Username
+                using (Font uFont = new Font("Segoe UI", 10f, FontStyle.Bold))
+                using (SolidBrush uBrush = new SolidBrush(isMe ? Color.FromArgb(255, 215, 60) : Color.White))
+                {
+                    g.DrawString(item.Username, uFont, uBrush, 120, curY + 15);
+                }
+
+                // 4. Elo: ★ 978
+                using (Font eFont = new Font("Segoe UI", 10f, FontStyle.Bold))
+                using (SolidBrush eBrush = new SolidBrush(Color.FromArgb(0, 215, 255)))
+                {
+                    g.DrawString($"★ {item.Elo}", eFont, eBrush, 280, curY + 15);
+                }
+
+                // 5. Record: 1W - 3L - 0D
+                string recordStr = $"{item.Wins}W - {item.Losses}L - {item.Draws}D";
+                using (Font rFont = new Font("Segoe UI", 9.5f, FontStyle.Regular))
+                using (SolidBrush rBrush = new SolidBrush(Color.FromArgb(160, 185, 220)))
+                {
+                    g.DrawString(recordStr, rFont, rBrush, 390, curY + 15);
+                }
+
+                // 6. Badges: [Thắng] [Thua] [Hòa]
+                int badgeBaseX = Math.Max(520, w - 240);
+                DrawStatusBadge(g, "Thắng", badgeBaseX, curY + 14, Color.FromArgb(34, 197, 94));
+                DrawStatusBadge(g, "Thua", badgeBaseX + 54, curY + 14, Color.FromArgb(239, 68, 68));
+                DrawStatusBadge(g, "Hòa", badgeBaseX + 104, curY + 14, Color.FromArgb(100, 116, 139));
+
+                // 7. Win rate %
+                string rateStr = $"{item.WinRate}%";
+                using (Font rateFont = new Font("Segoe UI", 10f, FontStyle.Bold))
+                using (SolidBrush rateBrush = new SolidBrush(Color.FromArgb(230, 245, 255)))
+                {
+                    SizeF rz = g.MeasureString(rateStr, rateFont);
+                    g.DrawString(rateStr, rateFont, rateBrush, w - 35 - rz.Width, curY + 15);
+                }
+            }
+
+            // Scrollbar Track & Thumb
+            if (_maxScrollY > 0)
+            {
+                int trackX = w - 8;
+                int trackY = 8;
+                int trackH = h - 16;
+                using (SolidBrush tb = new SolidBrush(Color.FromArgb(15, 30, 55)))
+                {
+                    g.FillRectangle(tb, trackX, trackY, 4, trackH);
+                }
+                float thumbRatio = (float)h / (_items.Count * (rowH + gap) + 12);
+                int thumbH = Math.Max(24, (int)(trackH * thumbRatio));
+                int thumbY = trackY + (int)((float)_scrollY / _maxScrollY * (trackH - thumbH));
+                using (SolidBrush thb = new SolidBrush(Color.FromArgb(0, 194, 255)))
+                {
+                    g.FillRectangle(thb, trackX, thumbY, 4, thumbH);
+                }
+            }
+        }
+
+        private void DrawStatusBadge(Graphics g, string text, int x, int y, Color color)
+        {
+            int bw = 46;
+            int bh = 22;
+            Rectangle bRect = new Rectangle(x, y, bw, bh);
+            using (GraphicsPath bp = UITheme.CreateRoundedRectanglePath(bRect, 6))
+            {
+                using (SolidBrush fill = new SolidBrush(Color.FromArgb(25, color.R, color.G, color.B)))
+                {
+                    g.FillPath(fill, bp);
+                }
+                using (Pen border = new Pen(color, 1.2f))
+                {
+                    g.DrawPath(border, bp);
+                }
+            }
+            using (Font f = new Font("Segoe UI", 8f, FontStyle.Bold))
+            using (SolidBrush b = new SolidBrush(color))
+            {
+                SizeF sz = g.MeasureString(text, f);
+                g.DrawString(text, f, b, x + (bw - sz.Width) / 2f, y + (bh - sz.Height) / 2f);
+            }
         }
     }
 }

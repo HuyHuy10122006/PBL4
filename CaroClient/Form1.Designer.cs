@@ -54,12 +54,33 @@ namespace CaroClient
             lblChatTitle = new Label();
             pnlMainContent = new Panel();
             pnlHomeView = new Panel();
+            heroBanner = new HeroBannerPanel();
+            lblHeroTitle = new Label();
+            lblHeroSubtitle = new Label();
             pnlMiddleGrid = new Panel();
-            pnlPlayersContainer = new Panel();
+
+            // View 1: 3 Column Panels & Controls
+            colEvent = new Panel();
+            lblEventHeader = new Label();
+            cardEvent = new HomeEventCard();
+
+            colTopPlayers = new Panel();
+            lblTopPlayersHeader = new Label();
+            cardTopPlayers = new HomePodiumPanel();
+
+            colOnlinePlayers = new Panel();
             cardConnectedPlayers = new RoundedCard();
-            lblNoPlayers = new Label();
-            lstConnectedPlayers = new ListBox();
+            pnlOnlineHeaderBar = new Panel();
             lblHomePlayersHeader = new Label();
+            lblOnlineCountBadge = new Label();
+            pnlOnlineSearchBar = new Panel();
+            pnlSearchFriendWrapper = new Panel();
+            txtSearchFriend = new TextBox();
+            lstConnectedPlayers = new ListBox();
+            lblNoPlayers = new Label();
+
+            // Legacy dummy controls for backward compatibility
+            pnlPlayersContainer = new Panel();
             pnlServerInfoContainer = new Panel();
             cardServerInfo = new RoundedCard();
             btnHomeSettings = new CyberButton();
@@ -69,10 +90,7 @@ namespace CaroClient
             lblHomeServerHost = new Label();
             lblHomeServerStatus = new Label();
             lblHomeServerHeader = new Label();
-            heroBanner = new HeroBannerPanel();
-            lblHeroTitle = new Label();
-            lblHeroSubtitle = new Label();
-            pnlGameView = new Panel();
+            pnlGameView = new GameArenaBackgroundPanel();
             gameOverModal = new GameOverModal();
             boardControl1 = new BoardControl();
             pnlGameHeader = new RoundedCard();
@@ -85,7 +103,7 @@ namespace CaroClient
             lblRoomIdInfo = new Label();
             lblPlayersInfo = new Label();
             lblTurnInfo = new Label();
-            pnlCreateRoomView = new Panel();
+            pnlCreateRoomView = new CreateRoomBackgroundPanel();
             cardCreateBox = new RoundedCard();
             btnCancelCreate = new CyberButton();
             btnCreateRoom = new CyberButton();
@@ -198,6 +216,11 @@ namespace CaroClient
             pnlLeaderboardHeaderBar = new Panel();
             btnRefreshLeaderboard = new Button();
             lblLeaderboardHeader = new Label();
+            leaderboardPodium = new LeaderboardPodiumControl();
+            pnlLeaderboardSubHeader = new Panel();
+            lblLeaderboardSubHeader = new Label();
+            btnRefreshLeaderboardList = new Button();
+            leaderboardList = new LeaderboardListControl();
             pnlSettingsView = new SettingsBackgroundPanel();
             cardSettingsBox = new CyberLoginCard();
             btnTabLogin = new CyberButton();
@@ -267,10 +290,13 @@ namespace CaroClient
             pnlMainContent.SuspendLayout();
             pnlHomeView.SuspendLayout();
             pnlMiddleGrid.SuspendLayout();
-            pnlPlayersContainer.SuspendLayout();
+            colEvent.SuspendLayout();
+            colTopPlayers.SuspendLayout();
+            colOnlinePlayers.SuspendLayout();
             cardConnectedPlayers.SuspendLayout();
-            pnlServerInfoContainer.SuspendLayout();
-            cardServerInfo.SuspendLayout();
+            pnlOnlineHeaderBar.SuspendLayout();
+            pnlOnlineSearchBar.SuspendLayout();
+            pnlSearchFriendWrapper.SuspendLayout();
             heroBanner.SuspendLayout();
             pnlGameView.SuspendLayout();
             pnlGameHeader.SuspendLayout();
@@ -306,6 +332,7 @@ namespace CaroClient
             cardLeaderboardBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvLeaderboard).BeginInit();
             pnlLeaderboardHeaderBar.SuspendLayout();
+            pnlLeaderboardSubHeader.SuspendLayout();
             pnlSettingsView.SuspendLayout();
             cardSettingsBox.SuspendLayout();
             pnlAuthBodyLogin.SuspendLayout();
@@ -853,26 +880,143 @@ namespace CaroClient
             pnlHomeView.Padding = new Padding(16, 12, 16, 14);
             pnlHomeView.Size = new Size(750, 732);
             pnlHomeView.TabIndex = 0;
+            pnlHomeView.Resize += pnlHomeView_Resize;
+            // 
+            // heroBanner
+            // 
+            heroBanner.BackColor = Color.Transparent;
+            heroBanner.Controls.Add(lblHeroTitle);
+            heroBanner.Controls.Add(lblHeroSubtitle);
+            heroBanner.Location = new Point(16, 12);
+            heroBanner.Name = "heroBanner";
+            heroBanner.Size = new Size(718, 180);
+            heroBanner.TabIndex = 0;
+            // 
+            // lblHeroTitle
+            // 
+            lblHeroTitle.Visible = false;
+            // 
+            // lblHeroSubtitle
+            // 
+            lblHeroSubtitle.Visible = false;
             // 
             // pnlMiddleGrid
             // 
-            pnlMiddleGrid.Controls.Add(pnlPlayersContainer);
-            pnlMiddleGrid.Controls.Add(pnlServerInfoContainer);
-            pnlMiddleGrid.Dock = DockStyle.Fill;
-            pnlMiddleGrid.Location = new Point(16, 127);
+            pnlMiddleGrid.Controls.Add(colOnlinePlayers);
+            pnlMiddleGrid.Controls.Add(colTopPlayers);
+            pnlMiddleGrid.Controls.Add(colEvent);
+            pnlMiddleGrid.Location = new Point(16, 204);
             pnlMiddleGrid.Name = "pnlMiddleGrid";
-            pnlMiddleGrid.Padding = new Padding(0, 10, 0, 0);
-            pnlMiddleGrid.Size = new Size(718, 591);
-            pnlMiddleGrid.TabIndex = 0;
+            pnlMiddleGrid.Padding = new Padding(0);
+            pnlMiddleGrid.Size = new Size(718, 514);
+            pnlMiddleGrid.TabIndex = 1;
+            pnlMiddleGrid.Resize += pnlMiddleGrid_Resize;
             // 
-            // pnlPlayersContainer
+            // colEvent
             // 
-            pnlPlayersContainer.Controls.Add(cardConnectedPlayers);
-            pnlPlayersContainer.Dock = DockStyle.Fill;
-            pnlPlayersContainer.Location = new Point(330, 10);
-            pnlPlayersContainer.Name = "pnlPlayersContainer";
-            pnlPlayersContainer.Size = new Size(388, 581);
-            pnlPlayersContainer.TabIndex = 0;
+            colEvent.BackColor = Color.Transparent;
+            colEvent.Controls.Add(cardEvent);
+            colEvent.Controls.Add(lblEventHeader);
+            colEvent.Location = new Point(0, 0);
+            colEvent.Name = "colEvent";
+            colEvent.Size = new Size(200, 564);
+            colEvent.TabIndex = 0;
+            // 
+            // lblEventHeader
+            // 
+            lblEventHeader.Dock = DockStyle.Top;
+            lblEventHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblEventHeader.ForeColor = Color.White;
+            lblEventHeader.Location = new Point(0, 0);
+            lblEventHeader.Name = "lblEventHeader";
+            lblEventHeader.Size = new Size(200, 28);
+            lblEventHeader.TabIndex = 0;
+            lblEventHeader.Text = "SỰ KIỆN NỔI BẬT";
+            lblEventHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardEvent
+            // 
+            cardEvent.Dock = DockStyle.Fill;
+            cardEvent.Location = new Point(0, 28);
+            cardEvent.Name = "cardEvent";
+            cardEvent.Size = new Size(200, 536);
+            cardEvent.TabIndex = 1;
+            // 
+            // colTopPlayers
+            // 
+            colTopPlayers.BackColor = Color.Transparent;
+            colTopPlayers.Controls.Add(cardTopPlayers);
+            colTopPlayers.Controls.Add(lblTopPlayersHeader);
+            colTopPlayers.Location = new Point(212, 0);
+            colTopPlayers.Name = "colTopPlayers";
+            colTopPlayers.Size = new Size(260, 564);
+            colTopPlayers.TabIndex = 1;
+            // 
+            // lblTopPlayersHeader
+            // 
+            lblTopPlayersHeader.Dock = DockStyle.Top;
+            lblTopPlayersHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblTopPlayersHeader.ForeColor = Color.White;
+            lblTopPlayersHeader.Location = new Point(0, 0);
+            lblTopPlayersHeader.Name = "lblTopPlayersHeader";
+            lblTopPlayersHeader.Size = new Size(260, 28);
+            lblTopPlayersHeader.TabIndex = 0;
+            lblTopPlayersHeader.Text = "BẢNG XẾP HẠNG TOP CAO THỦ";
+            lblTopPlayersHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardTopPlayers
+            // 
+            cardTopPlayers.Dock = DockStyle.Fill;
+            cardTopPlayers.Location = new Point(0, 28);
+            cardTopPlayers.Name = "cardTopPlayers";
+            cardTopPlayers.Size = new Size(260, 536);
+            cardTopPlayers.TabIndex = 1;
+            // 
+            // colOnlinePlayers
+            // 
+            colOnlinePlayers.BackColor = Color.Transparent;
+            colOnlinePlayers.Controls.Add(cardConnectedPlayers);
+            colOnlinePlayers.Controls.Add(pnlOnlineHeaderBar);
+            colOnlinePlayers.Location = new Point(484, 0);
+            colOnlinePlayers.Name = "colOnlinePlayers";
+            colOnlinePlayers.Size = new Size(234, 564);
+            colOnlinePlayers.TabIndex = 2;
+            // 
+            // pnlOnlineHeaderBar
+            // 
+            pnlOnlineHeaderBar.BackColor = Color.Transparent;
+            pnlOnlineHeaderBar.Controls.Add(lblOnlineCountBadge);
+            pnlOnlineHeaderBar.Controls.Add(lblHomePlayersHeader);
+            pnlOnlineHeaderBar.Dock = DockStyle.Top;
+            pnlOnlineHeaderBar.Location = new Point(0, 0);
+            pnlOnlineHeaderBar.Name = "pnlOnlineHeaderBar";
+            pnlOnlineHeaderBar.Size = new Size(234, 28);
+            pnlOnlineHeaderBar.TabIndex = 0;
+            // 
+            // lblHomePlayersHeader
+            // 
+            lblHomePlayersHeader.Dock = DockStyle.Fill;
+            lblHomePlayersHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblHomePlayersHeader.ForeColor = Color.White;
+            lblHomePlayersHeader.Location = new Point(0, 0);
+            lblHomePlayersHeader.Name = "lblHomePlayersHeader";
+            lblHomePlayersHeader.Size = new Size(160, 28);
+            lblHomePlayersHeader.TabIndex = 0;
+            lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE";
+            lblHomePlayersHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // lblOnlineCountBadge
+            // 
+            lblOnlineCountBadge.AutoSize = true;
+            lblOnlineCountBadge.Dock = DockStyle.Right;
+            lblOnlineCountBadge.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
+            lblOnlineCountBadge.ForeColor = Color.FromArgb(0, 230, 118);
+            lblOnlineCountBadge.Location = new Point(174, 0);
+            lblOnlineCountBadge.Name = "lblOnlineCountBadge";
+            lblOnlineCountBadge.Size = new Size(60, 28);
+            lblOnlineCountBadge.TabIndex = 1;
+            lblOnlineCountBadge.Text = "● 0";
+            lblOnlineCountBadge.TextAlign = ContentAlignment.MiddleRight;
             // 
             // cardConnectedPlayers
             // 
@@ -881,27 +1025,51 @@ namespace CaroClient
             cardConnectedPlayers.BorderWidth = 1.2F;
             cardConnectedPlayers.Controls.Add(lblNoPlayers);
             cardConnectedPlayers.Controls.Add(lstConnectedPlayers);
-            cardConnectedPlayers.Controls.Add(lblHomePlayersHeader);
+            cardConnectedPlayers.Controls.Add(pnlOnlineSearchBar);
             cardConnectedPlayers.CornerRadius = 14;
             cardConnectedPlayers.Dock = DockStyle.Fill;
             cardConnectedPlayers.FillColor = Color.FromArgb(13, 24, 48);
-            cardConnectedPlayers.Location = new Point(0, 0);
+            cardConnectedPlayers.Location = new Point(0, 28);
             cardConnectedPlayers.Name = "cardConnectedPlayers";
-            cardConnectedPlayers.Padding = new Padding(16, 14, 16, 14);
-            cardConnectedPlayers.Size = new Size(388, 581);
-            cardConnectedPlayers.TabIndex = 0;
+            cardConnectedPlayers.Padding = new Padding(12, 10, 12, 10);
+            cardConnectedPlayers.Size = new Size(234, 536);
+            cardConnectedPlayers.TabIndex = 1;
             // 
-            // lblNoPlayers
+            // pnlOnlineSearchBar
             // 
-            lblNoPlayers.Dock = DockStyle.Fill;
-            lblNoPlayers.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
-            lblNoPlayers.ForeColor = Color.FromArgb(120, 140, 175);
-            lblNoPlayers.Location = new Point(16, 46);
-            lblNoPlayers.Name = "lblNoPlayers";
-            lblNoPlayers.Size = new Size(356, 521);
-            lblNoPlayers.TabIndex = 0;
-            lblNoPlayers.Text = "Chưa kết nối đến máy chủ";
-            lblNoPlayers.TextAlign = ContentAlignment.MiddleCenter;
+            pnlOnlineSearchBar.BackColor = Color.Transparent;
+            pnlOnlineSearchBar.Controls.Add(pnlSearchFriendWrapper);
+            pnlOnlineSearchBar.Dock = DockStyle.Top;
+            pnlOnlineSearchBar.Location = new Point(12, 10);
+            pnlOnlineSearchBar.Name = "pnlOnlineSearchBar";
+            pnlOnlineSearchBar.Padding = new Padding(0, 0, 0, 6);
+            pnlOnlineSearchBar.Size = new Size(210, 36);
+            pnlOnlineSearchBar.TabIndex = 0;
+            // 
+            // pnlSearchFriendWrapper
+            // 
+            pnlSearchFriendWrapper.BackColor = Color.FromArgb(9, 15, 30);
+            pnlSearchFriendWrapper.Controls.Add(txtSearchFriend);
+            pnlSearchFriendWrapper.Dock = DockStyle.Fill;
+            pnlSearchFriendWrapper.Location = new Point(0, 0);
+            pnlSearchFriendWrapper.Margin = new Padding(0);
+            pnlSearchFriendWrapper.Name = "pnlSearchFriendWrapper";
+            pnlSearchFriendWrapper.Padding = new Padding(8, 5, 8, 5);
+            pnlSearchFriendWrapper.Size = new Size(210, 30);
+            pnlSearchFriendWrapper.TabIndex = 0;
+            // 
+            // txtSearchFriend
+            // 
+            txtSearchFriend.BackColor = Color.FromArgb(9, 15, 30);
+            txtSearchFriend.BorderStyle = BorderStyle.None;
+            txtSearchFriend.Dock = DockStyle.Fill;
+            txtSearchFriend.Font = new Font("Segoe UI", 9F);
+            txtSearchFriend.ForeColor = Color.FromArgb(180, 200, 230);
+            txtSearchFriend.Location = new Point(8, 5);
+            txtSearchFriend.Name = "txtSearchFriend";
+            txtSearchFriend.PlaceholderText = "🔍 Tìm kiếm bạn bè...";
+            txtSearchFriend.Size = new Size(194, 20);
+            txtSearchFriend.TabIndex = 0;
             // 
             // lstConnectedPlayers
             // 
@@ -909,206 +1077,36 @@ namespace CaroClient
             lstConnectedPlayers.BorderStyle = BorderStyle.None;
             lstConnectedPlayers.Dock = DockStyle.Fill;
             lstConnectedPlayers.DrawMode = DrawMode.OwnerDrawFixed;
-            lstConnectedPlayers.ItemHeight = 34;
-            lstConnectedPlayers.Location = new Point(16, 46);
+            lstConnectedPlayers.ItemHeight = 52;
+            lstConnectedPlayers.Location = new Point(12, 74);
             lstConnectedPlayers.Name = "lstConnectedPlayers";
             lstConnectedPlayers.SelectionMode = SelectionMode.None;
-            lstConnectedPlayers.Size = new Size(356, 521);
-            lstConnectedPlayers.TabIndex = 1;
+            lstConnectedPlayers.Size = new Size(210, 480);
+            lstConnectedPlayers.TabIndex = 2;
             // 
-            // lblHomePlayersHeader
+            // lblNoPlayers
             // 
-            lblHomePlayersHeader.Dock = DockStyle.Top;
-            lblHomePlayersHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            lblHomePlayersHeader.ForeColor = Color.White;
-            lblHomePlayersHeader.Location = new Point(16, 14);
-            lblHomePlayersHeader.Name = "lblHomePlayersHeader";
-            lblHomePlayersHeader.Size = new Size(356, 32);
-            lblHomePlayersHeader.TabIndex = 2;
-            lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE (0)";
-            // 
-            // pnlServerInfoContainer
-            // 
-            pnlServerInfoContainer.Controls.Add(cardServerInfo);
-            pnlServerInfoContainer.Dock = DockStyle.Left;
-            pnlServerInfoContainer.Location = new Point(0, 10);
-            pnlServerInfoContainer.Name = "pnlServerInfoContainer";
-            pnlServerInfoContainer.Padding = new Padding(0, 0, 12, 0);
-            pnlServerInfoContainer.Size = new Size(330, 581);
-            pnlServerInfoContainer.TabIndex = 1;
+            lblNoPlayers.Dock = DockStyle.Fill;
+            lblNoPlayers.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            lblNoPlayers.ForeColor = Color.FromArgb(120, 140, 175);
+            lblNoPlayers.Location = new Point(12, 74);
+            lblNoPlayers.Name = "lblNoPlayers";
+            lblNoPlayers.Size = new Size(210, 480);
+            lblNoPlayers.TabIndex = 3;
+            lblNoPlayers.Text = "Không có người chơi online";
+            lblNoPlayers.TextAlign = ContentAlignment.MiddleCenter;
+            lblNoPlayers.Visible = false;
             // 
             // cardServerInfo
             // 
-            cardServerInfo.BackColor = Color.Transparent;
-            cardServerInfo.BorderColor = Color.FromArgb(25, 45, 85);
-            cardServerInfo.BorderWidth = 1.2F;
-            cardServerInfo.Controls.Add(btnHomeSettings);
-            cardServerInfo.Controls.Add(btnHomeJoinRoom);
-            cardServerInfo.Controls.Add(btnHomeCreateRoom);
-            cardServerInfo.Controls.Add(lblHomeServerIp);
-            cardServerInfo.Controls.Add(lblHomeServerHost);
             cardServerInfo.Controls.Add(lblHomeServerStatus);
+            cardServerInfo.Controls.Add(lblHomeServerHost);
+            cardServerInfo.Controls.Add(lblHomeServerIp);
             cardServerInfo.Controls.Add(lblHomeServerHeader);
-            cardServerInfo.CornerRadius = 14;
-            cardServerInfo.Dock = DockStyle.Fill;
-            cardServerInfo.FillColor = Color.FromArgb(13, 24, 48);
-            cardServerInfo.Location = new Point(0, 0);
-            cardServerInfo.Name = "cardServerInfo";
-            cardServerInfo.Padding = new Padding(18, 16, 18, 16);
-            cardServerInfo.Size = new Size(318, 581);
-            cardServerInfo.TabIndex = 0;
-            // 
-            // btnHomeSettings
-            // 
-            btnHomeSettings.BackColor = Color.FromArgb(9, 15, 30);
-            btnHomeSettings.BorderLineColor = Color.FromArgb(42, 70, 120);
-            btnHomeSettings.ClickColor = Color.FromArgb(10, 18, 36);
-            btnHomeSettings.CornerRadius = 10;
-            btnHomeSettings.CustomTextAlign = ContentAlignment.MiddleLeft;
-            btnHomeSettings.FlatStyle = FlatStyle.Flat;
-            btnHomeSettings.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            btnHomeSettings.ForeColor = Color.FromArgb(220, 235, 255);
-            btnHomeSettings.HoverColor = Color.FromArgb(24, 44, 82);
-            btnHomeSettings.IsPrimaryGradient = false;
-            btnHomeSettings.IsPurpleGradient = false;
-            btnHomeSettings.Location = new Point(18, 252);
-            btnHomeSettings.Name = "btnHomeSettings";
-            btnHomeSettings.NavIcon = CyberIcon.None;
-            btnHomeSettings.NormalColor = Color.FromArgb(14, 26, 50);
-            btnHomeSettings.ParentBgColor = Color.FromArgb(9, 15, 30);
-            btnHomeSettings.Size = new Size(284, 40);
-            btnHomeSettings.TabIndex = 0;
-            btnHomeSettings.Text = "⚙  Cài đặt kết nối...";
-            btnHomeSettings.TextLeftPadding = 16;
-            btnHomeSettings.UseVisualStyleBackColor = false;
-            btnHomeSettings.Click += btnHomeSettings_Click;
-            // 
-            // btnHomeJoinRoom
-            // 
-            btnHomeJoinRoom.BackColor = Color.FromArgb(9, 15, 30);
-            btnHomeJoinRoom.BorderLineColor = Color.FromArgb(0, 194, 255);
-            btnHomeJoinRoom.ClickColor = Color.FromArgb(10, 18, 36);
-            btnHomeJoinRoom.CornerRadius = 10;
-            btnHomeJoinRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
-            btnHomeJoinRoom.FlatStyle = FlatStyle.Flat;
-            btnHomeJoinRoom.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnHomeJoinRoom.ForeColor = Color.FromArgb(245, 248, 255);
-            btnHomeJoinRoom.HoverColor = Color.FromArgb(26, 50, 96);
-            btnHomeJoinRoom.IsPrimaryGradient = false;
-            btnHomeJoinRoom.IsPurpleGradient = false;
-            btnHomeJoinRoom.Location = new Point(18, 202);
-            btnHomeJoinRoom.Name = "btnHomeJoinRoom";
-            btnHomeJoinRoom.NavIcon = CyberIcon.None;
-            btnHomeJoinRoom.NormalColor = Color.FromArgb(16, 32, 64);
-            btnHomeJoinRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
-            btnHomeJoinRoom.Size = new Size(284, 42);
-            btnHomeJoinRoom.TabIndex = 1;
-            btnHomeJoinRoom.Text = "➜  Danh sách phòng đấu";
-            btnHomeJoinRoom.TextLeftPadding = 16;
-            btnHomeJoinRoom.UseVisualStyleBackColor = false;
-            btnHomeJoinRoom.Click += btnHomeJoinRoom_Click;
-            // 
-            // btnHomeCreateRoom
-            // 
-            btnHomeCreateRoom.BackColor = Color.FromArgb(9, 15, 30);
-            btnHomeCreateRoom.BorderLineColor = Color.FromArgb(0, 220, 255);
-            btnHomeCreateRoom.ClickColor = Color.FromArgb(10, 18, 36);
-            btnHomeCreateRoom.CornerRadius = 10;
-            btnHomeCreateRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
-            btnHomeCreateRoom.FlatStyle = FlatStyle.Flat;
-            btnHomeCreateRoom.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnHomeCreateRoom.ForeColor = Color.White;
-            btnHomeCreateRoom.HoverColor = Color.FromArgb(24, 42, 80);
-            btnHomeCreateRoom.IsPrimaryGradient = true;
-            btnHomeCreateRoom.IsPurpleGradient = false;
-            btnHomeCreateRoom.Location = new Point(18, 150);
-            btnHomeCreateRoom.Name = "btnHomeCreateRoom";
-            btnHomeCreateRoom.NavIcon = CyberIcon.None;
-            btnHomeCreateRoom.NormalColor = Color.FromArgb(14, 24, 46);
-            btnHomeCreateRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
-            btnHomeCreateRoom.Size = new Size(284, 44);
-            btnHomeCreateRoom.TabIndex = 2;
-            btnHomeCreateRoom.Text = "＋  Tạo phòng mới";
-            btnHomeCreateRoom.TextLeftPadding = 16;
-            btnHomeCreateRoom.UseVisualStyleBackColor = false;
-            btnHomeCreateRoom.Click += btnHomeCreateRoom_Click;
-            // 
-            // lblHomeServerIp
-            // 
-            lblHomeServerIp.AutoSize = true;
-            lblHomeServerIp.Font = new Font("Segoe UI", 8.5F);
-            lblHomeServerIp.ForeColor = Color.FromArgb(0, 194, 255);
-            lblHomeServerIp.Location = new Point(18, 102);
-            lblHomeServerIp.Name = "lblHomeServerIp";
-            lblHomeServerIp.Size = new Size(114, 20);
-            lblHomeServerIp.TabIndex = 3;
-            lblHomeServerIp.Text = "📡 IP & Cổng: ---";
-            // 
-            // lblHomeServerHost
-            // 
-            lblHomeServerHost.AutoSize = true;
-            lblHomeServerHost.Font = new Font("Segoe UI", 8.5F);
-            lblHomeServerHost.ForeColor = Color.FromArgb(170, 190, 220);
-            lblHomeServerHost.Location = new Point(18, 76);
-            lblHomeServerHost.Name = "lblHomeServerHost";
-            lblHomeServerHost.Size = new Size(141, 20);
-            lblHomeServerHost.TabIndex = 4;
-            lblHomeServerHost.Text = "💻 Tên máy chủ: ---";
-            // 
-            // lblHomeServerStatus
-            // 
-            lblHomeServerStatus.AutoSize = true;
-            lblHomeServerStatus.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
-            lblHomeServerStatus.ForeColor = Color.FromArgb(255, 75, 75);
-            lblHomeServerStatus.Location = new Point(18, 48);
-            lblHomeServerStatus.Name = "lblHomeServerStatus";
-            lblHomeServerStatus.Size = new Size(125, 21);
-            lblHomeServerStatus.TabIndex = 5;
-            lblHomeServerStatus.Text = "○ Chưa kết nối";
-            // 
-            // lblHomeServerHeader
-            // 
-            lblHomeServerHeader.AutoSize = true;
-            lblHomeServerHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
-            lblHomeServerHeader.ForeColor = Color.White;
-            lblHomeServerHeader.Location = new Point(18, 16);
-            lblHomeServerHeader.Name = "lblHomeServerHeader";
-            lblHomeServerHeader.Size = new Size(202, 25);
-            lblHomeServerHeader.TabIndex = 6;
-            lblHomeServerHeader.Text = "THÔNG TIN MÁY CHỦ";
-            // 
-            // heroBanner
-            // 
-            heroBanner.BackColor = Color.Transparent;
-            heroBanner.Controls.Add(lblHeroTitle);
-            heroBanner.Controls.Add(lblHeroSubtitle);
-            heroBanner.Dock = DockStyle.Top;
-            heroBanner.Location = new Point(16, 12);
-            heroBanner.Name = "heroBanner";
-            heroBanner.Size = new Size(718, 115);
-            heroBanner.TabIndex = 1;
-            // 
-            // lblHeroTitle
-            // 
-            lblHeroTitle.AutoSize = true;
-            lblHeroTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            lblHeroTitle.ForeColor = Color.White;
-            lblHeroTitle.Location = new Point(24, 20);
-            lblHeroTitle.Name = "lblHeroTitle";
-            lblHeroTitle.Size = new Size(506, 37);
-            lblHeroTitle.TabIndex = 0;
-            lblHeroTitle.Text = "Chơi cờ caro qua mạng LAN - CaroKan";
-            // 
-            // lblHeroSubtitle
-            // 
-            lblHeroSubtitle.AutoSize = true;
-            lblHeroSubtitle.Font = new Font("Segoe UI", 9.5F);
-            lblHeroSubtitle.ForeColor = Color.FromArgb(160, 185, 225);
-            lblHeroSubtitle.Location = new Point(25, 56);
-            lblHeroSubtitle.Name = "lblHeroSubtitle";
-            lblHeroSubtitle.Size = new Size(435, 42);
-            lblHeroSubtitle.TabIndex = 1;
-            lblHeroSubtitle.Text = "Kết nối cùng bạn bè trong cùng một mạng LAN.\nKhông cần Internet, giao đấu trực tiếp hoặc luyện tập cùng AI!";
+            cardServerInfo.Controls.Add(btnHomeCreateRoom);
+            cardServerInfo.Controls.Add(btnHomeJoinRoom);
+            cardServerInfo.Controls.Add(btnHomeSettings);
+            cardServerInfo.Visible = false;
             // 
             // pnlGameView
             // 
@@ -1143,14 +1141,14 @@ namespace CaroClient
             // pnlGameHeader
             // 
             pnlGameHeader.BackColor = Color.Transparent;
-            pnlGameHeader.BorderColor = Color.FromArgb(25, 45, 85);
+            pnlGameHeader.BorderColor = Color.FromArgb(40, 75, 130);
             pnlGameHeader.BorderWidth = 1.2F;
             pnlGameHeader.Controls.Add(pnlGameActions);
             pnlGameHeader.Controls.Add(timerWidget);
             pnlGameHeader.Controls.Add(pnlGameInfo);
             pnlGameHeader.CornerRadius = 14;
             pnlGameHeader.Dock = DockStyle.Top;
-            pnlGameHeader.FillColor = Color.FromArgb(13, 24, 48);
+            pnlGameHeader.FillColor = Color.FromArgb(160, 10, 18, 36);
             pnlGameHeader.Location = new Point(12, 12);
             pnlGameHeader.Name = "pnlGameHeader";
             pnlGameHeader.Padding = new Padding(12, 10, 12, 10);
@@ -1302,6 +1300,7 @@ namespace CaroClient
             // 
             // pnlCreateRoomView
             // 
+            pnlCreateRoomView.BackColor = Color.FromArgb(8, 13, 26);
             pnlCreateRoomView.Controls.Add(cardCreateBox);
             pnlCreateRoomView.Dock = DockStyle.Fill;
             pnlCreateRoomView.Location = new Point(0, 0);
@@ -1314,8 +1313,10 @@ namespace CaroClient
             // cardCreateBox
             // 
             cardCreateBox.BackColor = Color.Transparent;
-            cardCreateBox.BorderColor = Color.FromArgb(25, 45, 85);
-            cardCreateBox.BorderWidth = 1.2F;
+            cardCreateBox.BorderColor = Color.FromArgb(0, 220, 255);
+            cardCreateBox.BorderWidth = 1.8F;
+            cardCreateBox.CornerRadius = 14;
+            cardCreateBox.IsTechCircuitFrame = true;
             cardCreateBox.Controls.Add(btnCancelCreate);
             cardCreateBox.Controls.Add(btnCreateRoom);
             cardCreateBox.Controls.Add(pillRuleFree);
@@ -1330,8 +1331,7 @@ namespace CaroClient
             cardCreateBox.Controls.Add(cardModePvP);
             cardCreateBox.Controls.Add(secHeaderMode);
             cardCreateBox.Controls.Add(pnlCreateHeader);
-            cardCreateBox.CornerRadius = 14;
-            cardCreateBox.FillColor = Color.FromArgb(13, 24, 48);
+            cardCreateBox.FillColor = Color.FromArgb(238, 7, 34, 52);
             cardCreateBox.Location = new Point(80, 20);
             cardCreateBox.Name = "cardCreateBox";
             cardCreateBox.Padding = new Padding(28, 20, 28, 20);
@@ -1341,20 +1341,20 @@ namespace CaroClient
             // btnCancelCreate
             // 
             btnCancelCreate.BackColor = Color.FromArgb(9, 15, 30);
-            btnCancelCreate.BorderLineColor = Color.FromArgb(40, 70, 125);
+            btnCancelCreate.BorderLineColor = Color.FromArgb(38, 75, 125);
             btnCancelCreate.ClickColor = Color.FromArgb(10, 18, 36);
             btnCancelCreate.CornerRadius = 12;
             btnCancelCreate.CustomTextAlign = ContentAlignment.MiddleLeft;
             btnCancelCreate.FlatStyle = FlatStyle.Flat;
             btnCancelCreate.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            btnCancelCreate.ForeColor = Color.FromArgb(200, 220, 255);
-            btnCancelCreate.HoverColor = Color.FromArgb(32, 52, 92);
+            btnCancelCreate.ForeColor = Color.FromArgb(210, 230, 255);
+            btnCancelCreate.HoverColor = Color.FromArgb(24, 44, 76);
             btnCancelCreate.IsPrimaryGradient = false;
             btnCancelCreate.IsPurpleGradient = false;
             btnCancelCreate.Location = new Point(470, 510);
             btnCancelCreate.Name = "btnCancelCreate";
             btnCancelCreate.NavIcon = CyberIcon.None;
-            btnCancelCreate.NormalColor = Color.FromArgb(20, 32, 58);
+            btnCancelCreate.NormalColor = Color.FromArgb(14, 26, 48);
             btnCancelCreate.ParentBgColor = Color.FromArgb(9, 15, 30);
             btnCancelCreate.Size = new Size(182, 48);
             btnCancelCreate.TabIndex = 0;
@@ -1366,7 +1366,7 @@ namespace CaroClient
             // btnCreateRoom
             // 
             btnCreateRoom.BackColor = Color.FromArgb(9, 15, 30);
-            btnCreateRoom.BorderLineColor = Color.FromArgb(0, 220, 255);
+            btnCreateRoom.BorderLineColor = Color.FromArgb(120, 245, 255);
             btnCreateRoom.ClickColor = Color.FromArgb(10, 18, 36);
             btnCreateRoom.CornerRadius = 12;
             btnCreateRoom.CustomTextAlign = ContentAlignment.MiddleLeft;
@@ -1374,16 +1374,17 @@ namespace CaroClient
             btnCreateRoom.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnCreateRoom.ForeColor = Color.White;
             btnCreateRoom.HoverColor = Color.FromArgb(24, 42, 80);
-            btnCreateRoom.IsPrimaryGradient = true;
+            btnCreateRoom.IsPrimaryGradient = false;
+            btnCreateRoom.IsCyanEmeraldGradient = true;
             btnCreateRoom.IsPurpleGradient = false;
             btnCreateRoom.Location = new Point(28, 510);
             btnCreateRoom.Name = "btnCreateRoom";
-            btnCreateRoom.NavIcon = CyberIcon.None;
+            btnCreateRoom.NavIcon = CyberIcon.Play;
             btnCreateRoom.NormalColor = Color.FromArgb(14, 24, 46);
             btnCreateRoom.ParentBgColor = Color.FromArgb(9, 15, 30);
             btnCreateRoom.Size = new Size(430, 48);
             btnCreateRoom.TabIndex = 1;
-            btnCreateRoom.Text = "▶  Tạo phòng";
+            btnCreateRoom.Text = "Tạo phòng";
             btnCreateRoom.TextLeftPadding = 16;
             btnCreateRoom.UseVisualStyleBackColor = false;
             btnCreateRoom.Click += btnCreateRoom_Click;
@@ -1813,7 +1814,7 @@ namespace CaroClient
             btnFeaturedAction.BorderLineColor = Color.Transparent;
             btnFeaturedAction.ClickColor = Color.FromArgb(10, 18, 36);
             btnFeaturedAction.CornerRadius = 10;
-            btnFeaturedAction.CustomTextAlign = ContentAlignment.MiddleCenter;
+            btnFeaturedAction.CustomTextAlign = ContentAlignment.MiddleLeft;
             btnFeaturedAction.FlatStyle = FlatStyle.Flat;
             btnFeaturedAction.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             btnFeaturedAction.ForeColor = Color.White;
@@ -1828,6 +1829,7 @@ namespace CaroClient
             btnFeaturedAction.Size = new Size(257, 36);
             btnFeaturedAction.TabIndex = 0;
             btnFeaturedAction.Text = "Tạo phòng mới";
+            btnFeaturedAction.CustomTextAlign = ContentAlignment.MiddleCenter;
             btnFeaturedAction.TextLeftPadding = 0;
             btnFeaturedAction.UseVisualStyleBackColor = false;
             btnFeaturedAction.Click += btnFeaturedAction_Click;
@@ -2705,18 +2707,23 @@ namespace CaroClient
             pnlLeaderboardView.Padding = new Padding(20);
             pnlLeaderboardView.Size = new Size(750, 732);
             pnlLeaderboardView.TabIndex = 5;
+            pnlLeaderboardView.Resize += pnlLeaderboardView_Resize;
             // 
             // cardLeaderboardBox
             // 
             cardLeaderboardBox.BackColor = Color.Transparent;
-            cardLeaderboardBox.BorderColor = Color.FromArgb(25, 45, 85);
+            cardLeaderboardBox.BorderColor = Color.FromArgb(0, 194, 255);
             cardLeaderboardBox.BorderWidth = 1.2F;
             cardLeaderboardBox.Controls.Add(lblNoLeaderboard);
             cardLeaderboardBox.Controls.Add(dgvLeaderboard);
+            cardLeaderboardBox.Controls.Add(leaderboardList);
+            cardLeaderboardBox.Controls.Add(pnlLeaderboardSubHeader);
+            cardLeaderboardBox.Controls.Add(leaderboardPodium);
             cardLeaderboardBox.Controls.Add(pnlLeaderboardHeaderBar);
             cardLeaderboardBox.CornerRadius = 14;
             cardLeaderboardBox.Dock = DockStyle.Fill;
-            cardLeaderboardBox.FillColor = Color.FromArgb(13, 24, 48);
+            cardLeaderboardBox.FillColor = Color.FromArgb(10, 20, 36);
+            cardLeaderboardBox.IsTechCircuitFrame = true;
             cardLeaderboardBox.Location = new Point(20, 20);
             cardLeaderboardBox.Name = "cardLeaderboardBox";
             cardLeaderboardBox.Padding = new Padding(16, 12, 16, 14);
@@ -2744,23 +2751,7 @@ namespace CaroClient
             dgvLeaderboard.BackgroundColor = Color.FromArgb(12, 22, 44);
             dgvLeaderboard.BorderStyle = BorderStyle.None;
             dgvLeaderboard.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = Color.FromArgb(14, 28, 56);
-            dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = Color.FromArgb(160, 180, 215);
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dgvLeaderboard.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dgvLeaderboard.ColumnHeadersHeight = 32;
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(12, 22, 44);
-            dataGridViewCellStyle4.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle4.ForeColor = Color.White;
-            dataGridViewCellStyle4.SelectionBackColor = Color.FromArgb(20, 45, 90);
-            dataGridViewCellStyle4.SelectionForeColor = Color.White;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dgvLeaderboard.DefaultCellStyle = dataGridViewCellStyle4;
             dgvLeaderboard.Dock = DockStyle.Fill;
             dgvLeaderboard.EnableHeadersVisualStyles = false;
             dgvLeaderboard.GridColor = Color.FromArgb(20, 36, 70);
@@ -2773,6 +2764,64 @@ namespace CaroClient
             dgvLeaderboard.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvLeaderboard.Size = new Size(678, 626);
             dgvLeaderboard.TabIndex = 1;
+            dgvLeaderboard.Visible = false;
+            // 
+            // leaderboardList
+            // 
+            leaderboardList.BackColor = Color.Transparent;
+            leaderboardList.Dock = DockStyle.Fill;
+            leaderboardList.Location = new Point(16, 324);
+            leaderboardList.Name = "leaderboardList";
+            leaderboardList.Size = new Size(678, 354);
+            leaderboardList.TabIndex = 5;
+            // 
+            // pnlLeaderboardSubHeader
+            // 
+            pnlLeaderboardSubHeader.BackColor = Color.Transparent;
+            pnlLeaderboardSubHeader.Controls.Add(btnRefreshLeaderboardList);
+            pnlLeaderboardSubHeader.Controls.Add(lblLeaderboardSubHeader);
+            pnlLeaderboardSubHeader.Dock = DockStyle.Top;
+            pnlLeaderboardSubHeader.Location = new Point(16, 288);
+            pnlLeaderboardSubHeader.Name = "pnlLeaderboardSubHeader";
+            pnlLeaderboardSubHeader.Size = new Size(678, 36);
+            pnlLeaderboardSubHeader.TabIndex = 4;
+            // 
+            // btnRefreshLeaderboardList
+            // 
+            btnRefreshLeaderboardList.Cursor = Cursors.Hand;
+            btnRefreshLeaderboardList.Dock = DockStyle.Right;
+            btnRefreshLeaderboardList.FlatAppearance.BorderSize = 0;
+            btnRefreshLeaderboardList.FlatStyle = FlatStyle.Flat;
+            btnRefreshLeaderboardList.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
+            btnRefreshLeaderboardList.ForeColor = Color.FromArgb(0, 194, 255);
+            btnRefreshLeaderboardList.Location = new Point(568, 0);
+            btnRefreshLeaderboardList.Name = "btnRefreshLeaderboardList";
+            btnRefreshLeaderboardList.Size = new Size(110, 36);
+            btnRefreshLeaderboardList.TabIndex = 1;
+            btnRefreshLeaderboardList.Text = "🔄 Làm mới";
+            btnRefreshLeaderboardList.Click += btnRefreshLeaderboard_Click;
+            // 
+            // lblLeaderboardSubHeader
+            // 
+            lblLeaderboardSubHeader.AutoSize = true;
+            lblLeaderboardSubHeader.Dock = DockStyle.Left;
+            lblLeaderboardSubHeader.Font = new Font("Segoe UI", 10.5F, FontStyle.Bold);
+            lblLeaderboardSubHeader.ForeColor = Color.FromArgb(160, 185, 220);
+            lblLeaderboardSubHeader.Location = new Point(0, 0);
+            lblLeaderboardSubHeader.Name = "lblLeaderboardSubHeader";
+            lblLeaderboardSubHeader.Size = new Size(180, 25);
+            lblLeaderboardSubHeader.TabIndex = 0;
+            lblLeaderboardSubHeader.Text = "Danh sách thứ hạng";
+            lblLeaderboardSubHeader.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // leaderboardPodium
+            // 
+            leaderboardPodium.BackColor = Color.Transparent;
+            leaderboardPodium.Dock = DockStyle.Top;
+            leaderboardPodium.Location = new Point(16, 48);
+            leaderboardPodium.Name = "leaderboardPodium";
+            leaderboardPodium.Size = new Size(678, 260);
+            leaderboardPodium.TabIndex = 3;
             // 
             // pnlLeaderboardHeaderBar
             // 
@@ -2782,7 +2831,7 @@ namespace CaroClient
             pnlLeaderboardHeaderBar.Dock = DockStyle.Top;
             pnlLeaderboardHeaderBar.Location = new Point(16, 12);
             pnlLeaderboardHeaderBar.Name = "pnlLeaderboardHeaderBar";
-            pnlLeaderboardHeaderBar.Size = new Size(678, 40);
+            pnlLeaderboardHeaderBar.Size = new Size(678, 36);
             pnlLeaderboardHeaderBar.TabIndex = 2;
             // 
             // btnRefreshLeaderboard
@@ -2793,9 +2842,9 @@ namespace CaroClient
             btnRefreshLeaderboard.FlatStyle = FlatStyle.Flat;
             btnRefreshLeaderboard.Font = new Font("Segoe UI", 8.5F, FontStyle.Bold);
             btnRefreshLeaderboard.ForeColor = Color.FromArgb(0, 194, 255);
-            btnRefreshLeaderboard.Location = new Point(583, 0);
+            btnRefreshLeaderboard.Location = new Point(568, 0);
             btnRefreshLeaderboard.Name = "btnRefreshLeaderboard";
-            btnRefreshLeaderboard.Size = new Size(95, 40);
+            btnRefreshLeaderboard.Size = new Size(110, 36);
             btnRefreshLeaderboard.TabIndex = 0;
             btnRefreshLeaderboard.Text = "🔄 Làm mới";
             btnRefreshLeaderboard.Click += btnRefreshLeaderboard_Click;
@@ -3562,9 +3611,15 @@ namespace CaroClient
             pnlMainContent.ResumeLayout(false);
             pnlHomeView.ResumeLayout(false);
             pnlMiddleGrid.ResumeLayout(false);
-            pnlPlayersContainer.ResumeLayout(false);
+            colEvent.ResumeLayout(false);
+            colTopPlayers.ResumeLayout(false);
+            colOnlinePlayers.ResumeLayout(false);
             cardConnectedPlayers.ResumeLayout(false);
-            pnlServerInfoContainer.ResumeLayout(false);
+            pnlOnlineHeaderBar.ResumeLayout(false);
+            pnlOnlineHeaderBar.PerformLayout();
+            pnlOnlineSearchBar.ResumeLayout(false);
+            pnlSearchFriendWrapper.ResumeLayout(false);
+            pnlSearchFriendWrapper.PerformLayout();
             cardServerInfo.ResumeLayout(false);
             cardServerInfo.PerformLayout();
             heroBanner.ResumeLayout(false);
@@ -3618,6 +3673,8 @@ namespace CaroClient
             ((System.ComponentModel.ISupportInitialize)dgvLeaderboard).EndInit();
             pnlLeaderboardHeaderBar.ResumeLayout(false);
             pnlLeaderboardHeaderBar.PerformLayout();
+            pnlLeaderboardSubHeader.ResumeLayout(false);
+            pnlLeaderboardSubHeader.PerformLayout();
             pnlSettingsView.ResumeLayout(false);
             cardSettingsBox.ResumeLayout(false);
             pnlAuthBodyLogin.ResumeLayout(false);
@@ -3692,8 +3749,26 @@ namespace CaroClient
         private System.Windows.Forms.Label lblHeroSubtitle;
 
         private System.Windows.Forms.Panel pnlMiddleGrid;
-        private System.Windows.Forms.Label lblNoRooms;
+        private System.Windows.Forms.Panel colEvent;
+        private System.Windows.Forms.Label lblEventHeader;
+        private CaroClient.HomeEventCard cardEvent;
 
+        private System.Windows.Forms.Panel colTopPlayers;
+        private System.Windows.Forms.Label lblTopPlayersHeader;
+        private CaroClient.HomePodiumPanel cardTopPlayers;
+
+        private System.Windows.Forms.Panel colOnlinePlayers;
+        private CaroClient.RoundedCard cardConnectedPlayers;
+        private System.Windows.Forms.Panel pnlOnlineHeaderBar;
+        private System.Windows.Forms.Label lblHomePlayersHeader;
+        private System.Windows.Forms.Label lblOnlineCountBadge;
+        private System.Windows.Forms.Panel pnlOnlineSearchBar;
+        private System.Windows.Forms.Panel pnlSearchFriendWrapper;
+        private System.Windows.Forms.TextBox txtSearchFriend;
+        private System.Windows.Forms.ListBox lstConnectedPlayers;
+        private System.Windows.Forms.Label lblNoPlayers;
+
+        private System.Windows.Forms.Label lblNoRooms;
         private CaroClient.CyberButton btnHomeCreateRoom;
         private CaroClient.CyberButton btnHomeJoinRoom;
         private CaroClient.CyberButton btnHomeSettings;
@@ -3704,13 +3779,9 @@ namespace CaroClient
         private System.Windows.Forms.Label lblHomeServerHost;
         private System.Windows.Forms.Label lblHomeServerIp;
         private System.Windows.Forms.Panel pnlPlayersContainer;
-        private CaroClient.RoundedCard cardConnectedPlayers;
-        private System.Windows.Forms.Label lblHomePlayersHeader;
-        private System.Windows.Forms.ListBox lstConnectedPlayers;
-        private System.Windows.Forms.Label lblNoPlayers;
 
         // View 2: Game Board
-        private System.Windows.Forms.Panel pnlGameView;
+        private CaroClient.GameArenaBackgroundPanel pnlGameView;
         private CaroClient.RoundedCard pnlGameHeader;
         private System.Windows.Forms.Panel pnlGameActions;
         private CaroClient.CyberButton btnSurrender;
@@ -3725,7 +3796,7 @@ namespace CaroClient
         private CaroClient.BoardControl boardControl1;
 
         // View 3: Create Room
-        private System.Windows.Forms.Panel pnlCreateRoomView;
+        private CaroClient.CreateRoomBackgroundPanel pnlCreateRoomView;
         private CaroClient.RoundedCard cardCreateBox;
         private System.Windows.Forms.Panel pnlCreateHeader;
         private CaroClient.CircleBadge badgeCreatePlus;
@@ -3912,6 +3983,11 @@ namespace CaroClient
         private System.Windows.Forms.Panel pnlLeaderboardHeaderBar;
         private System.Windows.Forms.Label lblLeaderboardHeader;
         private System.Windows.Forms.Button btnRefreshLeaderboard;
+        private CaroClient.LeaderboardPodiumControl leaderboardPodium;
+        private System.Windows.Forms.Panel pnlLeaderboardSubHeader;
+        private System.Windows.Forms.Label lblLeaderboardSubHeader;
+        private System.Windows.Forms.Button btnRefreshLeaderboardList;
+        private CaroClient.LeaderboardListControl leaderboardList;
         private System.Windows.Forms.DataGridView dgvLeaderboard;
         private System.Windows.Forms.Label lblNoLeaderboard;
     }

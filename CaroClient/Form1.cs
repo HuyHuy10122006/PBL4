@@ -25,6 +25,7 @@ namespace CaroClient
         // Offline AI Game State
         private bool _isOfflineGame = false;
         private GameEngine? _offlineEngine;
+        private int _offlineAiSessionId = 0;
         private AIDifficulty _selectedDifficulty = AIDifficulty.Medium;
         private bool _selectedBlockBothEnds = true;
         private int _selectedTimeLimit = 30;
@@ -143,8 +144,19 @@ namespace CaroClient
             this.Shown += (s, e) => RelayoutProfileView();
             pnlHistoryView.Resize += (s, e) => RelayoutProfileView();
 
-            // Wire up Connected Players owner-draw
+            // Wire up Connected Players owner-draw and interactions
             lstConnectedPlayers.DrawItem += lstConnectedPlayers_DrawItem;
+            lstConnectedPlayers.MouseClick += lstConnectedPlayers_MouseClick;
+            txtSearchFriend.TextChanged += (s, e) => ApplyPlayerFilter();
+
+            // Wire up Home cards & Hero Banner
+            heroBanner.PlayNowClicked += (s, e) => { SwitchToView(pnlJoinRoomView, btnNavJoin); };
+            heroBanner.CreateRoomClicked += (s, e) => { SwitchToView(pnlCreateRoomView, btnNavCreate); };
+            pnlHomeView.Resize += pnlHomeView_Resize;
+            pnlHomeView_Resize(this, EventArgs.Empty);
+            cardEvent.Click += (s, e) => MessageBox.Show("Sự kiện 'Đại Chiến Caro Mùa 1' đang diễn ra sôi nổi!\nTham gia ngay để tranh cúp và nhận giải thưởng lên đến 100.000 VBD + 250.000đ quà tặng!", "Sự kiện nổi bật", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            cardTopPlayers.Click += (s, e) => { SwitchToView(pnlLeaderboardView, btnNavLeaderboard); };
+            cardTopPlayers.AvatarProvider = GetOnlinePlayerAvatar;
 
             // Board Click Event
             boardControl1.OnCellClicked += BoardControl1_OnCellClicked;
@@ -541,7 +553,7 @@ namespace CaroClient
 
             if (_isInRoom)
             {
-                MessageBox.Show("Bạn đang ở trong phòng khác. Hãy thoát phòng hiện tại trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Bạn đang ở trong phòng đấu. Vui lòng thoát phòng hiện tại trước khi tham gia phòng khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -822,15 +834,15 @@ namespace CaroClient
 
                     item.JoinClicked += async (r) =>
                     {
+                        if (_isInRoom)
+                        {
+                            MessageBox.Show("Bạn đang ở trong phòng đấu. Vui lòng thoát phòng hiện tại trước khi tham gia phòng khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
                         if (_netClient == null || !_netClient.IsConnected)
                         {
                             SwitchToView(pnlSettingsView, btnNavSettings);
                             MessageBox.Show("Vui lòng kết nối máy chủ LAN để tham gia phòng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            return;
-                        }
-                        if (_isInRoom)
-                        {
-                            MessageBox.Show("Bạn đang ở trong phòng khác. Hãy thoát phòng hiện tại trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
                         txtRoomId.Text = r.RoomId;
@@ -840,15 +852,15 @@ namespace CaroClient
 
                     item.SpectateClicked += async (r) =>
                     {
+                        if (_isInRoom)
+                        {
+                            MessageBox.Show("Bạn đang ở trong phòng đấu. Vui lòng thoát phòng hiện tại trước khi xem phòng khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
                         if (_netClient == null || !_netClient.IsConnected)
                         {
                             SwitchToView(pnlSettingsView, btnNavSettings);
                             MessageBox.Show("Vui lòng kết nối máy chủ LAN để xem phòng!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            return;
-                        }
-                        if (_isInRoom)
-                        {
-                            MessageBox.Show("Bạn đang ở trong phòng khác. Hãy thoát phòng hiện tại trước!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return;
                         }
                         txtRoomId.Text = r.RoomId;
@@ -1094,18 +1106,15 @@ namespace CaroClient
             // Tự động làm mới bảng xếp hạng khi vào màn hình Bảng xếp hạng
             if (targetView == pnlLeaderboardView)
             {
+                pnlLeaderboardView_Resize(this, EventArgs.Empty);
                 if (_netClient != null && _netClient.IsConnected)
                 {
-                    lblNoLeaderboard.Text = "Đang tải dữ liệu Bảng xếp hạng...";
-                    lblNoLeaderboard.Visible = true;
-                    dgvLeaderboard.Visible = false;
                     _ = _netClient.RequestLeaderboardAsync();
                 }
                 else
                 {
-                    lblNoLeaderboard.Text = "Bạn chưa kết nối Server.\nVui lòng bấm nút 'ĐĂNG NHẬP' ở góc dưới bên trái để xem Bảng xếp hạng!";
-                    lblNoLeaderboard.Visible = true;
-                    dgvLeaderboard.Visible = false;
+                    leaderboardPodium?.ClearData();
+                    leaderboardList?.ClearData();
                 }
             }
 
@@ -1211,6 +1220,18 @@ namespace CaroClient
             }
         }
 
+        private void pnlLeaderboardView_Resize(object? sender, EventArgs e)
+        {
+            if (leaderboardPodium != null && cardLeaderboardBox != null && cardLeaderboardBox.Height > 0)
+            {
+                int targetH = Math.Min(280, Math.Max(220, (int)(cardLeaderboardBox.Height * 0.38f)));
+                if (leaderboardPodium.Height != targetH)
+                {
+                    leaderboardPodium.Height = targetH;
+                }
+            }
+        }
+
         private void lblTogglePassword_Click(object? sender, EventArgs e)
         {
             if (txtPassword.PasswordChar == '●')
@@ -1280,6 +1301,8 @@ namespace CaroClient
                 return;
             }
 
+            ForfeitAndExitOfflineGame();
+
             string ip = txtIp.Text.Trim();
             if (string.IsNullOrWhiteSpace(ip)) ip = "127.0.0.1";
             int port = 8888;
@@ -1318,6 +1341,8 @@ namespace CaroClient
 
         private async void btnRegister_Click(object? sender, EventArgs e)
         {
+            ForfeitAndExitOfflineGame();
+
             string ip = txtRegIp.Text.Trim();
             if (string.IsNullOrWhiteSpace(ip)) ip = "127.0.0.1";
             int port = 8888;
@@ -1364,6 +1389,18 @@ namespace CaroClient
 
         private void btnLogout_Click(object? sender, EventArgs e)
         {
+            ForfeitAndExitOfflineGame();
+
+            if (_isInRoom && !_isOfflineGame)
+            {
+                if (_currentGameStatus == GameStateStatus.Playing)
+                {
+                    _ = _netClient.SendSurrenderAsync();
+                }
+                _ = _netClient.SendLeaveRoomAsync();
+                ExitRoomUI();
+            }
+
             if (_netClient.IsConnected)
             {
                 _netClient.Disconnect();
@@ -1420,6 +1457,8 @@ namespace CaroClient
 
             if (data.Success)
             {
+                ForfeitAndExitOfflineGame();
+
                 lblStatusBadge.Text = $"● Đã kết nối: {data.Username}";
                 lblStatusBadge.ForeColor = Color.FromArgb(0, 230, 118);
                 btnConnect.Text = "Ngắt kết nối";
@@ -1907,7 +1946,7 @@ namespace CaroClient
             cardModePvP.IsSelected = !isAI;
             cardModeAI.IsSelected = isAI;
             pnlAiDifficultyOptions.Visible = isAI;
-            btnCreateRoom.Text = isAI && !_netClient.IsConnected ? "▶  Chơi với Máy ngay" : "▶  Tạo phòng";
+            btnCreateRoom.Text = _isInRoom ? "Quay lại phòng" : (isAI && !_netClient.IsConnected ? "Chơi với Máy ngay" : "Tạo phòng");
             RelayoutCreateBox();
         }
 
@@ -2104,6 +2143,7 @@ namespace CaroClient
             btnCreateRoom.Width = 430;
             btnCreateRoom.Height = 48;
             btnCreateRoom.Enabled = true;
+            btnCreateRoom.Text = _isInRoom ? "Quay lại phòng" : (cardModeAI.IsSelected && !_netClient.IsConnected ? "Chơi với Máy ngay" : "Tạo phòng");
 
             btnCancelCreate.Left = 470;
             btnCancelCreate.Top = currentY;
@@ -2148,6 +2188,12 @@ namespace CaroClient
 
         private async void btnCreateRoom_Click(object sender, EventArgs e)
         {
+            if (_isInRoom)
+            {
+                SwitchToView(pnlGameView, btnNavGame);
+                return;
+            }
+
             bool isAi = cardModeAI.IsSelected;
             int timeLimit = cardTimeTurn.IsSelected ? GetSelectedTimePillSeconds() : GetSelectedCountdownSeconds();
             bool blockBothEnds = _selectedBlockBothEnds;
@@ -2177,8 +2223,35 @@ namespace CaroClient
             await _netClient.CreateRoomAsync(_currentRoomMode, diff, 15, blockBothEnds, timeLimit);
         }
 
+        private void ForfeitAndExitOfflineGame()
+        {
+            if (_isOfflineGame && _isInRoom)
+            {
+                if (_offlineEngine != null && _currentGameStatus == GameStateStatus.Playing)
+                {
+                    _offlineEngine.Surrender('O');
+                }
+                CleanUpOfflineAiGame();
+                ExitRoomUI();
+            }
+        }
+
+        private void CleanUpOfflineAiGame()
+        {
+            _offlineAiSessionId++;
+            turnTimer.Stop();
+            _isOfflineGame = false;
+            _offlineEngine = null;
+            _isInRoom = false;
+            _currentGameStatus = GameStateStatus.WaitingForOpponent;
+            gameOverModal.Visible = false;
+            timerWidget.UpdateTime(0, 0);
+        }
+
         private void StartOfflineAiGame(AIDifficulty diff, bool blockBothEnds, int timeLimit)
         {
+            CleanUpOfflineAiGame();
+
             _isOfflineGame = true;
             _offlineEngine = new GameEngine(15, blockBothEndsRule: blockBothEnds);
             _selectedDifficulty = diff;
@@ -2262,44 +2335,64 @@ namespace CaroClient
                 ResetTimer(_timePerTurn);
             }
 
+            int sessionId = ++_offlineAiSessionId;
+            GameEngine engineCopy = _offlineEngine.Clone();
+
             _ = Task.Run(() =>
             {
-                Thread.Sleep(200);
-                CaroProtocol.Point aiMove = MinimaxAI.FindBestMove(_offlineEngine, 'O', _selectedDifficulty);
-                BeginInvoke(new Action(() =>
+                try
                 {
-                    if (!_isOfflineGame || _offlineEngine == null || _offlineEngine.Status != GameStateStatus.Playing) return;
-                    _offlineEngine.MakeMove(aiMove.Row, aiMove.Col, 'O', out _);
-                    UpdateOfflineBoardUI();
+                    Thread.Sleep(200);
+                    if (sessionId != _offlineAiSessionId) return;
+                    CaroProtocol.Point aiMove = MinimaxAI.FindBestMove(engineCopy, 'O', _selectedDifficulty);
+                    if (sessionId != _offlineAiSessionId) return;
 
-                    if (_offlineEngine.Status == GameStateStatus.GameOver)
+                    BeginInvoke(new Action(() =>
                     {
-                        turnTimer.Stop();
-                        timerWidget.SetGameOver();
-                        lblTimer.Text = "● KẾT THÚC";
-                        if (_offlineEngine.WinnerSymbol == 'O')
+                        try
                         {
-                            ShowGameOverModal(GameResultType.Loss, "Bạn Thua!", "Tiếc quá! Lần sau cố gắng hơn nhé!");
+                            if (sessionId != _offlineAiSessionId || !_isOfflineGame || _offlineEngine == null || _offlineEngine.Status != GameStateStatus.Playing) return;
+                            _offlineEngine.MakeMove(aiMove.Row, aiMove.Col, 'O', out _);
+                            UpdateOfflineBoardUI();
+
+                            if (_offlineEngine.Status == GameStateStatus.GameOver)
+                            {
+                                turnTimer.Stop();
+                                timerWidget.SetGameOver();
+                                lblTimer.Text = "● KẾT THÚC";
+                                if (_offlineEngine.WinnerSymbol == 'O')
+                                {
+                                    ShowGameOverModal(GameResultType.Loss, "Bạn Thua!", "Tiếc quá! Lần sau cố gắng hơn nhé!");
+                                }
+                                else if (_offlineEngine.WinnerSymbol == 'X')
+                                {
+                                    ShowGameOverModal(GameResultType.Win, "Bạn Thắng!", "Chúc mừng bạn đã giành chiến thắng xuất sắc!");
+                                }
+                                else
+                                {
+                                    ShowGameOverModal(GameResultType.Draw, "Hòa Cờ!", "Hai bên bất phân thắng bại!");
+                                }
+                            }
+                            else
+                            {
+                                _currentTurnSymbol = 'X';
+                                if (!_isCountdownGame)
+                                {
+                                    ResetTimer(_timePerTurn);
+                                }
+                            }
+                            UpdateGameActionButtons();
                         }
-                        else if (_offlineEngine.WinnerSymbol == 'X')
+                        catch (Exception ex)
                         {
-                            ShowGameOverModal(GameResultType.Win, "Bạn Thắng!", "Chúc mừng bạn đã giành chiến thắng xuất sắc!");
+                            System.Diagnostics.Debug.WriteLine($"[OfflineAI Callback Error] {ex.Message}");
                         }
-                        else
-                        {
-                            ShowGameOverModal(GameResultType.Draw, "Hòa Cờ!", "Hai bên bất phân thắng bại!");
-                        }
-                    }
-                    else
-                    {
-                        _currentTurnSymbol = 'X';
-                        if (!_isCountdownGame)
-                        {
-                            ResetTimer(_timePerTurn);
-                        }
-                    }
-                    UpdateGameActionButtons();
-                }));
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[OfflineAI Thread Error] {ex.Message}");
+                }
             });
         }
 
@@ -2335,6 +2428,12 @@ namespace CaroClient
 
         private async void btnJoinRoom_Click(object sender, EventArgs e)
         {
+            if (_isInRoom)
+            {
+                MessageBox.Show("Bạn đang ở trong phòng đấu. Vui lòng thoát phòng hiện tại trước khi tham gia phòng khác!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (!_netClient.IsConnected)
             {
                 SwitchToView(pnlSettingsView, btnNavSettings);
@@ -2433,8 +2532,7 @@ namespace CaroClient
                     var confirm = MessageBox.Show("Bạn có chắc muốn thoát ván đấu với Máy?", "Xác nhận thoát", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                     if (confirm != DialogResult.Yes) return;
                 }
-                _isOfflineGame = false;
-                _offlineEngine = null;
+                CleanUpOfflineAiGame();
                 ExitRoomUI();
                 SwitchToView(pnlHomeView, btnNavHome);
                 return;
@@ -2984,6 +3082,8 @@ namespace CaroClient
 
         private void ExitRoomUI()
         {
+            _offlineAiSessionId++;
+            turnTimer.Stop();
             _isInRoom = false;
             _isOfflineGame = false;
             _offlineEngine = null;
@@ -2992,6 +3092,8 @@ namespace CaroClient
             _currentGameStatus = GameStateStatus.WaitingForOpponent;
             pnlRightBar.Visible = false;
             rtbChatLog.Clear();
+            gameOverModal.Visible = false;
+            timerWidget.UpdateTime(0, 0);
             btnCreateRoom.Enabled = true;
             btnJoinRoom.Enabled = true;
             txtRoomId.ReadOnly = false;
@@ -3008,7 +3110,7 @@ namespace CaroClient
             pillAiHard.Enabled = true;
             pillRuleStandard.Enabled = true;
             pillRuleFree.Enabled = true;
-            btnCreateRoom.Text = cardModeAI.IsSelected && !_netClient.IsConnected ? "▶  Chơi với Máy ngay" : "▶  Tạo phòng";
+            btnCreateRoom.Text = cardModeAI.IsSelected && !_netClient.IsConnected ? "Chơi với Máy ngay" : "Tạo phòng";
             lblRoomIdInfo.Text = "Phòng: ---";
             lblPlayersInfo.Text = "X: ---   VS   O: ---";
             lblTurnInfo.Text = "● Lượt đi: ---";
@@ -3031,14 +3133,28 @@ namespace CaroClient
             txtPassword.Enabled = !connected;
             btnRegister.Enabled = !connected;
 
-            if (cardModeAI.IsSelected)
+            if (_isInRoom)
             {
-                btnCreateRoom.Text = "▶  Chơi với Máy ngay";
+                btnCreateRoom.Text = "Quay lại phòng";
+            }
+            else if (cardModeAI.IsSelected)
+            {
+                btnCreateRoom.Text = "Chơi với Máy ngay";
             }
 
-            if (!connected && !_isOfflineGame)
+            if (!connected)
             {
-                ExitRoomUI();
+                ForfeitAndExitOfflineGame();
+                if (_isInRoom)
+                {
+                    ExitRoomUI();
+                }
+            }
+
+            if (!connected)
+            {
+                leaderboardPodium?.ClearData();
+                leaderboardList?.ClearData();
             }
         }
 
@@ -3080,6 +3196,9 @@ namespace CaroClient
                 lblProfileLevel.Text = $"★ {_netClient.Elo} ELO";
                 lblProfileXp.Text = $"{_netClient.Wins}W - {_netClient.Losses}L - {_netClient.Draws}D";
                 btnLogout.Visible = false; // Nút Đăng xuất chính đã được tích hợp ngay trên thẻ hồ sơ (btnNavSettings)
+
+                _ = _netClient.RequestLeaderboardAsync();
+                _ = _netClient.RequestRoomListAsync();
             }
             else
             {
@@ -3087,10 +3206,19 @@ namespace CaroClient
                 lblHomeServerStatus.ForeColor = Color.FromArgb(255, 75, 75);
                 lblHomeServerHost.Text = "Máy chủ: ---";
                 lblHomeServerIp.Text = "IP: ---";
-                lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE (0)";
+
+                // Real offline state - no mock players
+                _allOnlinePlayers.Clear();
                 lstConnectedPlayers.Items.Clear();
-                lblNoPlayers.Text = "Chưa kết nối đến máy chủ";
+                lblOnlineCountBadge.Text = "● 0";
+                lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE";
+                lblNoPlayers.Text = "Chưa kết nối đến máy chủ\nĐăng nhập để xem người chơi online";
                 lblNoPlayers.Visible = true;
+
+                if (cardTopPlayers != null)
+                {
+                    cardTopPlayers.SetLeaderboardData(null);
+                }
 
                 lblProfileName.Text = "Khách (Offline)";
                 lblProfileLevel.Text = "Chế độ Offline";
@@ -3161,6 +3289,15 @@ namespace CaroClient
 
         private void InitLeaderboardTable()
         {
+            if (leaderboardPodium != null)
+            {
+                leaderboardPodium.AvatarProvider = (name) => GetPlayerAvatarImage(name);
+            }
+            if (leaderboardList != null)
+            {
+                leaderboardList.AvatarProvider = (name) => GetPlayerAvatarImage(name);
+            }
+
             dgvLeaderboard.Columns.Clear();
 
             var colRank = new DataGridViewTextBoxColumn
@@ -3286,9 +3423,28 @@ namespace CaroClient
                 return;
             }
 
+            // Update Home Top Podium & Runner-ups with REAL leaderboard data
+            if (cardTopPlayers != null)
+            {
+                cardTopPlayers.SetLeaderboardData(list);
+            }
+
+            // Update dedicated Leaderboard view (3D Podium + Rank Card List)
+            if (leaderboardPodium != null)
+            {
+                leaderboardPodium.SetData(list);
+            }
+            if (leaderboardList != null)
+            {
+                string myName = !string.IsNullOrWhiteSpace(_netClient?.PlayerName) ? _netClient.PlayerName : txtName.Text.Trim();
+                leaderboardList.SetData(list, myName);
+            }
+
             dgvLeaderboard.Rows.Clear();
             if (list == null || list.Count == 0)
             {
+                leaderboardPodium?.ClearData();
+                leaderboardList?.ClearData();
                 if (_netClient != null && _netClient.IsConnected)
                 {
                     lblNoLeaderboard.Text = "Chưa có dữ liệu người chơi trên Bảng xếp hạng Server.";
@@ -3297,13 +3453,10 @@ namespace CaroClient
                 {
                     lblNoLeaderboard.Text = "Bạn chưa kết nối Server.\nVui lòng bấm nút 'ĐĂNG NHẬP' ở góc dưới bên trái để xem Bảng xếp hạng!";
                 }
-                lblNoLeaderboard.Visible = true;
-                dgvLeaderboard.Visible = false;
                 return;
             }
 
             lblNoLeaderboard.Visible = false;
-            dgvLeaderboard.Visible = true;
 
             foreach (var item in list)
             {
@@ -3380,6 +3533,8 @@ namespace CaroClient
             await _netClient.RequestLeaderboardAsync();
         }
 
+        private List<PlayerInfoData> _allOnlinePlayers = new List<PlayerInfoData>();
+
         private void NetClient_OnPlayerListReceived(List<PlayerInfoData> players)
         {
             if (InvokeRequired)
@@ -3388,20 +3543,123 @@ namespace CaroClient
                 return;
             }
 
-            lblHomePlayersHeader.Text = $"NGƯỜI CHƠI ONLINE ({players.Count})";
+            _allOnlinePlayers = players ?? new List<PlayerInfoData>();
+            ApplyPlayerFilter();
+        }
+
+        private void ApplyPlayerFilter()
+        {
+            string filter = txtSearchFriend.Text.Trim();
+            var filtered = string.IsNullOrEmpty(filter)
+                ? _allOnlinePlayers
+                : _allOnlinePlayers.Where(p => p.PlayerName.Contains(filter, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            lblOnlineCountBadge.Text = $"● {_allOnlinePlayers.Count}";
+            lblHomePlayersHeader.Text = "NGƯỜI CHƠI ONLINE";
+
             lstConnectedPlayers.BeginUpdate();
             lstConnectedPlayers.Items.Clear();
-            foreach (var p in players)
+            foreach (var p in filtered)
             {
                 lstConnectedPlayers.Items.Add(p);
             }
             lstConnectedPlayers.EndUpdate();
 
-            lblNoPlayers.Visible = (players.Count == 0);
-            if (players.Count == 0)
+            lblNoPlayers.Visible = (filtered.Count == 0);
+            if (filtered.Count == 0)
             {
-                lblNoPlayers.Text = "Không có người chơi nào khác";
+                lblNoPlayers.Text = _allOnlinePlayers.Count == 0
+                    ? "Không có người chơi nào khác online"
+                    : "Không tìm thấy bạn bè phù hợp";
             }
+        }
+
+        private void lstConnectedPlayers_MouseClick(object? sender, MouseEventArgs e)
+        {
+            int index = lstConnectedPlayers.IndexFromPoint(e.Location);
+            if (index >= 0 && index < lstConnectedPlayers.Items.Count)
+            {
+                var player = lstConnectedPlayers.Items[index] as PlayerInfoData;
+                if (player == null) return;
+
+                bool isSelf = (!string.IsNullOrEmpty(_netClient.PlayerName) && player.PlayerName.Equals(_netClient.PlayerName, StringComparison.OrdinalIgnoreCase))
+                           || (!string.IsNullOrEmpty(_netClient.PlayerId) && player.PlayerId == _netClient.PlayerId);
+                if (isSelf) return;
+
+                Rectangle itemRect = lstConnectedPlayers.GetItemRectangle(index);
+                int btnW = 76;
+                int btnH = 26;
+                int btnX = itemRect.Right - btnW - 10;
+                int btnY = itemRect.Y + (itemRect.Height - btnH) / 2;
+                Rectangle btnRect = new Rectangle(btnX, btnY, btnW, btnH);
+
+                if (btnRect.Contains(e.Location))
+                {
+                    if (player.Status.Contains("trận") || player.Status.Contains("phòng"))
+                    {
+                        MessageBox.Show($"Người chơi {player.PlayerName} hiện đang trong trận đấu! Lời mời thách đấu đã được gửi để giao chiến khi xong trận.", "Thách đấu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Đã gửi lời mời giao đấu cờ Caro tới {player.PlayerName}!", "Mời chơi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+            }
+        }
+
+        private void pnlHomeView_Resize(object? sender, EventArgs e)
+        {
+            if (pnlHomeView == null || heroBanner == null || pnlMiddleGrid == null) return;
+            int padX = 16;
+            int padTop = 12;
+            int padBottom = 14;
+            int gapY = 12;
+
+            int totalW = pnlHomeView.ClientSize.Width;
+            int totalH = pnlHomeView.ClientSize.Height;
+            if (totalW <= 100 || totalH <= 100) return;
+
+            int usableW = Math.Max(100, totalW - padX * 2);
+
+            // Banner height: enlarge to give the artwork more breathing room and grandeur (~215-235px)
+            int bannerH = Math.Min(235, Math.Max(195, (int)(usableW * 0.30f)));
+
+            heroBanner.SetBounds(padX, padTop, usableW, bannerH);
+
+            int gridY = padTop + bannerH + gapY;
+            int gridH = Math.Max(100, totalH - gridY - padBottom);
+
+            pnlMiddleGrid.SetBounds(padX, gridY, usableW, gridH);
+        }
+
+        private void pnlMiddleGrid_Resize(object? sender, EventArgs e)
+        {
+            if (pnlMiddleGrid == null || colEvent == null || colTopPlayers == null || colOnlinePlayers == null) return;
+            int w = pnlMiddleGrid.ClientSize.Width;
+            int h = pnlMiddleGrid.ClientSize.Height;
+            if (w <= 100 || h <= 100) return;
+
+            int gap = 12;
+            int totalGap = gap * 2;
+            int availW = Math.Max(100, w - totalGap);
+
+            // Proportions:
+            // Col 1: ~36% (Sự kiện nổi bật - enlarged to showcase poster comfortably)
+            // Col 2: ~35% (Bảng xếp hạng Top Cao Thủ)
+            // Col 3: ~29% (Người chơi online)
+            int w1 = (int)(availW * 0.36f);
+            int w2 = (int)(availW * 0.35f);
+            int w3 = availW - w1 - w2;
+
+            colEvent.SetBounds(0, 0, w1, h);
+            colTopPlayers.SetBounds(w1 + gap, 0, w2, h);
+            colOnlinePlayers.SetBounds(w1 + gap + w2 + gap, 0, w3, h);
+        }
+
+        private Image? GetOnlinePlayerAvatar(string playerName)
+        {
+            if (string.IsNullOrWhiteSpace(playerName) || playerName == "---") return null;
+            return GetPlayerAvatarImage(playerName);
         }
 
         private void lstConnectedPlayers_DrawItem(object? sender, DrawItemEventArgs e)
@@ -3409,7 +3667,9 @@ namespace CaroClient
             if (e.Index < 0 || e.Index >= lstConnectedPlayers.Items.Count) return;
 
             Graphics g = e.Graphics;
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
             var player = lstConnectedPlayers.Items[e.Index] as PlayerInfoData;
             if (player == null) return;
@@ -3422,44 +3682,134 @@ namespace CaroClient
                 g.FillRectangle(bgBrush, bounds);
             }
 
-            // Status indicator dot
-            bool isWaiting = player.Status == "Đang chờ";
-            Color statusColor = isWaiting ? UITheme.AccentGreen : UITheme.AccentOrange;
+            // Avatar circle
+            int avatarSize = 34;
+            int avatarX = bounds.X + 8;
+            int avatarY = bounds.Y + (bounds.Height - avatarSize) / 2;
+            Rectangle avatarRect = new Rectangle(avatarX, avatarY, avatarSize, avatarSize);
+
+            Image? avatarImg = GetOnlinePlayerAvatar(player.PlayerName);
+            if (avatarImg != null)
+            {
+                using (GraphicsPath circlePath = new GraphicsPath())
+                {
+                    circlePath.AddEllipse(avatarRect);
+                    g.SetClip(circlePath);
+                    g.DrawImage(avatarImg, avatarRect);
+                    g.ResetClip();
+                }
+            }
+            else
+            {
+                using (SolidBrush avBg = new SolidBrush(Color.FromArgb(20, 36, 68)))
+                {
+                    g.FillEllipse(avBg, avatarRect);
+                }
+            }
+
+            // Avatar border
+            using (Pen avPen = new Pen(Color.FromArgb(40, 75, 130), 1.2f))
+            {
+                g.DrawEllipse(avPen, avatarRect);
+            }
+
+            // Status dot on avatar bottom-right
+            bool isInMatch = player.Status.Contains("trận") || player.Status.Contains("phòng");
+            Color statusColor = isInMatch ? Color.FromArgb(255, 171, 0) : Color.FromArgb(0, 230, 118);
             int dotSize = 8;
-            int dotY = bounds.Y + (bounds.Height - dotSize) / 2;
+            int dotX = avatarX + avatarSize - dotSize;
+            int dotY = avatarY + avatarSize - dotSize;
+
+            using (SolidBrush dotDark = new SolidBrush(Color.FromArgb(13, 24, 48)))
+            {
+                g.FillEllipse(dotDark, dotX - 1, dotY - 1, dotSize + 2, dotSize + 2);
+            }
             using (SolidBrush dotBrush = new SolidBrush(statusColor))
             {
-                g.FillEllipse(dotBrush, bounds.X + 8, dotY, dotSize, dotSize);
+                g.FillEllipse(dotBrush, dotX, dotY, dotSize, dotSize);
             }
 
-            // Player name
-            bool isSelf = (player.PlayerId == _netClient.PlayerId);
-            string eloBadge = player.Elo > 0 ? $" (★ {player.Elo})" : "";
-            string displayName = isSelf ? $"{player.PlayerName}{eloBadge} (Bạn)" : $"{player.PlayerName}{eloBadge}";
-            Color nameColor = isSelf ? UITheme.AccentCyan : Color.White;
-
-            using (Font nameFont = new Font("Segoe UI", 9f, isSelf ? FontStyle.Bold : FontStyle.Regular))
-            using (SolidBrush nameBrush = new SolidBrush(nameColor))
+            // Player Name & Status
+            int textX = avatarX + avatarSize + 10;
+            int nameY = bounds.Y + 8;
+            using (Font nameFont = new Font("Segoe UI", 9f, FontStyle.Bold))
+            using (SolidBrush nameBrush = new SolidBrush(Color.FromArgb(240, 246, 255)))
             {
-                int textY = bounds.Y + (bounds.Height - 16) / 2;
-                g.DrawString(displayName, nameFont, nameBrush, bounds.X + 22, textY);
+                g.DrawString(player.PlayerName, nameFont, nameBrush, textX, nameY);
             }
 
-            // Status text on right
-            string statusText = player.Status;
-            using (Font statusFont = new Font("Segoe UI", 8f))
-            using (SolidBrush statusBrush = new SolidBrush(statusColor))
+            int statusY = bounds.Y + 28;
+            using (Font statusFont = new Font("Segoe UI", 7.8f))
+            using (SolidBrush subBrush = new SolidBrush(Color.FromArgb(135, 155, 190)))
             {
-                SizeF size = g.MeasureString(statusText, statusFont);
-                float statusX = bounds.Right - size.Width - 8;
-                float statusY = bounds.Y + (bounds.Height - size.Height) / 2;
-                g.DrawString(statusText, statusFont, statusBrush, statusX, statusY);
+                string statusDesc = isInMatch ? "Trong trận ⚔" : "Đang rảnh ●";
+                g.DrawString(statusDesc, statusFont, subBrush, textX, statusY);
             }
 
-            // Divider line
-            using (Pen divPen = new Pen(Color.FromArgb(22, 38, 72), 1f))
+            // Right Action Button Pill
+            int btnW = 76;
+            int btnH = 26;
+            int btnX = bounds.Right - btnW - 10;
+            int btnY = bounds.Y + (bounds.Height - btnH) / 2;
+            Rectangle btnRect = new Rectangle(btnX, btnY, btnW, btnH);
+
+            bool isSelf = (!string.IsNullOrEmpty(_netClient.PlayerName) && player.PlayerName.Equals(_netClient.PlayerName, StringComparison.OrdinalIgnoreCase))
+                       || (!string.IsNullOrEmpty(_netClient.PlayerId) && player.PlayerId == _netClient.PlayerId);
+
+            using (GraphicsPath btnPath = UITheme.CreateRoundedRectanglePath(btnRect, 8))
             {
-                g.DrawLine(divPen, bounds.X + 6, bounds.Bottom - 1, bounds.Right - 6, bounds.Bottom - 1);
+                if (isSelf)
+                {
+                    // Self badge
+                    using (SolidBrush selfBg = new SolidBrush(Color.FromArgb(20, 36, 68)))
+                    using (Pen bp = new Pen(Color.FromArgb(42, 75, 130), 1f))
+                    using (Font selfFont = new Font("Segoe UI", 8.2f, FontStyle.Italic))
+                    using (SolidBrush selfTxt = new SolidBrush(Color.FromArgb(145, 185, 235)))
+                    using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        g.FillPath(selfBg, btnPath);
+                        g.DrawPath(bp, btnPath);
+                        g.DrawString("(Bạn)", selfFont, selfTxt, btnRect, sf);
+                    }
+                }
+                else if (isInMatch)
+                {
+                    // Cyan action button - Thách đấu
+                    using (LinearGradientBrush lgb = new LinearGradientBrush(btnRect, Color.FromArgb(0, 194, 255), Color.FromArgb(0, 140, 255), LinearGradientMode.Vertical))
+                    {
+                        g.FillPath(lgb, btnPath);
+                    }
+                    using (Font btnFont = new Font("Segoe UI", 8.2f, FontStyle.Bold))
+                    using (SolidBrush txtB = new SolidBrush(Color.FromArgb(5, 16, 32)))
+                    using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        g.DrawString("Thách đấu", btnFont, txtB, btnRect, sf);
+                    }
+                }
+                else
+                {
+                    // Dark pill button - Mời chơi
+                    using (SolidBrush bg = new SolidBrush(Color.FromArgb(16, 28, 54)))
+                    {
+                        g.FillPath(bg, btnPath);
+                    }
+                    using (Pen bp = new Pen(Color.FromArgb(32, 54, 96), 1f))
+                    {
+                        g.DrawPath(bp, btnPath);
+                    }
+                    using (Font btnFont = new Font("Segoe UI", 8.2f, FontStyle.Regular))
+                    using (SolidBrush txtB = new SolidBrush(Color.FromArgb(200, 218, 245)))
+                    using (StringFormat sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
+                    {
+                        g.DrawString("Mời chơi", btnFont, txtB, btnRect, sf);
+                    }
+                }
+            }
+
+            // Bottom subtle divider
+            using (Pen divPen = new Pen(Color.FromArgb(20, 34, 64), 1f))
+            {
+                g.DrawLine(divPen, bounds.X + 8, bounds.Bottom - 1, bounds.Right - 8, bounds.Bottom - 1);
             }
         }
 
